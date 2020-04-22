@@ -1,0 +1,175 @@
+import React, { PureComponent } from "react";
+import "./App.css";
+import axios from "axios";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import AddExpense from "./components/AddExpense";
+import AddCity from "./components/AddCity";
+import AddProject from "./components/AddProject";
+import AddCompany from "./components/AddCompany";
+import { Home, Login, Register, Header, Dashboard, Footer } from "./components";
+import ViewExpense from "./components/ViewExpense";
+import { useHistory } from "react-router-dom";
+
+class App extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      projects: [],
+      cities: [],
+      compnies: [],
+      campaignData: []
+    };
+  }
+
+  componentDidMount() {
+    // axios.post('http', {
+    //     firstName: 'Fred',
+    //     lastName: 'Flintstone'
+    // })
+    // .then(function (response) {
+    //     console.log(response);
+    // })
+    // .catch(function (error) {
+    //     console.log(error);
+    // });
+  }
+
+  handleLoginSubmit = async e => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/users/login", {
+        email: e.target.email.value,
+        password: e.target.password.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleRegisterSubmit = async e => {
+    console.log(e);
+
+    e.preventDefault();
+    await axios
+      .post("http://localhost:5000/users/register", {
+        name: e.target.name.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+        password2: e.target.password2.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleExpenseSubmit = async e => {
+    e.preventDefault();
+    await axios
+      .post("http://localhost:5000/expenses", {
+        project: e.target.project.value,
+        campaignType: e.target.campaignType.value,
+        actualLeads: e.target.actualLeads.value,
+        plannedLeads: e.target.plannedLeads.value,
+        totalBudget: e.target.totalBudget.value,
+        cpl: e.target.cpl.value,
+        clicks: e.target.clicks.value,
+        impressions: e.target.impressions.value,
+        totalSpending: e.target.totalSpending.value,
+        spendingDate: e.target.spendingDate.value,
+        campaignStartDate: e.target.campaignStartDate.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleViewExpenseSubmit = async e => {
+    console.log(e);
+    console.log("VIEWING");
+    const _this = this;
+    e.preventDefault();
+    await axios
+      .post("http://localhost:5000/project/projectData", {
+        project: e.target.project.value,
+        startDate: e.target.startDate.value,
+        endDate: e.target.endDate.value
+      })
+      .then(async function(response) {
+        console.log("comin inside then");
+
+        console.log(response);
+
+        await _this.setState({ campaignData: response.data.spendings });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  render() {
+    return (
+      <>
+        <Dashboard />
+        <Router>
+          <div>
+            <Switch>
+              <Route exact path="/" component={Home}></Route>
+              <Route exact path="/header" component={Header}></Route>
+              <Route
+                exact
+                path="/users/login"
+                render={() => (
+                  <Login hanldeLoginSubmit={this.hanldeLoginSubmit} />
+                )}
+              ></Route>
+              <Route
+                exact
+                path="/users/register"
+                render={() => (
+                  <Register hanldeRegisterSubmit={this.hanldeRegisterSubmit} />
+                )}
+              ></Route>
+              <Route exact path="/footer" component={Footer}></Route>
+              {/* <Route  path='/dashboard' component = { Dashboard }></Route>  */}
+              {/* <Route exact path="/addexpense" component={AddExpense} hanldeRegisterSubmit={this.hanldeRegisterSubmit}></Route> */}
+              <Route
+                exact
+                path="/addexpense"
+                render={() => (
+                  <AddExpense handleExpenseSubmit={this.handleExpenseSubmit} />
+                )}
+              ></Route>
+              <Route exact path="/addcity" component={AddCity}></Route>
+              <Route exact path="/addproject" component={AddProject}></Route>
+              <Route exact path="/addcompany" component={AddCompany}></Route>
+
+              {/* <Route exact path="/viewexpense" component={ViewExpense}></Route> */}
+              <Route
+                exact
+                path="/viewexpense"
+                render={() => (
+                  <ViewExpense
+                    result={this.state.campaignData}
+                    handleViewExpenseSubmit={this.handleViewExpenseSubmit}
+                  />
+                )}
+              ></Route>
+            </Switch>
+          </div>
+        </Router>
+      </>
+    );
+  }
+}
+
+export default App;

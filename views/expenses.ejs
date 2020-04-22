@@ -1,0 +1,95 @@
+<form action="/project/add" method="POST">
+  <div class="row">
+
+    <div class="col">
+      <div class="form-group">
+        <label for="project">Add Project</label>
+        <input
+          type="text"
+          id="project"
+          name="project"
+          class="form-control"
+          placeholder="Enter Project"
+        />
+      </div>
+    </div>
+
+    <div class="col">
+      <label for="city">Select Company</label>
+      <select class="form-control" name="company">
+        <option value="">-- Select Company --</option>
+        <% companies.forEach( function(company) { %>
+            <option value="<%= company._id %>"><%= company.name %></option>
+        <% }); %>
+      </select>
+    </div>
+
+    <div class="col">
+      <label for="city">Select City</label>
+      <select class="form-control" name="city">
+        <option value="">-- Select City --</option>
+        <% cities.forEach( function(city) { %>
+            <option value="<%= city._id %>"><%= city.name %></option>
+        <% }); %>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-info btn-block">
+      Add Project
+    </button>
+
+  </div>
+</form>
+
+<hr />
+
+<form action="/city" method="POST">
+    <div class="form-group">
+      <label for="city">Add City</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        class="form-control"
+        placeholder="Enter City"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="region">Add Region</label>
+      <input
+        type="text"
+        id="region"
+        name="region"
+        class="form-control"
+        placeholder="Enter region"
+      />
+    </div>
+    
+    <button type="submit" class="btn btn-success btn-block">
+      Update
+    </button>
+</form>
+
+<hr/>
+
+<form action="/company" method="POST">
+  <div class="form-group">
+    <label for="company">Add Company</label>
+    <input
+      type="text"
+      id="company"
+      name="company"
+      class="form-control"
+      placeholder="Enter Company"
+    />
+  </div>
+  
+  <button type="submit" class="btn btn-success btn-block">
+    Update
+  </button>
+</form>
+
+  
+
+

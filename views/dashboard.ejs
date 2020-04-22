@@ -1,0 +1,241 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <!-- Brand -->
+    <a class="navbar-brand" href="#">PROPSTORY</a>
+  
+    <!-- Toggler/collapsibe Button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Dashboard</a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="/users/logout" class=" nav-link">Logout</a>
+        </li>
+      </ul>
+    </div>
+</nav>
+
+<form action="/project/campaigndata" method="POST">
+    <div class="jumbotron">
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="project">Project</label>
+                    <select
+                    id="project"
+                    name="project"
+                    class="form-control"
+                    >
+                        <option value="">-- Select Project --</option>
+                        <% projects.forEach( function(project) { %>
+                            <option value="<%= project._id %>"><%= project.name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="startDate">Start Date</label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        name="startDate"
+                        class="form-control"
+                        placeholder="Enter Start Date"
+                        value="<%= typeof startDate != 'undefined' ? startDate : '' %>"
+                    />
+                </div>
+                <div class="col">
+                    <label for="endDate">End Date</label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        name="endDate"
+                        class="form-control"
+                        placeholder="Enter End Date"
+                        value="<%= typeof endDate != 'undefined' ? endDate : '' %>"
+                    />
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info btn-block">
+            Find
+        </button>
+    </div>
+</form>
+
+<% if (expenses) { %>
+    <div  class="jumbotron">
+        <table class="table table-bordered table-striped">
+            <tbody>
+            <% expenses.forEach( function(expense) { %>
+                <tr><td class="text-info ">Project:</td><td><%= expense.project %> (<%= expense.campaignType %>)</td></tr> 
+                <tr><td class="text-info ">Actual Leads:</td><td><%= expense.actualLeads %></td></tr> 
+                <tr><td class="text-info ">Planned Leads</td><td><%= expense.plannedLeads %></td></tr>
+                <tr><td class="text-info ">Cpl</td><td><%= expense.cpl %></td></tr>
+                <tr><td class="text-info ">Click</td><td><%= expense.click %></td></tr>
+                <tr><td class="text-info ">Impressions</td><td><%= expense.impressions %></td></tr>
+                <tr><td class="text-info ">Total Budget:</td><td><%= expense.totalBudget %></td></tr> 
+                <tr><td class="text-info ">Total Spending: </td><td><%= expense.totalSpending %></td></tr>
+                <tr><td class="text-info ">Sepnt on:</td><td><%= expense.spendingDate %></td></tr> 
+                <tr><td class="text-info ">Campaign Start Sate:</td><td><%= expense.campaignStartDate %></td></tr> 
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+<% } %>
+
+<form action="/expenses" method="POST"  class="jumbotron">
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="project">Project</label>
+                <select
+                id="project"
+                name="project"
+                class="form-control"
+                >
+                    <option value="">-- Select Project --</option>
+                    <% projects.forEach( function(project) { %>
+                        <option value="<%= project._id %>"><%= project.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col">
+                <label for="campaignType">Campaign Type</label>
+                <select
+                id="campaignType"
+                name="campaignType"
+                class="form-control"
+                >
+                    <option value="">-- Select Campaign Type --</option>
+                    <option value="GDN">Google - GDN</option>
+                    <option value="GSN">Google - GSN</option>
+                    <option value="Google">Google</option>
+                    <option value="Facebook Lead Form">Facebook Lead Form</option>
+                    <option value="Facebook LP">Facebook LP</option>
+                    <option value="Taboola">Taboola</option>
+                    <option value="Calls/Chats">Calls/Chats</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="actualLeads">Actual Leads</label>
+                <input
+                    type="text"
+                    id="actualLeads"
+                    name="actualLeads"
+                    class="form-control"
+                    placeholder="Enter Actual Leads"
+                    value="<%= typeof actualLeads != 'undefined' ? actualLeads : '' %>"
+                />
+            </div>
+            <div class="col">
+                <label for="plannedLeads">Planned Leads</label>
+                <input
+                    type="text"
+                    id="plannedLeads"
+                    name="plannedLeads"
+                    class="form-control"
+                    placeholder="Enter Planned Leads"
+                    value="<%= typeof plannedLeads != 'undefined' ? plannedLeads : '' %>"
+                />
+            </div>
+            <div class="col">
+                <label for="totalBudget">Total Budget</label>
+                <input
+                    type="text"
+                    id="totalBudget"
+                    name="totalBudget"
+                    class="form-control"
+                    placeholder="Enter Total Budget"
+                    value="<%= typeof totalBudget != 'undefined' ? totalBudget : '' %>"
+                />
+            </div>
+        </div>  
+    </div>
+    <div class="form-group">
+      <label for="totalSpending">Total Spending</label>
+      <input
+        type="text"
+        id="totalSpending"
+        name="totalSpending"
+        class="form-control"
+        placeholder="Enter Total Spending"
+        value="<%= typeof totalSpending != 'undefined' ? totalSpending : '' %>"
+      />
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="cpl">CPL</label>
+                <input
+                    type="text"
+                    id="cpl"
+                    name="cpl"
+                    class="form-control"
+                    placeholder="Enter CPL"
+                    value="<%= typeof cpl != 'undefined' ? cpl : '' %>"
+                />
+            </div>
+            <div class="col">
+                <label for="clicks">Reach/Clicks</label>
+                <input
+                    type="name"
+                    id="clicks"
+                    name="clicks"
+                    class="form-control"
+                    placeholder="Enter Reach/Clicks"
+                    value="<%= typeof clicks != 'undefined' ? clicks : '' %>"
+                />
+            </div>
+            <div class="col">
+                <label for="impressions">Impressions</label>
+                <input
+                    type="name"
+                    id="impressions"
+                    name="impressions"
+                    class="form-control"
+                    placeholder="Enter Impressions"
+                    value="<%= typeof impressions != 'undefined' ? impressions : '' %>"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="spendingDate">Spending Date</label>
+                <input
+                    type="date"
+                    id="spendingDate"
+                    name="spendingDate"
+                    class="form-control"
+                    placeholder="Enter Spending Date"
+                    value="<%= typeof spendingDate != 'undefined' ? spendingDate : '' %>"
+                />
+            </div>
+            <div class="col">
+                <label for="campaignStartDate">Campaign Start Date</label>
+                <input
+                    type="date"
+                    id="campaignStartDate"
+                    name="campaignStartDate"
+                    class="form-control"
+                    placeholder="Enter Campaign Start Date"
+                    value="<%= typeof campaignStartDate != 'undefined' ? campaignStartDate : '' %>"
+                />
+            </div>
+        </div>       
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">
+      Update
+    </button>
+</form>
