@@ -64,7 +64,7 @@ export default function AddExpense(props) {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/project/getProjects")
+      .get("http://localhost:3050/project/getProjects")
       .then(response => {
         console.log(response);
 

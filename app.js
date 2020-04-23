@@ -59,8 +59,8 @@ app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
-
-const PORT = process.env.PORT || 5000
+app.use(express.static("./client/build"));
+const PORT = process.env.PORT || 3050
 
 // app server connection
 app.listen(PORT, (err, res) => {

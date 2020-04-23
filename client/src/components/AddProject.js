@@ -68,7 +68,7 @@ export default function AddProject(props) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/getCompanies")
+      .get("http://localhost:3050/getCompanies")
       .then(response => {
         console.log(response);
 
@@ -79,7 +79,7 @@ export default function AddProject(props) {
       .catch(err => console.log(err));
 
       axios
-      .get("http://localhost:5000/getCities")
+      .get("http://localhost:3050/getCities")
       .then(response => {
         console.log(response);
 

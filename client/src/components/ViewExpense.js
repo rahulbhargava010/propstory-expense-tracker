@@ -45,7 +45,7 @@ export default function ViewExpense(props) {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:5000/project/getProjects")
+      .get("http://localhost:3050/project/getProjects")
       .then(response => {
         console.log(response);
         let projects = response.data.projects;
@@ -60,7 +60,7 @@ export default function ViewExpense(props) {
     console.log("VIEWING");
     e.preventDefault();
     await axios
-      .post("http://localhost:5000/project/projectData", {
+      .post("http://localhost:3050/project/projectData", {
         project: e.target.project.value,
         startDate: e.target.startDate.value,
         endDate: e.target.endDate.value
