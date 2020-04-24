@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js ",
     "server": "nodemon app.js",
     "client": " npm start --prefix client",
     "dev": "concurrently \"npm run server\" \" npm run client\""
@@ -29,6 +30,5 @@
   "devDependencies": {
     "concurrently": "^5.1.0",
     "nodemon": "^2.0.3"
-  },
-  "proxy": "http://localhost:3050"
+  }
 }

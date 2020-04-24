@@ -79,7 +79,7 @@ export default function AddProject(props) {
       .catch(err => console.log(err));
 
       axios
-      .get("http://localhost:3050/getCities")
+      .get("http://expenses.propstory.com/getCities")
       .then(response => {
         console.log(response);
 
