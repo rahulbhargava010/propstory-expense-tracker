@@ -39,6 +39,7 @@ app.use(session({
 app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(express.static("client/build"));
 
 //Connect flash
 // app.use(flash())
@@ -59,7 +60,6 @@ app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
-app.use(express.static("./client/build"));
 const PORT = process.env.PORT || 3050
 
 // app server connection
