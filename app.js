@@ -41,7 +41,7 @@ app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.static("client/build"));
+//app.use(express.static("client/build/"));
 
 //Connect flash
 // app.use(flash())
@@ -63,7 +63,7 @@ app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 app.get('*', (req, res) => {    
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    res.sendFile(path.resolve(__dirname, "public", "index.html"));
 })
 
 const PORT = process.env.PORT || 3050
