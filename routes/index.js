@@ -1,4 +1,6 @@
 const express = require("express")
+const path = require("path")
+
 const Project = require("../models/Project")
 const Expense = require("../models/Expense")
 const City = require("../models/City")
@@ -9,9 +11,8 @@ const { ensureAuthenticated } = require('../config/auth')
 
 //Welcome Page without login
 router.get('/', (req, res) => {
-    res.json({
-        'msg' : 'success'
-    })
+    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+
 })
 
 // Home page after login

@@ -38,7 +38,7 @@ class App extends PureComponent {
   handleLoginSubmit = async e => {
     e.preventDefault();
     axios
-      .post("http://localhost:3050/users/login", {
+      .post("http://expenses.propstory.com/users/login", {
         email: e.target.email.value,
         password: e.target.password.value
       })
@@ -55,7 +55,7 @@ class App extends PureComponent {
 
     e.preventDefault();
     await axios
-      .post("http://localhost:3050/users/register", {
+      .post("http://expenses.propstory.com/users/register", {
         name: e.target.name.value,
         email: e.target.email.value,
         password: e.target.password.value,
@@ -72,7 +72,7 @@ class App extends PureComponent {
   handleExpenseSubmit = async e => {
     e.preventDefault();
     await axios
-      .post("http://localhost:3050/expenses", {
+      .post("http://expenses.propstory.com/expenses", {
         project: e.target.project.value,
         campaignType: e.target.campaignType.value,
         actualLeads: e.target.actualLeads.value,
@@ -99,7 +99,7 @@ class App extends PureComponent {
     const _this = this;
     e.preventDefault();
     await axios
-      .post("http://localhost:3050/project/projectData", {
+      .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
         startDate: e.target.startDate.value,
         endDate: e.target.endDate.value
