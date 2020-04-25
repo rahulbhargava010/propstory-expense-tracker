@@ -7,6 +7,7 @@ const session           = require('express-session')
 const passport          = require('passport')
 var cors            = require('cors')
 var bodyParser = require('body-parser');
+var logger = require('morgan');
 
 require('./config/passport')(passport)
 
@@ -24,10 +25,10 @@ mongoose.connect(db, { useNewUrlParser: true })
 // app.set('view engine', 'ejs')
 
 //Bodyparser
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(express.urlencoded({ extended: false }))
+app.use(logger('dev'));
 
 //Express session
 app.use(session({
@@ -39,6 +40,7 @@ app.use(session({
 app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static("client/build"));
 
 //Connect flash
@@ -56,10 +58,14 @@ app.use(express.static("client/build"));
 // app.use(express.static(path.join(__dirname, 'public')))
 
 //routers to use by app
-app.use('/', require('./routes/index'))
+app.use('/api', require('./routes/index'))
 app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
+app.get('*', (req, res) => {    
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+})
+
 const PORT = process.env.PORT || 3050
 
 // app server connection

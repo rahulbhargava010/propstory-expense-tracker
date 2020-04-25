@@ -10,10 +10,7 @@ const router = express.Router()
 const { ensureAuthenticated } = require('../config/auth')
 
 //Welcome Page without login
-router.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
 
-})
 
 // Home page after login
 // Getting Projects and Cities

@@ -68,7 +68,7 @@ export default function AddProject(props) {
 
   useEffect(() => {
     axios
-      .get("http://expenses.propstory.com/getCompanies")
+      .get("http://expenses.propstory.com/api/getCompanies")
       .then(response => {
         console.log(response);
 
@@ -79,7 +79,7 @@ export default function AddProject(props) {
       .catch(err => console.log(err));
 
       axios
-      .get("http://expenses.propstory.com/getCities")
+      .get("http://expenses.propstory.com/api/getCities")
       .then(response => {
         console.log(response);
 
