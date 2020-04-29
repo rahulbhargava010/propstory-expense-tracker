@@ -7,11 +7,12 @@ const router = express.Router()
 const { ensureAuthenticated } = require('../config/auth')
 
 
-// Adding new expense Sheet
+// Adding/Edit Expense
+// Need to add authentication later
 router.post('/', (req, res) => {
-    console.log("ADDING EXPENSE");
     
     const { project, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
+    
     console.log(req.body);
     
     let errors = []
@@ -20,38 +21,65 @@ router.post('/', (req, res) => {
         errors.push({ msg: 'Please fill all required fields' })
     }
 
-
     if (errors.length > 0) {
         res.status(400).json({ errors })
     } else {
         //validation Passes
+        console.log('coming inside new/edit expense')
+
         const projectID = ObjectId(project)
-        Expense.findOne( { project: projectID, campaignType: campaignType, spendingDate: spendingDate } )
-        .then( (expense) => {
-            if (expense) {
-                errors.push( { msg: "Expense already exist for this date" })
+        if (req.body._id) {
+            console.log('coming inside edit expense')
+            // id is there then update row
+            const filter = {_id: ObjectId(req.body._id)}
+            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate }
+
+            Expense.findByIdAndUpdate( filter, updateData, { new: true } )
+            .then( (expense) => {
+                console.log('coming inside edit successfully')
+                res.status(200).json({ msg: 'Your Expense tracker has been updated successfully', expense })
+            })
+            .catch(err => {
+                console.log('coming inside error')
+                errors.push( { msg: err })
                 res.status(400).json({ errors })
-            } else {
-                // console.log(projectID)
-                const newExpense = new Expense({
-                    project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate
+            })
 
-                })
+        } else {
+            console.log('coming inside new expense')
+            Expense.findOne( { project: projectID, campaignType: campaignType, spendingDate: spendingDate } )
+            .then( (expense) => {
+                if (expense) {
+                    errors.push( { msg: "Expense already exist for this date" })
+                    res.status(400).json({ errors })
+                } else {
+                    const newExpense = new Expense({
+                        project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate
 
-                console.log(newExpense)
-                
-                newExpense.save()
-                .then(expense => {
-                    // req.flash(
-                    //     'success_msg',
-                    //     'Your Expense tracker has ben saved'
-                    // );
-                    res.status(201).json({ msg: 'Your Expense tracker has been saved' })
-                })
-                .catch(err => console.log(err))
-            }
-        });
+                    })
+                    newExpense.save()
+                    .then(expense => {
+                        res.status(201).json({ msg: 'Your Expense tracker has been saved successfully' })
+                    })
+                    .catch(err => console.log(err))
+                }
+            });
+        }
     }
+})
+
+router.post('/delete', (req, res) => {
+
+    const deleteExpense = {_id: ObjectId(req.body._id)}
+    Expense.findOneAndRemove( deleteExpense )
+    .then( (result) => {
+        console.log('coming inside delete success')
+        res.status(200).json({ msg: 'Your Expense has been deleted successfully' })
+    }).catch((err)=>{
+        console.log('coming inside delete error')
+        errors.push( { msg: err })
+        res.status(400).json({ errors })
+    })
 })
 
 module.exports = router
