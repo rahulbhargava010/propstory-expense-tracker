@@ -110,7 +110,7 @@ export default function AddProject(props) {
                 variant="outlined"
                 required
                 fullWidth
-                name="totalBudget"
+                name="project"
                 label="Name of the project"
                 id="totalBudget"
                 autoComplete="totalBudget"
@@ -124,13 +124,13 @@ export default function AddProject(props) {
 
               <select
                 class="custom-select"
-                id="projectSelect"
-                value={company}
+                name="company"
+                id="company"
                 onChange={handleChangeCompany}
                 style={{ width: "100%" }}
               >
                  {companies.map(company => {
-                  return <option>{company.name}</option>;
+                  return <option value={company._id}>{company.name}</option>;
                 })}
               </select>
             </Grid>
@@ -139,13 +139,13 @@ export default function AddProject(props) {
 
               <select
                 class="custom-select"
-                id="projectSelect"
-                value={city}
+                name="city"
+                id="city"
                 onChange={handleChangeCity}
                 style={{ width: "100%" }}
               >
                    {cities.map(city => {
-                  return <option>{city.name}</option>;
+                  return <option value={city._id}>{city.name}</option>;
                 })}
               </select>
             </Grid>

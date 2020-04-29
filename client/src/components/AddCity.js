@@ -64,17 +64,17 @@ export default function AddCity(props) {
         <form
           className={classes.form}
           noValidate
-          onSubmit={props.hanldeExpenseSubmit}
+          onSubmit={props.hanldeCitySubmit}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="actualLeads"
-                name="actualLeads"
+                autoComplete="city"
+                name="city"
                 variant="outlined"
                 required
                 fullWidth
-                id="actualLeads"
+                id="city"
                 label="ENTER CITY"
                 autoFocus
                 size="small"
@@ -82,13 +82,13 @@ export default function AddCity(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                variant="outlined"
+                variant="region"
                 required
                 fullWidth
-                id="plannedLeads"
+                id="region"
                 label="ENTER REGION"
-                name="plannedLeads"
-                autoComplete="plannedLeads"
+                name="region"
+                autoComplete="region"
                 size="small"
               />
             </Grid>

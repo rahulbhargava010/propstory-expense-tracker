@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import "../assets/style.css";
-import Nav from "./Home/Nav";
-import Content from "./Home/Content";
-import Footer from "./Home/Footer";
+// import Nav from "./Home/Nav";
+// import Content from "./Home/Content";
+// import Footer from "./Home/Footer";
 
 class Home extends PureComponent {
   constructor(props) {
