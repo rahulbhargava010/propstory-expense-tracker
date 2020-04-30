@@ -35,7 +35,7 @@ class App extends PureComponent {
     // });
   }
 
-  handleLoginSubmit = async e => {
+  handleLoginSubmit = async (e) => {
     e.preventDefault();
     axios
       .post("http://expenses.propstory.com/users/login", {
@@ -50,7 +50,55 @@ class App extends PureComponent {
       });
   };
 
-  handleRegisterSubmit = async e => {
+  handleCitySubmit = async (e) => {
+    e.preventDefault();
+
+    axios
+      .post("http://localhost:3050/api/addCity", {
+        city: e.target.city.value,
+        region: e.target.region.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleCompanySubmit = async (e) => {
+    e.preventDefault()
+
+    axios
+      .post("http://localhost:3050/api/addCompany", {
+        company: e.target.company.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleProjectSubmit = async (e) => {
+    e.preventDefault()
+
+    axios
+      .post("http://localhost:3050/project/addProject", {
+        project: e.target.project.value,
+        city: e.target.city.value,
+        company: e.target.company.value
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleRegisterSubmit = async (e) => {
     console.log(e);
 
     e.preventDefault();
@@ -69,7 +117,7 @@ class App extends PureComponent {
       });
   };
 
-  handleExpenseSubmit = async e => {
+  handleExpenseSubmit = async (e) => {
     e.preventDefault();
     await axios
       .post("http://expenses.propstory.com/expenses", {
@@ -94,7 +142,7 @@ class App extends PureComponent {
       });
   };
 
-  handleUpdateExpense = async e => {
+  handleUpdateExpense = async (e) => {
     console.log(e.target);
     
     e.preventDefault();
@@ -121,7 +169,7 @@ class App extends PureComponent {
       });
   };
 
-  handleViewExpenseSubmit = async e => {
+  handleViewExpenseSubmit = async (e) => {
     console.log(e);
     console.log("VIEWING");
     const _this = this;
@@ -152,6 +200,7 @@ class App extends PureComponent {
           <div>
             <Switch>
               <Route exact path="/" component={Home}></Route>
+
               <Route exact path="/header" component={Header}></Route>
               <Route
                 exact
@@ -160,6 +209,7 @@ class App extends PureComponent {
                   <Login hanldeLoginSubmit={this.hanldeLoginSubmit} />
                 )}
               ></Route>
+              
               <Route
                 exact
                 path="/users/register"
@@ -167,6 +217,7 @@ class App extends PureComponent {
                   <Register hanldeRegisterSubmit={this.hanldeRegisterSubmit} />
                 )}
               ></Route>
+
               <Route exact path="/footer" component={Footer}></Route>
               {/* <Route  path='/dashboard' component = { Dashboard }></Route>  */}
               {/* <Route exact path="/addexpense" component={AddExpense} hanldeRegisterSubmit={this.hanldeRegisterSubmit}></Route> */}
@@ -180,9 +231,28 @@ class App extends PureComponent {
                   />
                 )}
               ></Route>
-              <Route exact path="/addcity" component={AddCity}></Route>
-              <Route exact path="/addproject" component={AddProject}></Route>
-              <Route exact path="/addcompany" component={AddCompany}></Route>
+
+              <Route exact path="/addcity" render={() => (
+                  <AddCity
+                    show={this.state.show}
+                    handleCitySubmit={this.handleCitySubmit}
+                  />
+                )}
+                ></Route>
+
+              <Route exact path="/addproject" render={() => (
+                  <AddProject
+                    show={this.state.show}
+                    handleProjectSubmit={this.handleProjectSubmit}
+                  />
+                )}></Route>
+
+              <Route exact path="/addcompany" render={() => (
+                  <AddCompany
+                    show={this.state.show}
+                    handleCompanySubmit={this.handleCompanySubmit}
+                  />
+                )}></Route>
 
               {/* <Route exact path="/viewexpense" component={ViewExpense}></Route> */}
               <Route

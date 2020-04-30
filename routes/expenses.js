@@ -1,12 +1,25 @@
 const express = require("express")
 const Expense = require("../models/Expense")
 const { ObjectId } = require('mongodb');
-
+var aws = require('aws-sdk');
+var fs = require("fs")
+var path = require('path')
+const csv=require('csvtojson')
 const router = express.Router()
 
 const { ensureAuthenticated } = require('../config/auth')
 
+// var config = require('../../config/environment/' + process.env.NODE_ENV); // require you config file
 
+var s3 = new aws.S3({ 
+    accessKeyId: 'AKIAIGJ5VYSE5NHUFPQA', 
+    secretAccessKey: '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' 
+});
+
+var getParams = {
+    Bucket: 'stitchdb-bucket', 
+    Key: 'propstory_fb_ads/ads_insights/0_1588236887114.csv'
+}
 // Adding/Edit Expense
 // Need to add authentication later
 router.post('/', (req, res) => {
@@ -15,7 +28,7 @@ router.post('/', (req, res) => {
     
     console.log(req.body);
     
-    let errors = []
+    let errors = []             
 
     if (!project || !campaignType || !actualLeads || !totalSpending) {
         errors.push({ msg: 'Please fill all required fields' })
@@ -33,8 +46,10 @@ router.post('/', (req, res) => {
         if (req.body._id) {
             console.log('coming inside edit expense')
             // id is there then update row
-            const filter = {_id: ObjectId(req.body._id)}
 
+            const filter = {_id: req.body._id }
+            console.log(filter)
+            // const filter = {_id: ObjectId(req.body._id)}
             const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate }
             console.log();
             
@@ -83,6 +98,36 @@ router.post('/delete', (req, res) => {
         console.log('coming inside delete error')
         errors.push( { msg: err })
         res.status(400).json({ errors })
+    })
+})
+
+router.get('/fbexpense', (req, res) => {
+
+    s3.getObject(getParams, (err, bucketData) => {
+
+        if (err) {
+            res.status(400).json({ "err" : err });
+        } else {
+            const cvsString = bucketData.Body.toString()
+
+            csv({
+                noheader:true,
+                output: "csv",
+                // output: "line"
+            })
+            .fromString(cvsString)
+            // .subscribe((cvsLine) => {
+            //     console.log(cvsLine)
+            //     res.status(200).json( cvsLine )
+            // })
+            .then((jsonObj)=>{
+                console.log(jsonObj);
+                res.status(200).json( { "file" :  jsonObj } )
+            }).catch((error) => {
+                res.status(400).json( { "error" : error } );
+            })
+        }
+    
     })
 })
 

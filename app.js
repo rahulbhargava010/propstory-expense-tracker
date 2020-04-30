@@ -1,34 +1,30 @@
-const express           = require("express")
-// const expressLayouts    = require("express-ejs-layouts")
-const mongoose          = require("mongoose")
-var path                = require('path');
-// var flash               = require('connect-flash')
-const session           = require('express-session')
-const passport          = require('passport')
-var cors            = require('cors')
+const express = require("express")
+const mongoose = require("mongoose")
+var path = require('path');
+const session = require('express-session')
+const passport = require('passport')
+var cors = require('cors')
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+require('dotenv').config()
 
 require('./config/passport')(passport)
 
 const app = express()
 
 //DB Config
-const db = require("./config/keys").MongoURI;
+const db = process.env.MONGO_URI;
 
 //Mongoose Connection
 mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err))
 
-// app.use(expressLayouts)
-// app.set('view engine', 'ejs')
-
 //Bodyparser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(logger('dev'));
+app.use(logger(process.env.NODE_ENV));
 
 //Express session
 app.use(session({

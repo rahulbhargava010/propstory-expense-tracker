@@ -32,7 +32,8 @@ router.get('/dashboard', ensureAuthenticated, async (req, res) => {
 })
 
 // Add New City
-router.post('/addCity', ensureAuthenticated, (req, res) => { 
+router.post('/addCity', (req, res) => {
+     
     const cityInfo = new City({
         name: req.body.city,
         region: req.body.region
@@ -43,7 +44,9 @@ router.post('/addCity', ensureAuthenticated, (req, res) => {
 })
 
 // Add New Company
-router.post('/addCompany', ensureAuthenticated, (req, res) => { 
+router.post('/addCompany', (req, res) => {
+    console.log('coming insde addcompany');
+    
     const companyInfo = new Company({
         name: req.body.company
     })

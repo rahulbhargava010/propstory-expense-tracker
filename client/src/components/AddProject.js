@@ -102,7 +102,7 @@ export default function AddProject(props) {
         <form
           className={classes.form}
           noValidate
-          onSubmit={props.hanldeExpenseSubmit}
+          onSubmit={props.handleProjectSubmit}
         >
           <Grid container spacing={4}>
             <Grid item xs={12}>

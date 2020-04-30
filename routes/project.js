@@ -7,7 +7,7 @@ const { ObjectId } = require('mongodb');
 const { ensureAuthenticated } = require('../config/auth')
 
 //Adding a new Project
-router.post('/addProject', ensureAuthenticated, (req, res) => {
+router.post('/addProject', (req, res) => {
     const projectInfo = new Project({
         name: req.body.project,
         city: ObjectId(req.body.city),
@@ -15,7 +15,7 @@ router.post('/addProject', ensureAuthenticated, (req, res) => {
     })
     const project  = projectInfo.save()
 
-    res.json({ project })
+    res.status(201).json({ project })
 })
 
 router.get('/getProjects', (req, res) => {

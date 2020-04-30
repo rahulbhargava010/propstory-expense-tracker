@@ -66,7 +66,7 @@ export default function ViewExpense(props) {
 
   const _Edit = data => {
     setModalShow(true);
-
+    console.log(data)
     setData(data);
   };
 
