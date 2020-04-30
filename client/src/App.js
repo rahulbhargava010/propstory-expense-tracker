@@ -8,7 +8,6 @@ import AddProject from "./components/AddProject";
 import AddCompany from "./components/AddCompany";
 import { Home, Login, Register, Header, Dashboard, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
-import { useHistory } from "react-router-dom";
 
 class App extends PureComponent {
   constructor(props) {
@@ -18,7 +17,8 @@ class App extends PureComponent {
       projects: [],
       cities: [],
       compnies: [],
-      campaignData: []
+      campaignData: [],
+      show: false
     };
   }
 
@@ -73,6 +73,34 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post("http://expenses.propstory.com/expenses", {
+        project: e.target.project.value,
+        campaignType: e.target.campaignType.value,
+        actualLeads: e.target.actualLeads.value,
+        plannedLeads: e.target.plannedLeads.value,
+        totalBudget: e.target.totalBudget.value,
+        cpl: e.target.cpl.value,
+        clicks: e.target.clicks.value,
+        impressions: e.target.impressions.value,
+        totalSpending: e.target.totalSpending.value,
+        spendingDate: e.target.spendingDate.value,
+        campaignStartDate: e.target.campaignStartDate.value
+      })
+      .then(function(response) {
+        console.log(response);
+        alert("ADD YOUR EXPENSE SUCCESSFULLY")
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  handleUpdateExpense = async e => {
+    console.log(e.target);
+    
+    e.preventDefault();
+    await axios
+      .post("http://localhost:3050/expenses", {
+        _id: e.target.expenseid.value,
         project: e.target.project.value,
         campaignType: e.target.campaignType.value,
         actualLeads: e.target.actualLeads.value,
@@ -146,7 +174,10 @@ class App extends PureComponent {
                 exact
                 path="/addexpense"
                 render={() => (
-                  <AddExpense handleExpenseSubmit={this.handleExpenseSubmit} />
+                  <AddExpense
+                    show={this.state.show}
+                    handleExpenseSubmit={this.handleExpenseSubmit}
+                  />
                 )}
               ></Route>
               <Route exact path="/addcity" component={AddCity}></Route>
@@ -160,6 +191,7 @@ class App extends PureComponent {
                 render={() => (
                   <ViewExpense
                     result={this.state.campaignData}
+                    handleUpdateExpense={this.handleUpdateExpense}
                     handleViewExpenseSubmit={this.handleViewExpenseSubmit}
                   />
                 )}

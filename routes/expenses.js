@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth')
 // Adding/Edit Expense
 // Need to add authentication later
 router.post('/', (req, res) => {
-    
+   
     const { project, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
     console.log(req.body);
@@ -28,13 +28,17 @@ router.post('/', (req, res) => {
         console.log('coming inside new/edit expense')
 
         const projectID = ObjectId(project)
+        console.log(req.body._id);
+        
         if (req.body._id) {
             console.log('coming inside edit expense')
             // id is there then update row
             const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate }
 
-            Expense.findByIdAndUpdate( filter, updateData, { new: true } )
+            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate }
+            console.log();
+            
+            Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
             .then( (expense) => {
                 console.log('coming inside edit successfully')
                 res.status(200).json({ msg: 'Your Expense tracker has been updated successfully', expense })

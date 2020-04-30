@@ -8,7 +8,7 @@ import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import {Modal} from 'react-bootstrap';
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -53,6 +53,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddExpense(props) {
   const classes = useStyles();
+  const [show, setShow] = React.useState(props.show);
+
   const [city, setCity] = React.useState("");
   const [project, setProject] = React.useState("");
   const [projects, setProjects] = React.useState([]);
@@ -256,6 +258,21 @@ export default function AddExpense(props) {
           <Grid container justify="flex-end"></Grid>
         </form>
       </div>
+      <Modal
+        show={show}
+        onHide={() => setShow(false)}
+        dialogClassName="modal-90w"
+        aria-labelledby="example-custom-modal-styling-title"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-custom-modal-styling-title">
+            Custom Modal Styling
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }
