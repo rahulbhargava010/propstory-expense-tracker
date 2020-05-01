@@ -2,22 +2,18 @@ const express = require("express")
 const Expense = require("../models/Expense")
 const { ObjectId } = require('mongodb');
 var aws = require('aws-sdk');
-var fs = require("fs")
-var path = require('path')
 const csv=require('csvtojson')
 const router = express.Router()
 
 const { ensureAuthenticated } = require('../config/auth')
 
-// var config = require('../../config/environment/' + process.env.NODE_ENV); // require you config file
-
 var s3 = new aws.S3({ 
-    accessKeyId: 'AKIAIGJ5VYSE5NHUFPQA', 
-    secretAccessKey: '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' 
+    accessKeyId: process.env.accessKeyId, 
+    secretAccessKey: process.env.secretAccessKey 
 });
 
 var getParams = {
-    Bucket: 'stitchdb-bucket', 
+    Bucket: process.env.Bucket, 
     Key: 'propstory_fb_ads/ads_insights/0_1588236887114.csv'
 }
 // Adding/Edit Expense
@@ -26,7 +22,7 @@ router.post('/', (req, res) => {
    
     const { project, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
-    console.log(req.body);
+    // console.log(req.body);
     
     let errors = []             
 
