@@ -43,6 +43,8 @@ export default function ViewExpense(props) {
   const [modalShow, setModalShow] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [city, setCity] = React.useState("");
+  const [show, setShow] = React.useState(true);
+  const [deleteId, setDeleteId] = React.useState("")
 
   const handleChangeCampaign = event => {
     setCity(event.target.value);
@@ -66,7 +68,7 @@ export default function ViewExpense(props) {
 
   const _Edit = data => {
     setModalShow(true);
-    console.log(data)
+    console.log(data);
     setData(data);
   };
 
@@ -92,6 +94,32 @@ export default function ViewExpense(props) {
         console.log(error);
       });
   }
+
+  async function _Delete(id) {
+    console.log(id);
+    setDeleteId(id)
+    setShow(true);
+   
+  }
+  async function handleDelete () {
+    console.log(deleteId);
+
+    await axios
+    .post("http://localhost:3050/expenses/delete", {
+      _id: deleteId
+    })
+    .then(async function(response) {
+      console.log("DELETED SUCCESSFULLY");
+      console.log(response);
+      alert("DELETED SELECTED EXPENSE SUCCESSFULLY")
+      window.location.reload(false);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <div>
@@ -224,6 +252,7 @@ export default function ViewExpense(props) {
                       Edit
                     </td>
                     <td
+                      onClick={() => _Delete(spending._id)}
                       style={{
                         backgroundColor: "#f73859",
                         color: "#fff",
@@ -252,7 +281,11 @@ export default function ViewExpense(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form className={classes.form} noValidate onSubmit={props.handleUpdateExpense}>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={props.handleUpdateExpense}
+          >
             <TextField name="expenseid" hidden value={data._id} />
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -416,6 +449,19 @@ export default function ViewExpense(props) {
             <Grid container justify="flex-end"></Grid>
           </form>
         </Modal.Body>
+      </Modal>
+      <Modal show={show} centered animation={false}>
+        <Modal.Header>
+          <Modal.Title>Are you sure you want to delete?</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            CANCEL
+          </Button>
+          <Button variant="contained" color="secondary" onClick={handleDelete}>
+            YES! DELETE
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
