@@ -12,7 +12,16 @@ import { Table } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
-let totalSpending = 0;
+import CalcDrawer from "./CalcDrawer";
+const totalSpending = 0;
+
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
+
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -43,7 +52,7 @@ export default function ViewExpense(props) {
   const [modalShow, setModalShow] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [city, setCity] = React.useState("");
-  const [show, setShow] = React.useState(true);
+  const [show, setShow] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState("")
 
   const handleChangeCampaign = event => {
@@ -58,7 +67,7 @@ export default function ViewExpense(props) {
 
         let projects = response.data.projects;
         setProjects(projects);
-      })
+      }, options)
       .catch(err => console.log(err));
   }, []);
 
@@ -107,7 +116,7 @@ export default function ViewExpense(props) {
     await axios
     .post("http://localhost:3050/expenses/delete", {
       _id: deleteId
-    })
+    }, options)
     .then(async function(response) {
       console.log("DELETED SUCCESSFULLY");
       console.log(response);
@@ -123,6 +132,8 @@ export default function ViewExpense(props) {
 
   return (
     <div>
+            <CalcDrawer />
+
       <Container maxWidth="md">
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>

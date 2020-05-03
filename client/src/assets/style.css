@@ -1712,3 +1712,41 @@ BLOG SINGLE
   outline: none !important;
 }
 /*# sourceMappingURL=maps/style.css.map */
+.result {
+  height: 60px;
+  background-color: #f50057;
+  width: 100%;
+}
+
+.result p {
+  font-size: 40px;
+  margin: 5px;
+  padding-top: 20px;
+  color: #fff;
+}
+
+.calculator-body {
+  max-width: 400px;
+  margin: auto;
+}
+
+.button {
+  display: block;
+}
+
+.button button {
+  width: 25%;
+  height: 60px;
+  font-size: 30px;
+  background-color: #3f51b5;
+  border-width: 1px;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.MuiPaper-root {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0) !important;
+}

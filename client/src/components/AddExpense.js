@@ -15,6 +15,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
 
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
+  
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -66,7 +73,7 @@ export default function AddExpense(props) {
   };
   useEffect(() => {
     axios
-      .get("http://expenses.propstory.com/project/getProjects")
+      .get("http://expenses.propstory.com/project/getProjects", options)
       .then(response => {
         console.log(response);
 

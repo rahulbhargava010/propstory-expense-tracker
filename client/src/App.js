@@ -9,6 +9,13 @@ import AddCompany from "./components/AddCompany";
 import { Home, Login, Register, Header, Dashboard, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
 
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
+
 class App extends PureComponent {
   constructor(props) {
     super(props);
@@ -18,10 +25,11 @@ class App extends PureComponent {
       cities: [],
       compnies: [],
       campaignData: [],
-      show: false
+      show: false,
     };
   }
 
+ 
   componentDidMount() {
     // axios.post('http', {
     //     firstName: 'Fred',
@@ -44,6 +52,8 @@ class App extends PureComponent {
       })
       .then(function(response) {
         console.log(response);
+        localStorage.setItem('LoginToken', response.data);
+
       })
       .catch(function(error) {
         console.log(error);
@@ -57,7 +67,7 @@ class App extends PureComponent {
       .post("http://localhost:3050/api/addCity", {
         city: e.target.city.value,
         region: e.target.region.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
       })
@@ -72,7 +82,7 @@ class App extends PureComponent {
     axios
       .post("http://localhost:3050/api/addCompany", {
         company: e.target.company.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
       })
@@ -89,7 +99,7 @@ class App extends PureComponent {
         project: e.target.project.value,
         city: e.target.city.value,
         company: e.target.company.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
       })
@@ -108,7 +118,7 @@ class App extends PureComponent {
         email: e.target.email.value,
         password: e.target.password.value,
         password2: e.target.password2.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
       })
@@ -132,7 +142,7 @@ class App extends PureComponent {
         totalSpending: e.target.totalSpending.value,
         spendingDate: e.target.spendingDate.value,
         campaignStartDate: e.target.campaignStartDate.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
         alert("ADDED YOUR EXPENSE SUCCESSFULLY")
@@ -162,7 +172,7 @@ class App extends PureComponent {
         totalSpending: e.target.totalSpending.value,
         spendingDate: e.target.spendingDate.value,
         campaignStartDate: e.target.campaignStartDate.value
-      })
+      }, options)
       .then(function(response) {
         console.log(response);
         alert("UPDATED- YOUR EXPENSE SUCCESSFULLY")
@@ -183,7 +193,7 @@ class App extends PureComponent {
         project: e.target.project.value,
         startDate: e.target.startDate.value,
         endDate: e.target.endDate.value
-      })
+      }, options)
       .then(async function(response) {
         console.log("comin inside then");
 

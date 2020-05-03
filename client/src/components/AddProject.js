@@ -14,6 +14,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
 
 function Copyright() {
   return (
@@ -75,7 +81,7 @@ export default function AddProject(props) {
         let companies = response.data.companies;
         console.log(companies);
         setCompanies( companies );
-      })
+      }, options)
       .catch(err => console.log(err));
 
       axios
@@ -86,7 +92,7 @@ export default function AddProject(props) {
         let cities = response.data.cities;
         console.log(cities);
         setCities( cities );
-      })
+      }, options)
       .catch(err => console.log(err));
   }, []);
 
