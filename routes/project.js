@@ -1,10 +1,11 @@
 const express = require("express")
 const Expense = require("../models/Expense")
 const Project = require("../models/Project")
+const User = require("../models/User")
 const router = express.Router()
 const { ObjectId } = require('mongodb');
 
-const { ensureAuthenticated } = require('../config/auth')
+// const { ensureAuthenticated } = require('../config/auth')
 let middleware = require('../config/middleware');
 
 //Adding a new Project
@@ -20,10 +21,27 @@ router.post('/addProject', middleware.checkToken, (req, res) => {
 })
 
 router.get('/getProjects', middleware.checkToken, (req, res) => {
+    const user_id = req.body.user_id
+    const company_id = req.body.company_id
 
-    Project.find({}, (err, result) => {
-        res.status(200).json({ projects: result })
+    User.findById(user_id, (err, user) => {
+        if(err) console.log(err)
+        
+        if(user.role == 'PSADMIN') {
+            Project.find({}, (err, result) => {
+                res.status(200).json({ projects: result })
+            })
+        } else if(user.role == 'ADMIN') {
+            const filter = {company: company_id }
+            Project.find(filter, (err, result) => {
+                res.status(200).json({ projects: result })
+            })
+        } else {
+            res.status(200).json({ msg: 'there are no project assigned to you plz contect your admin' })
+        }
+        
     })
+ 
 
 })
 
