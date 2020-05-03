@@ -1,26 +1,21 @@
 const express = require("express")
 const router = express.Router()
 const bcrypt = require("bcryptjs")
-const passport = require('passport')
-
 const User = require("../models/User")
 
-// router.get('/login', (req, res) => {
-//     res.render('login')
-// })
+let jwt = require('jsonwebtoken');
+let middleware = require('../config/middleware');
 
-// router.get('/register', (req, res) => {
-//     res.render('register')
-// })
-
+// working properly as of 01 may 2020 
+// need to add fields like emailConfirmation, lastLogin, enable, company, createdAt, updatedAt
+// add last login field
 router.post('/register', (req, res) => {
-    console.log("IN SERVER");
+
+    const { name, email, password, password2, company } = req.body;
     
-    const { name, email, password, password2 } = req.body;
-    // res.send({ req: req.body})
     let errors = []
 
-    if (!name || !email || !password || !password2) {
+    if (!name || !email || !password || !password2 || !company) {
         errors.push({ msg: 'Please fill all the fields' })
     }
 
@@ -45,7 +40,8 @@ router.post('/register', (req, res) => {
                 const newUser = new User({
                     name,
                     email,
-                    password
+                    password,
+                    company
                 })
                 
                 //hashed password
@@ -58,11 +54,10 @@ router.post('/register', (req, res) => {
                         newUser.password = hash
                         newUser.save()
                         .then(user => {
-                            // res.status(201).json({
-                            //     msg: "You are now registered and can log in",
-                            //     user
-                            // })
-                            res.redirect('http://localhost:3000/addexpense');
+                            res.status(201).json({
+                                msg: "You are now registered and can log in",
+                                user
+                            })
                         })
                         .catch(err => console.log(err))
                     })
@@ -72,12 +67,26 @@ router.post('/register', (req, res) => {
     }
 })
 
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next)
+router.post('/login', middleware.findUserByCredentials, async (req, res, next) => {
+    if (req.user) {
+        let token = jwt.sign({ email: req.body.email },
+            process.env.ACCESS_TOKEN_SECRET,
+            { 
+                expiresIn: '24h' // expires in 24 hours
+            }
+        );
+        res.status('200').send({ 
+            success: true,
+            message: 'Authentication successful!',
+            token,
+            user: req.user
+        })
+    } else {
+        res.status('403').send({
+            success: false,
+            message: 'Incorrect username or password'
+        });
+    }
 })
 
 router.get('/logout', (req, res) => {
@@ -86,6 +95,6 @@ router.get('/logout', (req, res) => {
     res.status(200).json({
         msg: "logged out successfully"
     })
-}) 
+})
 
 module.exports = router

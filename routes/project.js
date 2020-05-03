@@ -5,9 +5,10 @@ const router = express.Router()
 const { ObjectId } = require('mongodb');
 
 const { ensureAuthenticated } = require('../config/auth')
+let middleware = require('../config/middleware');
 
 //Adding a new Project
-router.post('/addProject', (req, res) => {
+router.post('/addProject', middleware.checkToken, (req, res) => {
     const projectInfo = new Project({
         name: req.body.project,
         city: ObjectId(req.body.city),
@@ -18,14 +19,16 @@ router.post('/addProject', (req, res) => {
     res.status(201).json({ project })
 })
 
-router.get('/getProjects', (req, res) => {
+router.get('/getProjects', middleware.checkToken, (req, res) => {
+
     Project.find({}, (err, result) => {
-        res.json({ projects: result })
+        res.status(200).json({ projects: result })
     })
+
 })
 
 // Getting campaign data b/w Dates
-router.post('/projectData', async (req, res) => {
+router.post('/projectData', middleware.checkToken, async (req, res) => {
     let errors = [], expenses
     const { startDate, endDate, project } = req.body
     // res.json({'body': req.body})

@@ -29,19 +29,6 @@ class App extends PureComponent {
     };
   }
 
- 
-  componentDidMount() {
-    // axios.post('http', {
-    //     firstName: 'Fred',
-    //     lastName: 'Flintstone'
-    // })
-    // .then(function (response) {
-    //     console.log(response);
-    // })
-    // .catch(function (error) {
-    //     console.log(error);
-    // });
-  }
 
   handleLoginSubmit = async (e) => {
     e.preventDefault();

@@ -5,7 +5,9 @@ var aws = require('aws-sdk');
 const csv=require('csvtojson')
 const router = express.Router()
 
-const { ensureAuthenticated } = require('../config/auth')
+// const { ensureAuthenticated } = require('../config/auth')
+
+let middleware = require('../config/middleware');
 
 var s3 = new aws.S3({ 
     accessKeyId: process.env.accessKeyId, 
@@ -16,9 +18,10 @@ var getParams = {
     Bucket: process.env.Bucket, 
     Key: 'propstory_fb_ads/ads_insights/0_1588236887114.csv'
 }
+
 // Adding/Edit Expense
 // Need to add authentication later
-router.post('/', (req, res) => {
+router.post('/', middleware.checkToken, (req, res) => {
    
     const { project, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
@@ -83,7 +86,7 @@ router.post('/', (req, res) => {
     }
 })
 
-router.post('/delete', (req, res) => {
+router.post('/delete', middleware.checkToken, (req, res) => {
 
     const deleteExpense = {_id: ObjectId(req.body._id)}
     Expense.findOneAndRemove( deleteExpense )
@@ -97,7 +100,7 @@ router.post('/delete', (req, res) => {
     })
 })
 
-router.get('/fbexpense', (req, res) => {
+router.get('/fbexpense', middleware.checkToken, (req, res) => {
 
     s3.getObject(getParams, (err, bucketData) => {
 
