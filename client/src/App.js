@@ -153,7 +153,7 @@ class App extends PureComponent {
       })
       .then(function(response) {
         console.log(response);
-        alert("UPDATED YOUR EXPENSE SUCCESSFULLY")
+        alert("UPDATED- YOUR EXPENSE SUCCESSFULLY")
         window.location.reload(false);
       })
       .catch(function(error) {
