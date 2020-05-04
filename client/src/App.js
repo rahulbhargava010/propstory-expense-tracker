@@ -16,6 +16,8 @@ import { Home, Login, Register, Header, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
 
 const token = localStorage.getItem("LoginToken");
+const userin = localStorage.getItem("LoggedinUser");
+const userCompany = localStorage.getItem("userCompany");
 
 const options = {
   headers: { Authorization: "Bearer " + token },
@@ -26,12 +28,11 @@ class App extends PureComponent {
     super(props);
 
     this.state = {
-      projects: [],
       cities: [],
-      compnies: [],
+      companies: [],
       campaignData: [],
       show: false,
-      user: false,
+      projects: [],
     };
   }
 
@@ -44,7 +45,40 @@ class App extends PureComponent {
       localStorage.setItem("Lastclear", Time_now);
     }
   };
+
+  handleGetCompanies = () => {
+    axios
+      .get("http://localhost:3050/api/getCompanies", options)
+      .then((response) => {
+        console.log(response);
+
+        let companies = response.data.companies;
+        console.log(companies);
+        this.setState({ companies });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  handleGetProjects = () => {
+    var data = {
+      user_id: userin,
+      company_id: userCompany,
+    };
+
+    axios
+      .post("http://localhost:3050/project/getProjects", data, options)
+      .then((response) => {
+        console.log(response);
+
+        let projects = response.data.projects;
+        this.setState({ projects });
+        console.log(this.state.projects);
+      })
+      .catch((err) => console.log(err));
+  };
+
   handleLoginSubmit = async (e) => {
+    const _this = this;
     e.preventDefault();
     axios
       .post("http://localhost:3050/users/login", {
@@ -54,6 +88,9 @@ class App extends PureComponent {
       .then(function (response) {
         console.log(response);
         localStorage.setItem("LoginToken", response.data.token);
+        localStorage.setItem("LoggedinUser", response.data.user._id);
+        localStorage.setItem("userCompany", response.data.user.company);
+        _this.setState({ role: response.data.user.role });
       })
       .then(() => {
         window.location.href = "http://localhost:3000/addexpense";
@@ -77,6 +114,8 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
+        alert("ADDED YOUR CITY SUCCESSFULLY");
+        window.location.reload(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -96,6 +135,8 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
+        alert("ADDED YOUR COMPANY SUCCESSFULLY");
+        window.location.reload(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -117,6 +158,8 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
+        alert("ADDED YOUR PROJECT SUCCESSFULLY");
+        window.location.reload(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -202,7 +245,7 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
-        alert("UPDATED- YOUR EXPENSE SUCCESSFULLY");
+        alert("UPDATED YOUR EXPENSE SUCCESSFULLY");
         window.location.reload(false);
       })
       .catch(function (error) {
@@ -217,7 +260,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://expenses.propstory.com/project/projectData",
+        "http://localhost:3050/project/projectData",
         {
           project: e.target.project.value,
           startDate: e.target.startDate.value,
@@ -225,12 +268,12 @@ class App extends PureComponent {
         },
         options
       )
-      .then(async function (response) {
+      .then(function (response) {
         console.log("comin inside then");
 
         console.log(response);
-
-        await _this.setState({ campaignData: response.data.spendings });
+        const campaignData = response.data.spendings;
+        _this.setState({ campaignData });
       })
       .catch(function (error) {
         console.log(error);
@@ -264,15 +307,18 @@ class App extends PureComponent {
               <Route exact path="/footer" component={Footer}></Route>
               {/* <Route  path='/dashboard' component = { Dashboard }></Route>  */}
               {/* <Route exact path="/addexpense" component={AddExpense} hanldeRegisterSubmit={this.hanldeRegisterSubmit}></Route> */}
-                  
+
               <Route
                 exact
                 path="/addexpense"
                 render={() => (
                   <AddExpense
                     show={this.state.show}
-                    user={this.state.user}
                     handleExpenseSubmit={this.handleExpenseSubmit}
+                    handleGetProjects={this.handleGetProjects}
+                    handleGetCompanies={this.handleGetCompanies}
+                    companies={this.state.companies}
+                    projects={this.state.projects}
                   />
                 )}
               ></Route>
@@ -297,6 +343,8 @@ class App extends PureComponent {
                     user={this.state.user}
                     show={this.state.show}
                     handleProjectSubmit={this.handleProjectSubmit}
+                    handleGetCompanies={this.handleGetCompanies}
+                    companies={this.state.companies}
                   />
                 )}
               ></Route>
@@ -323,6 +371,9 @@ class App extends PureComponent {
                     result={this.state.campaignData}
                     handleUpdateExpense={this.handleUpdateExpense}
                     handleViewExpenseSubmit={this.handleViewExpenseSubmit}
+                    handleGetProjects={this.handleGetProjects}
+                    projects={this.state.projects}
+
                   />
                 )}
               ></Route>

@@ -14,8 +14,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
+import Dashboard from "./Dashboard";
 
 const token = localStorage.getItem("LoginToken");
+const userin = localStorage.getItem("LoggedinUser");
+const userCompany = localStorage.getItem("userCompany");
 
 const options = {
   headers: { Authorization: "Bearer " + token },
@@ -60,232 +63,252 @@ const useStyles = makeStyles((theme) => ({
 export default function AddExpense(props) {
   const classes = useStyles();
   const [show, setShow] = React.useState(props.show);
+  const [company, setCompany] = React.useState("");
 
   const [city, setCity] = React.useState("");
   const [project, setProject] = React.useState("");
-  const [projects, setProjects] = React.useState([]);
   const handleChangeCampaign = (event) => {
     setCity(event.target.value);
   };
   const handleChangeProject = (event) => {
     setProject(event.target.value);
   };
-  useEffect(() => {
-    axios
-      .get("http://localhost:3050/project/getProjects", options)
-      .then((response) => {
-        console.log(response);
 
-        let projects = response.data.projects;
-        setProjects(projects);
-      })
-      .catch((err) => console.log(err));
+  const handleChangeCompany = event => {
+    setCompany(event.target.value);
+  };
+
+  useEffect(() => {
+    props.handleGetCompanies();
+    props.handleGetProjects();
   }, []);
 
   if (token == null) {
     return <h1>YOU R NOT LOGGED IN</h1>;
-  } else { 
+  } else {
     return (
-      <Container maxWidth="md">
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography style={{ paddingBottom: 16 }} component="h1">
-            Add Your Daily Expense
-          </Typography>
-          <form
-            className={classes.form}
-            noValidate
-            onSubmit={props.handleExpenseSubmit}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <InputLabel id="demo-simple-select-label">
-                  Select Project
-                </InputLabel>
+      <>
+        <Dashboard />
+        <Container maxWidth="md">
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography style={{ paddingBottom: 16 }} component="h1">
+              Add Your Daily Expense
+            </Typography>
+            <form
+              className={classes.form}
+              noValidate
+              onSubmit={props.handleExpenseSubmit}
+            >
+              <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
+              <InputLabel id="demo-simple-select-label">
+                Select Company
+              </InputLabel>
 
-                <select
-                  className="custom-select"
-                  id="projectSelect"
-                  name="project"
-                  required
-                  value={project}
-                  onChange={handleChangeProject}
-                  style={{ width: "100%" }}
-                >
-                  {projects &&
-                    projects.map((project) => {
-                      return (
-                        <option key={project._id} value={project._id}>
-                          {project.name}
-                        </option>
-                      );
-                    })}
-                </select>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputLabel id="demo-simple-select-label">
-                  Select Campaign Type
-                </InputLabel>
-
-                <select
-                  className="custom-select"
-                  id="projectSelect"
-                  name="campaignType"
-                  value={city}
-                  onChange={handleChangeCampaign}
-                  style={{ width: "100%" }}
-                >
-                  <option value="GDN">Google - GDN</option>
-                  <option value="GSN">Google - GSN</option>
-                  <option value="Google">Google</option>
-                  <option value="Facebook Lead Form">Facebook Lead Form</option>
-                  <option value="Facebook LP">Facebook LP</option>
-                  <option value="Taboola">Taboola</option>
-                  <option value="Calls/Chats">Calls/Chats</option>
-                </select>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  autoComplete="actualLeads"
-                  name="actualLeads"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="actualLeads"
-                  label="Actual Leads"
-                  autoFocus
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="plannedLeads"
-                  label="Planned Leads"
-                  name="plannedLeads"
-                  autoComplete="plannedLeads"
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="totalSpending"
-                  label="Total Spending"
-                  name="totalSpending"
-                  autoComplete="totalSpending"
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="totalBudget"
-                  label="Total Budget"
-                  id="totalBudget"
-                  autoComplete="totalBudget"
-                  size="small"
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="cpl"
-                  label="CPL"
-                  id="cpl"
-                  autoComplete="cpl"
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="clicks"
-                  label="Clicks"
-                  id="clicks"
-                  autoComplete="clicks"
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="impressions"
-                  label="Impressions"
-                  id="impressions"
-                  autoComplete="impressions"
-                  size="small"
-                />
-              </Grid>
-              <Grid item lg={6} xs={12}>
-                <InputLabel shrink htmlFor="bootstrap-input">
-                  Spending Date
-                </InputLabel>
-                <TextField
-                  required
-                  fullWidth
-                  name="spendingDate"
-                  id="outlined-spendingDate"
-                  type="date"
-                  autoComplete="spendingDate"
-                />
-              </Grid>
-              <Grid item lg={6} xs={12}>
-                <InputLabel shrink htmlFor="bootstrap-input">
-                  Campaign Start Date
-                </InputLabel>
-                <TextField
-                  required
-                  fullWidth
-                  name="campaignStartDate"
-                  id="outlined-campaignStartDate"
-                  type="date"
-                  autoComplete="campaignStartDate"
-                />
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
+              <select
+                class="custom-select"
+                name="company"
+                id="company"
+                onChange={handleChangeCompany}
+                style={{ width: "100%" }}
               >
-                Add Expense
-              </Button>
+                 {props.companies && props.companies.map(company => {
+                  return <option value={company._id}>{company.name}</option>;
+                })}
+              </select>
             </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel id="demo-simple-select-label">
+                    Select Project
+                  </InputLabel>
 
-            <Grid container justify="flex-end"></Grid>
-          </form>
-        </div>
-        <Modal
-          show={show}
-          onHide={() => setShow(false)}
-          dialogClassName="modal-90w"
-          aria-labelledby="example-custom-modal-styling-title"
-        >
-          <Modal.Header closeButton>
-            <Modal.Title id="example-custom-modal-styling-title">
-              Custom Modal Styling
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body></Modal.Body>
-        </Modal>
-      </Container>
+                  <select
+                    className="custom-select"
+                    id="projectSelect"
+                    name="project"
+                    required
+                    value={project}
+                    onChange={handleChangeProject}
+                    style={{ width: "100%" }}
+                  >
+                    {props.projects &&
+                      props.projects.map((project) => {
+                        return (
+                          <option key={project._id} value={project._id}>
+                            {project.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel id="demo-simple-select-label">
+                    Select Campaign Type
+                  </InputLabel>
+
+                  <select
+                    className="custom-select"
+                    id="projectSelect"
+                    name="campaignType"
+                    value={city}
+                    onChange={handleChangeCampaign}
+                    style={{ width: "100%" }}
+                  >
+                    <option value="GDN">Google - GDN</option>
+                    <option value="GSN">Google - GSN</option>
+                    <option value="Google">Google</option>
+                    <option value="Facebook Lead Form">
+                      Facebook Lead Form
+                    </option>
+                    <option value="Facebook LP">Facebook LP</option>
+                    <option value="Taboola">Taboola</option>
+                    <option value="Calls/Chats">Calls/Chats</option>
+                  </select>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    autoComplete="actualLeads"
+                    name="actualLeads"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="actualLeads"
+                    label="Actual Leads"
+                    autoFocus
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="plannedLeads"
+                    label="Planned Leads"
+                    name="plannedLeads"
+                    autoComplete="plannedLeads"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="totalSpending"
+                    label="Total Spending"
+                    name="totalSpending"
+                    autoComplete="totalSpending"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="totalBudget"
+                    label="Total Budget"
+                    id="totalBudget"
+                    autoComplete="totalBudget"
+                    size="small"
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="cpl"
+                    label="CPL"
+                    id="cpl"
+                    autoComplete="cpl"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="clicks"
+                    label="Clicks"
+                    id="clicks"
+                    autoComplete="clicks"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="impressions"
+                    label="Impressions"
+                    id="impressions"
+                    autoComplete="impressions"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Spending Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="spendingDate"
+                    id="outlined-spendingDate"
+                    type="date"
+                    autoComplete="spendingDate"
+                  />
+                </Grid>
+                <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Campaign Start Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="campaignStartDate"
+                    id="outlined-campaignStartDate"
+                    type="date"
+                    autoComplete="campaignStartDate"
+                  />
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Add Expense
+                </Button>
+              </Grid>
+
+              <Grid container justify="flex-end"></Grid>
+            </form>
+          </div>
+          <Modal
+            show={show}
+            onHide={() => setShow(false)}
+            dialogClassName="modal-90w"
+            aria-labelledby="example-custom-modal-styling-title"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="example-custom-modal-styling-title">
+                Custom Modal Styling
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body></Modal.Body>
+          </Modal>
+        </Container>
+      </>
     );
   }
 }

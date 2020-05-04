@@ -74,7 +74,7 @@ export default function AddCity(props) {
         <form
           className={classes.form}
           noValidate
-          onSubmit={props.hanldeCitySubmit}
+          onSubmit={props.handleCitySubmit}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -85,20 +85,20 @@ export default function AddCity(props) {
                 required
                 fullWidth
                 id="city"
-                label="ENTER CITY"
+                label="Enter City"
                 autoFocus
                 size="small"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                variant="region"
+                variant="outlined"
                 required
                 fullWidth
                 id="region"
-                label="ENTER REGION"
+                label="Enter Region"
                 name="region"
-                autoComplete="region"
+                autoComplete
                 size="small"
               />
             </Grid>
@@ -114,7 +114,6 @@ export default function AddCity(props) {
             </Button>
           </Grid>
 
-          <Grid container justify="flex-end"></Grid>
         </form>
       </div>
     </Container>

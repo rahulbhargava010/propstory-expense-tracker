@@ -20,7 +20,8 @@ router.post('/addProject', middleware.checkToken, (req, res) => {
     res.status(201).json({ project })
 })
 
-router.get('/getProjects', middleware.checkToken, (req, res) => {
+router.post('/getProjects', middleware.checkToken, (req, res) => {
+    
     const user_id = req.body.user_id
     const company_id = req.body.company_id
 
@@ -46,7 +47,9 @@ router.get('/getProjects', middleware.checkToken, (req, res) => {
 })
 
 // Getting campaign data b/w Dates
-router.post('/projectData', middleware.checkToken, async (req, res) => {
+router.post('/projectData', (req, res) => {
+ 
+    
     let errors = [], expenses
     const { startDate, endDate, project } = req.body
     // res.json({'body': req.body})
@@ -54,7 +57,7 @@ router.post('/projectData', middleware.checkToken, async (req, res) => {
         errors.push({ msg: 'Please fill all the fields' })
     }
 
-    await Expense.find({
+     Expense.find({
            "spendingDate": { 
                 '$gte': startDate, 
                 '$lte': endDate

@@ -64,7 +64,6 @@ export default function AddProject(props) {
 
   const [city, setCity] = React.useState("");
   const [company, setCompany] = React.useState("");
-  const [companies, setCompanies] = React.useState([]);
   const [cities, setCities] = React.useState([]);
 
   const handleChangeCity = event => {
@@ -75,16 +74,7 @@ export default function AddProject(props) {
   };
 
   useEffect(() => {
-    axios
-      .get("http://expenses.propstory.com/api/getCompanies")
-      .then(response => {
-        console.log(response);
-
-        let companies = response.data.companies;
-        console.log(companies);
-        setCompanies( companies );
-      }, options)
-      .catch(err => console.log(err));
+      props.handleGetCompanies();
 
       axios
       .get("http://expenses.propstory.com/api/getCities")
@@ -101,6 +91,8 @@ export default function AddProject(props) {
     return <h1>YOU R NOT LOGGED IN</h1>;
   } else { 
   return (
+    <>
+    <Dashboard />
     <Container maxWidth="md">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -139,7 +131,7 @@ export default function AddProject(props) {
                 onChange={handleChangeCompany}
                 style={{ width: "100%" }}
               >
-                 {companies.map(company => {
+                 {props.companies && props.companies.map(company => {
                   return <option value={company._id}>{company.name}</option>;
                 })}
               </select>
@@ -174,7 +166,9 @@ export default function AddProject(props) {
           <Grid container justify="flex-end"></Grid>
         </form>
       </div>
+    
     </Container>
+  </>
   );}
 }
 

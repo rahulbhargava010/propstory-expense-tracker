@@ -1748,3 +1748,15 @@ BLOG SINGLE
 .MuiBackdrop-root {
   background-color: rgba(0, 0, 0, 0) !important;
 }
+
+
+.logoutButton{
+  position: fixed;
+  bottom: 0px;
+  padding: 20px 0px;
+  width: 250px;
+  background-color: #f50057;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}

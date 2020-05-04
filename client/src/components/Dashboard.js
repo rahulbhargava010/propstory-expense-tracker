@@ -14,29 +14,30 @@ import {
   MonetizationOn,
   LocationCity,
   ViewList,
-  Business
+  Business,
 } from "@material-ui/icons";
 import { ListItemIcon, ListItemText } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import "../assets/style.css";
+import axios from "axios";
 
 const useStyles = makeStyles({
   list: {
-    width: 250
+    width: 250,
   },
   fullList: {
-    width: "auto"
-  }
+    width: "auto",
+  },
 });
 
 export default function TemporaryDrawer() {
   const classes = useStyles();
   const [state, setState] = React.useState({
-    left: false
+    left: false,
   });
 
-  const toggleDrawer = (anchor, open) => event => {
+  const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -46,11 +47,15 @@ export default function TemporaryDrawer() {
 
     setState({ ...state, [anchor]: open });
   };
+  const _Logout = () => {
+    localStorage.removeItem("LoginToken");
+    window.location.href = "http://localhost:3000/";
 
-  const list = anchor => (
+  };
+  const list = (anchor) => (
     <div
       className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom"
+        [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
@@ -111,6 +116,9 @@ export default function TemporaryDrawer() {
           </ListItem>
         </a>
       </List>
+      <div className="logoutButton" onClick={_Logout}>
+        <h4 style={{ color: "#fff" }}>Logout</h4>
+      </div>
     </div>
   );
 
