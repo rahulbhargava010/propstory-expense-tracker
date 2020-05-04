@@ -48,7 +48,7 @@ class App extends PureComponent {
 
   handleGetCompanies = () => {
     axios
-      .get("http://localhost:3050/api/getCompanies", options)
+      .get("http://expenses.propstory.com/api/getCompanies", options)
       .then((response) => {
         console.log(response);
 
@@ -66,7 +66,7 @@ class App extends PureComponent {
     };
 
     axios
-      .post("http://localhost:3050/project/getProjects", data, options)
+      .post("http://expenses.propstory.com/project/getProjects", data, options)
       .then((response) => {
         console.log(response);
 
@@ -81,7 +81,7 @@ class App extends PureComponent {
     const _this = this;
     e.preventDefault();
     axios
-      .post("http://localhost:3050/users/login", {
+      .post("http://expenses.propstory.com/users/login", {
         email: e.target.email.value,
         password: e.target.password.value,
       })
@@ -105,7 +105,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://localhost:3050/api/addCity",
+        "http://expenses.propstory.com/api/addCity",
         {
           city: e.target.city.value,
           region: e.target.region.value,
@@ -127,7 +127,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://localhost:3050/api/addCompany",
+        "http://expenses.propstory.com/api/addCompany",
         {
           company: e.target.company.value,
         },
@@ -148,7 +148,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://localhost:3050/project/addProject",
+        "http://expenses.propstory.com/project/addProject",
         {
           project: e.target.project.value,
           city: e.target.city.value,
@@ -172,7 +172,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://localhost:3050/users/register",
+        "http://expenses.propstory.com/users/register",
         {
           name: e.target.name.value,
           email: e.target.email.value,
@@ -226,7 +226,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://localhost:3050/expenses",
+        "http://expenses.propstory.com/expenses",
         {
           _id: e.target.expenseid.value,
           project: e.target.project.value,
@@ -260,7 +260,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://localhost:3050/project/projectData",
+        "http://expenses.propstory.com/project/projectData",
         {
           project: e.target.project.value,
           startDate: e.target.startDate.value,

@@ -81,7 +81,7 @@ export default function ViewExpense(props) {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3050/project/projectData", {
+      .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
         startDate: e.target.startDate.value,
         endDate: e.target.endDate.value,
@@ -106,7 +106,7 @@ export default function ViewExpense(props) {
 
     await axios
       .post(
-        "http://localhost:3050/expenses/delete",
+        "http://expenses.propstory.com/expenses/delete",
         {
           _id: deleteId,
         },
