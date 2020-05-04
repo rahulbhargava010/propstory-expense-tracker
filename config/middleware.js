@@ -3,6 +3,8 @@ const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 
 let checkToken = (req, res, next) => {
+    console.log("IN CHECK TOKEN");
+    
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     if (token) {
         if (token.startsWith('Bearer ')) {

@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
+import Dashboard from "./Dashboard";
+
 const token = localStorage.getItem('LoginToken');
 
 const options = {
@@ -95,7 +97,9 @@ export default function AddProject(props) {
       }, options)
       .catch(err => console.log(err));
   }, []);
-
+  if (token == null) {
+    return <h1>YOU R NOT LOGGED IN</h1>;
+  } else { 
   return (
     <Container maxWidth="md">
       <div className={classes.paper}>
@@ -171,7 +175,7 @@ export default function AddProject(props) {
         </form>
       </div>
     </Container>
-  );
+  );}
 }
 
 // export default Login

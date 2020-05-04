@@ -68,25 +68,34 @@ router.post('/register', (req, res) => {
 })
 
 router.post('/login', middleware.findUserByCredentials, async (req, res, next) => {
+    // console.log("IN LOGIN API");
+    // console.log(req.user)
+    // console.log('--------------token');    
+    // console.log(process.env.ACCESS_TOKEN_SECRET)
     if (req.user) {
+        
         let token = jwt.sign({ email: req.body.email },
             process.env.ACCESS_TOKEN_SECRET,
             { 
                 expiresIn: '24h' // expires in 24 hours
             }
         );
+
         res.status('200').send({ 
             success: true,
             message: 'Authentication successful!',
             token,
             user: req.user
         })
+
     } else {
         res.status('403').send({
             success: false,
             message: 'Incorrect username or password'
         });
     }
+
+
 })
 
 router.get('/logout', (req, res) => {

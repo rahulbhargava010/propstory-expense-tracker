@@ -1,27 +1,35 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, {useEffect} from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import InputLabel from "@material-ui/core/InputLabel";
+import axios from "axios";
 
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -29,16 +37,16 @@ function Copyright() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -48,7 +56,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Register(props) {
   const classes = useStyles();
+  const [company, setCompany] = React.useState("");
 
+  const [companies, setCompanies] = React.useState([]);
+  const handleChangeCompany = (event) => {
+    setCompany(event.target.value);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://expenses.propstory.com/api/getCompanies")
+      .then((response) => {
+        console.log(response);
+
+        let companies = response.data.companies;
+        console.log(companies);
+        setCompanies(companies);
+      }, options)
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,7 +85,11 @@ export default function Register(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate onSubmit = { props.hanldeRegisterSubmit }>
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={props.handleRegisterSubmit}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
               <TextField
@@ -71,6 +101,7 @@ export default function Register(props) {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                size="small"
               />
             </Grid>
             <Grid item xs={12}>
@@ -81,8 +112,28 @@ export default function Register(props) {
                 id="email"
                 label="Email Address"
                 name="email"
+                type="email"
                 autoComplete="email"
+                size="small"
+
               />
+            </Grid>
+            <Grid item xs={12}>
+              <InputLabel id="demo-simple-select-label">
+                Select Company
+              </InputLabel>
+
+              <select
+                class="custom-select"
+                name="company"
+                id="company"
+                onChange={handleChangeCompany}
+                style={{ width: "100%" }}
+              >
+                {companies.map((company) => {
+                  return <option value={company._id}>{company.name}</option>;
+                })}
+              </select>
             </Grid>
             <Grid item xs={12}>
               <TextField

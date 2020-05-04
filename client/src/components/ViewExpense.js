@@ -129,7 +129,9 @@ export default function ViewExpense(props) {
   }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  if (token == null) {
+    return <h1>YOU R NOT LOGGED IN</h1>;
+  } else { 
   return (
     <div>
             <CalcDrawer />
@@ -475,5 +477,5 @@ export default function ViewExpense(props) {
         </Modal.Footer>
       </Modal>
     </div>
-  );
+  );}
 }

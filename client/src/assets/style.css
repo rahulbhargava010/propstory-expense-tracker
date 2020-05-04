@@ -1744,9 +1744,7 @@ BLOG SINGLE
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.MuiPaper-root {
-  background-color: rgba(0, 0, 0, 0) !important;
-}
+
 .MuiBackdrop-root {
   background-color: rgba(0, 0, 0, 0) !important;
 }

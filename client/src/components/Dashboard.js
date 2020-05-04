@@ -118,6 +118,7 @@ export default function TemporaryDrawer() {
     <div>
       <React.Fragment key="left">
         <Navbar bg="light" expand="lg">
+          {}
           <Button className="Button" onClick={toggleDrawer("left", true)}>
             <MenuIcon fontSize="large" />
           </Button>

@@ -12,6 +12,13 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 // import InputLabel from "@material-ui/core/InputLabel";
+import Dashboard from "./Dashboard";
+const token = localStorage.getItem('LoginToken');
+
+const options = {
+  headers: {'Authorization': 'Bearer '+ token }
+ 
+}
 
 function Copyright() {
   return (
@@ -51,8 +58,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddCity(props) {
   const classes = useStyles();
-
-  return (
+  if (token == null) {
+    return <h1>YOU R NOT LOGGED IN</h1>;
+  } else { 
+  return (<>
+  <Dashboard />
     <Container maxWidth="md">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -108,7 +118,8 @@ export default function AddCity(props) {
         </form>
       </div>
     </Container>
-  );
+    </>
+  );}
 }
 
 // export default Login
