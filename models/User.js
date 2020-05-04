@@ -23,6 +23,22 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    role:{
+        type: String,
+        default: 'TEAM_MEMBER'
+    },
+    token: {
+        type: String,
+        default: ''
+    },
+    confirmation: {
+        type: Boolean,
+        default: false
+    },
+    lastLogin: {
+        type: Date,
+        default: ''
+    },
     date: {
         type: Date,
         default: Date.now

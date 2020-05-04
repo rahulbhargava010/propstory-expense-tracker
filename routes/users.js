@@ -98,6 +98,83 @@ router.post('/login', middleware.findUserByCredentials, async (req, res, next) =
 
 })
 
+router.post('/getUsers', middleware.checkToken, async (req, res) => {
+    const user_id = req.body.user_id
+    if (user_id) {
+        User.findById(user_id, (err, user) => {
+            if(err) console.log(err)
+            
+            if(user.role == 'PSADMIN') {
+                User.find({}, (err, users) => {
+                    if (err) {
+                        res.status('403').send({
+                            success: false,
+                            message: 'You are not Authorize'
+                        });
+                    }
+        
+                    res.status('200').send({ 
+                        success: true,
+                        user: users
+                    })
+                })
+            } else {
+                res.status('403').send({
+                    success: false,
+                    message: 'You are not Admin'
+                });
+            }
+        })
+        
+    } else {
+        res.status('403').send({
+            success: false,
+            message: 'Please pass UserID'
+        });
+    }
+})
+
+router.post('/makeAdmin', middleware.checkToken, async (req, res) => {
+    // console.log('get all users')
+    const user_id = req.body.user_id
+    const admin_id = req.body.admin_id
+    console.log(user_id)
+    //check role of the user
+    // one who is making admin
+    // whom we making admin 
+    if (user_id) {
+        User.findById(user_id, (err, user) => {
+            if(err) console.log(err)
+            
+            if(user.role == 'ADMIN' || user.role == 'PSADMIN') {
+                User.findByIdAndUpdate(admin_id, { role: 'ADMIN'}, {new: true}, (err, adminuser) => {
+                    if (err) {
+                        res.status('403').send({
+                            success: false,
+                            message: 'You are not Authorize '
+                        });
+                    }
+
+                    res.status('200').send({ 
+                        success: true,
+                        user: adminuser
+                    })
+                })
+            }  else {
+                res.status('403').send({
+                    success: false,
+                    message: 'You are not Admin'
+                });
+            }
+        })
+    } else {
+        res.status('403').send({
+            success: false,
+            message: 'You are not Authorize'
+        });
+    }
+})
+
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'Logged out successfully')
