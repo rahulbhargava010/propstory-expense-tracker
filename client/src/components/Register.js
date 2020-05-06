@@ -130,7 +130,7 @@ export default function Register(props) {
                 onChange={handleChangeCompany}
                 style={{ width: "100%" }}
               >
-                {companies.map((company) => {
+                {companies && companies.map((company) => {
                   return <option value={company._id}>{company.name}</option>;
                 })}
               </select>

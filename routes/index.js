@@ -67,7 +67,7 @@ router.get('/getCities', middleware.checkToken, (req, res) => {
 })
 
 // Get Companies
-router.get('/getCompanies', middleware.checkToken, (req, res) => {
+router.get('/getCompanies', (req, res) => {
     Company.find({}, (err, result) => {
         res.json({ companies: result })
     })

@@ -373,7 +373,6 @@ class App extends PureComponent {
                     handleViewExpenseSubmit={this.handleViewExpenseSubmit}
                     handleGetProjects={this.handleGetProjects}
                     projects={this.state.projects}
-
                   />
                 )}
               ></Route>
