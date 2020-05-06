@@ -59,9 +59,9 @@ app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 
-// app.get('*', (req, res) => {    
-//     res.sendFile(path.resolve(__dirname, "public", "index.html"));
-// })
+app.get('*', (req, res) => {    
+    res.sendFile(path.resolve(__dirname, "public", "index.html"));
+})
 
 const PORT = process.env.PORT || 3050
 
