@@ -60,7 +60,7 @@ router.post('/addCompany', middleware.checkToken, (req, res) => {
 })
 
 // Get Cities
-router.get('/getCities', middleware.checkToken, (req, res) => {
+router.get('/getCities', (req, res) => {
     City.find({}, (err, result) => {
         res.json({ cities: result })
     })

@@ -16,6 +16,7 @@ import CalcDrawer from "./CalcDrawer";
 let totalSpending = 0;
 
 const token = localStorage.getItem("LoginToken");
+const role = localStorage.getItem("userRole");
 
 const options = {
   headers: { Authorization: "Bearer " + token },
@@ -122,6 +123,7 @@ export default function ViewExpense(props) {
         console.log(error);
       });
   }
+
   const handleClose = () => setShow(false);
   if (token == null) {
     return <h1>YOU R NOT LOGGED IN</h1>;
@@ -229,7 +231,8 @@ export default function ViewExpense(props) {
 
                   <th>SPENT ON</th>
                   <th>CAMPAIGN START DATE</th>
-                  <th colSpan="2">CHANGE</th>
+
+                  {role == "PSADMIN" ? <th colSpan="2">CHANGE</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -251,26 +254,30 @@ export default function ViewExpense(props) {
                         <td>{spending.totalBudget}</td>
                         <td>{spending.spendingDate}</td>
                         <td>{spending.campaignStartDate}</td>
-                        <td
-                          onClick={() => _Edit(spending)}
-                          style={{
-                            backgroundColor: "#15eda3",
-                            color: "#fff",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Edit
-                        </td>
-                        <td
-                          onClick={() => _Delete(spending._id)}
-                          style={{
-                            backgroundColor: "#f73859",
-                            color: "#fff",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Delete
-                        </td>
+                        {role == "PSADMIN" ? (
+                          <>
+                            <td
+                              onClick={() => _Edit(spending)}
+                              style={{
+                                backgroundColor: "#15eda3",
+                                color: "#fff",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Edit
+                            </td>
+                            <td
+                              onClick={() => _Delete(spending._id)}
+                              style={{
+                                backgroundColor: "#f73859",
+                                color: "#fff",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Delete
+                            </td>
+                          </>
+                        ) : null}
                       </tr>
                     );
                   })}
@@ -311,13 +318,14 @@ export default function ViewExpense(props) {
                       onChange={handleChangeProject}
                       style={{ width: "100%" }}
                     >
-                      {props.projects && props.projects.map((project) => {
-                        return (
-                          <option key={project._id} value={project._id}>
-                            {project.name}
-                          </option>
-                        );
-                      })}
+                      {props.projects &&
+                        props.projects.map((project) => {
+                          return (
+                            <option key={project._id} value={project._id}>
+                              {project.name}
+                            </option>
+                          );
+                        })}
                     </select>
                   </Grid>
                   <Grid item xs={12} sm={6}>

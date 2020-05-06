@@ -90,10 +90,11 @@ class App extends PureComponent {
         localStorage.setItem("LoginToken", response.data.token);
         localStorage.setItem("LoggedinUser", response.data.user._id);
         localStorage.setItem("userCompany", response.data.user.company);
-        _this.setState({ role: response.data.user.role });
+        localStorage.setItem("userRole", response.data.user.role);
+
       })
       .then(() => {
-        window.location.href = "http://expenses.propstory.com/addexpense";
+        window.location.href = "http://expenses.propstory.com/viewexpense";
       })
       .catch(function (error) {
         console.log(error);
