@@ -93,7 +93,7 @@ class App extends PureComponent {
         _this.setState({ role: response.data.user.role });
       })
       .then(() => {
-        window.location.href = "http://localhost:3000/addexpense";
+        window.location.href = "http://expenses.propstory.com/addexpense";
       })
       .catch(function (error) {
         console.log(error);
