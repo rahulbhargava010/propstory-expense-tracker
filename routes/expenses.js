@@ -40,6 +40,7 @@ router.post('/', middleware.checkToken, (req, res) => {
         console.log('coming inside new/edit expense')
 
         const projectID = ObjectId(project)
+        const userID = ObjectId(user)
         console.log(req.body._id);
         
         if (req.body._id) {
@@ -49,7 +50,7 @@ router.post('/', middleware.checkToken, (req, res) => {
             const filter = {_id: req.body._id }
             console.log(filter)
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate }
+            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -72,7 +73,7 @@ router.post('/', middleware.checkToken, (req, res) => {
                     res.status(400).json({ errors })
                 } else {
                     const newExpense = new Expense({
-                        project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate
+                        project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
                     newExpense.save()
