@@ -23,7 +23,7 @@ var getParams = {
 // Need to add authentication later
 router.post('/', middleware.checkToken, (req, res) => {
    
-    const { project, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
+    const { project, user, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
     // console.log(req.body);
     
