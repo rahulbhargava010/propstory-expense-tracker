@@ -197,6 +197,7 @@ class App extends PureComponent {
       .post(
         "http://expenses.propstory.com/expenses",
         {
+          user: userin,
           project: e.target.project.value,
           campaignType: e.target.campaignType.value,
           actualLeads: e.target.actualLeads.value,
