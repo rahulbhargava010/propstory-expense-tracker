@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
-import { Table } from "react-bootstrap";
+import Table from "./Table";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
@@ -214,75 +214,10 @@ export default function ViewExpense(props) {
             </div>
             {
               <Typography component="h3" variant="subtitle">
-                TOTAL SPENDING IS {totalSpending}{" "}
+                TOTAL SPENDING IS {totalSpending}
               </Typography>
             }
-            <Table style={{ alignSelf: "center" }} striped bordered hover>
-              <thead>
-                <tr>
-                  <th>ACTUAL LEADS</th>
-                  <th>PLANNED LEADS</th>
-                  <th>CPL</th>
-                  <th>CLICK</th>
-                  <th>IMPRESSIONS</th>
-                  <th>TOTAL SPENDING</th>
-
-                  <th>TOTAL BUDGET</th>
-
-                  <th>SPENT ON</th>
-                  <th>CAMPAIGN START DATE</th>
-
-                  {role == "PSADMIN" ? <th colSpan="2">CHANGE</th> : null}
-                </tr>
-              </thead>
-              <tbody>
-                {result &&
-                  result.map((spending) => {
-                    let totalSpendings = parseInt(spending.totalSpending);
-                    totalSpending += totalSpending;
-                    console.log(totalSpending);
-
-                    return (
-                      <tr key={spending._id}>
-                        <td>{spending.actualLeads}</td>
-                        <td>{spending.plannedLeads}</td>
-                        <td>{spending.cpl}</td>
-                        <td>{spending.clicks}</td>
-                        <td>{spending.impressions}</td>
-                        <td>{spending.totalSpending}</td>
-
-                        <td>{spending.totalBudget}</td>
-                        <td>{spending.spendingDate}</td>
-                        <td>{spending.campaignStartDate}</td>
-                        {role == "PSADMIN" ? (
-                          <>
-                            <td
-                              onClick={() => _Edit(spending)}
-                              style={{
-                                backgroundColor: "#15eda3",
-                                color: "#fff",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Edit
-                            </td>
-                            <td
-                              onClick={() => _Delete(spending._id)}
-                              style={{
-                                backgroundColor: "#f73859",
-                                color: "#fff",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Delete
-                            </td>
-                          </>
-                        ) : null}
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </Table>
+            <Table result={result} />
           </Container>
 
           <Modal
