@@ -93,7 +93,7 @@ export default function CalcDrawer() {
             style={{
               position: "absolute",
               right: 0,
-              top: "60%",
+              top: "15%",
               outline: "none",
               fontSize: 50,
               color: "#00bdaa",

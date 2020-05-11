@@ -14,13 +14,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 const token = localStorage.getItem('LoginToken');
 
 const options = {
   headers: {'Authorization': 'Bearer '+ token }
  
 }
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -35,6 +41,12 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -57,11 +69,22 @@ const useStyles = makeStyles((theme) => ({
 export default function Register(props) {
   const classes = useStyles();
   const [company, setCompany] = React.useState("");
+  const [open, setOpen] = React.useState(false);
 
   const [companies, setCompanies] = React.useState([]);
   const handleChangeCompany = (event) => {
     setCompany(event.target.value);
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
 
   useEffect(() => {
     axios
@@ -75,6 +98,11 @@ export default function Register(props) {
       }, options)
       .catch((err) => console.log(err));
   }, []);
+
+  useEffect(() => {
+    setOpen(props.alert);
+
+  }, [props.alert])
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -187,6 +215,11 @@ export default function Register(props) {
       <Box mt={5}>
         <Copyright />
       </Box>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          You have been successfully registered
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

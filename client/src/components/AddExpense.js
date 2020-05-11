@@ -15,6 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
 import Dashboard from "./Dashboard";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
@@ -23,6 +25,10 @@ const userCompany = localStorage.getItem("userCompany");
 const options = {
   headers: { Authorization: "Bearer " + token },
 };
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright() {
   return (
@@ -58,6 +64,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
     fontWeight: "bold",
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 export default function AddExpense(props) {
@@ -67,6 +79,8 @@ export default function AddExpense(props) {
 
   const [city, setCity] = React.useState("");
   const [project, setProject] = React.useState("");
+
+
   const handleChangeCampaign = (event) => {
     setCity(event.target.value);
   };
@@ -82,6 +96,20 @@ export default function AddExpense(props) {
     props.handleGetCompanies();
     props.handleGetProjects();
   }, []);
+
+  const [open, setOpen] = React.useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setOpen(props.alert);
+
+  }, [props.alert])
 
   if (token == null) {
     return <h1>YOU R NOT LOGGED IN</h1>;
@@ -307,6 +335,11 @@ export default function AddExpense(props) {
             </Modal.Header>
             <Modal.Body></Modal.Body>
           </Modal>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Added your expense successfully
+        </Alert>
+      </Snackbar>
         </Container>
       </>
     );

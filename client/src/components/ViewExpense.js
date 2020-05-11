@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ViewExpense(props) {
   const classes = useStyles();
   const [project, setProject] = React.useState("");
-  const [projects, setProjects] = React.useState([]);
   const [result, setResult] = React.useState([]);
   const [modalShow, setModalShow] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -91,6 +90,7 @@ export default function ViewExpense(props) {
         console.log(response);
         let result = response.data.spendings;
         setResult(result);
+        console.log(result.cpl);
       })
       .catch(function (error) {
         console.log(error);
@@ -103,8 +103,6 @@ export default function ViewExpense(props) {
     setShow(true);
   }
   async function handleDelete() {
-    console.log(deleteId);
-
     await axios
       .post(
         "http://expenses.propstory.com/expenses/delete",
@@ -135,7 +133,7 @@ export default function ViewExpense(props) {
         <div>
           <CalcDrawer />
 
-          <Container maxWidth="md">
+          <Container maxWidth="lg">
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
                 <ReceiptIcon />
@@ -217,7 +215,9 @@ export default function ViewExpense(props) {
                 TOTAL SPENDING IS {totalSpending}
               </Typography>
             }
-            <Table result={result} />
+          </Container>
+          <Container maxWidth="xl">
+            <Table onPressEdit={_Edit} onPressDelete={_Delete} result={result} />
           </Container>
 
           <Modal
@@ -238,7 +238,7 @@ export default function ViewExpense(props) {
                 noValidate
                 onSubmit={props.handleUpdateExpense}
               >
-                <TextField name="expenseid" hidden value={data._id} />
+                <TextField name="expenseid" hidden value={data.ID} />
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel id="demo-simple-select-label">
@@ -294,7 +294,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="actualLeads"
-                      label={"Actual Leads " + data.actualLeads}
+                      label={"Actual Leads " + data.ACTUAL_LEADS}
                       autoFocus
                       size="small"
                     />
@@ -304,7 +304,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="plannedLeads"
-                      label={"Planned Leads " + data.plannedLeads}
+                      label={"Planned Leads " + data.PLANNED_LEADS}
                       name="plannedLeads"
                       autoComplete="plannedLeads"
                       size="small"
@@ -315,7 +315,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="totalSpending"
-                      label={"Total Spending " + data.totalSpending}
+                      label={"Total Spending " + data.TOTAL_SPENDING}
                       name="totalSpending"
                       autoComplete="totalSpending"
                       size="small"
@@ -326,7 +326,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="totalBudget"
-                      label={"Total Budget " + data.totalBudget}
+                      label={"Total Budget " + data.TOTAL_BUDGET}
                       id="totalBudget"
                       autoComplete="totalBudget"
                       size="small"
@@ -338,7 +338,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="cpl"
-                      label={"CPL " + data.cpl}
+                      label={"CPL " + data.CPL}
                       id="cpl"
                       autoComplete="cpl"
                       size="small"
@@ -349,7 +349,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="clicks"
-                      label={"Clicks " + data.clicks}
+                      label={"Clicks " + data.CLICK}
                       id="clicks"
                       autoComplete="clicks"
                       size="small"
@@ -360,7 +360,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="impressions"
-                      label={"Impressions " + data.impressions}
+                      label={"Impressions " + data.IMPRESSIONS}
                       id="impressions"
                       autoComplete="impressions"
                       size="small"

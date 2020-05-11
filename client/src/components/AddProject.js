@@ -15,7 +15,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
 import Dashboard from "./Dashboard";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const token = localStorage.getItem('LoginToken');
 
 const options = {
@@ -56,7 +61,13 @@ const useStyles = makeStyles(theme => ({
     height: 50,
     fontSize: 24,
     fontWeight: "bold"
-  }
+  },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 export default function AddProject(props) {
@@ -87,6 +98,23 @@ export default function AddProject(props) {
       }, options)
       .catch(err => console.log(err));
   }, []);
+
+
+  const [open, setOpen] = React.useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setOpen(props.alert);
+
+  }, [props.alert])
+
+
   if (token == null) {
     return <h1>YOU R NOT LOGGED IN</h1>;
   } else { 
@@ -168,6 +196,11 @@ export default function AddProject(props) {
       </div>
     
     </Container>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Added your project successfully
+        </Alert>
+      </Snackbar>
   </>
   );}
 }

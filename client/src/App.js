@@ -33,6 +33,7 @@ class App extends PureComponent {
       campaignData: [],
       show: false,
       projects: [],
+      alert: false,
     };
   }
 
@@ -91,7 +92,6 @@ class App extends PureComponent {
         localStorage.setItem("LoggedinUser", response.data.user._id);
         localStorage.setItem("userCompany", response.data.user.company);
         localStorage.setItem("userRole", response.data.user.role);
-
       })
       .then(() => {
         window.location.href = "http://expenses.propstory.com/viewexpense";
@@ -103,6 +103,7 @@ class App extends PureComponent {
 
   handleCitySubmit = async (e) => {
     e.preventDefault();
+    const _this = this;
 
     axios
       .post(
@@ -115,8 +116,10 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
-        alert("ADDED YOUR CITY SUCCESSFULLY");
-        window.location.reload(false);
+        _this.setState({ alert: true });
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -125,6 +128,7 @@ class App extends PureComponent {
 
   handleCompanySubmit = async (e) => {
     e.preventDefault();
+    const _this = this;
 
     axios
       .post(
@@ -136,8 +140,10 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
-        alert("ADDED YOUR COMPANY SUCCESSFULLY");
-        window.location.reload(false);
+        _this.setState({ alert: true });
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -146,6 +152,7 @@ class App extends PureComponent {
 
   handleProjectSubmit = async (e) => {
     e.preventDefault();
+    let _this = this;
 
     axios
       .post(
@@ -159,8 +166,10 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
-        alert("ADDED YOUR PROJECT SUCCESSFULLY");
-        window.location.reload(false);
+        _this.setState({ alert: true });
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -169,7 +178,7 @@ class App extends PureComponent {
 
   handleRegisterSubmit = async (e) => {
     console.log(e);
-
+    let _this = this;
     e.preventDefault();
     await axios
       .post(
@@ -185,6 +194,7 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
+        _this.setState({ alert: true });
       })
       .catch(function (error) {
         console.log(error);
@@ -193,6 +203,8 @@ class App extends PureComponent {
 
   handleExpenseSubmit = async (e) => {
     e.preventDefault();
+    const _this = this;
+
     await axios
       .post(
         "http://expenses.propstory.com/expenses",
@@ -214,8 +226,10 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
-        alert("ADDED YOUR EXPENSE SUCCESSFULLY");
-        window.location.reload(false);
+        _this.setState({ alert: true });
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -248,6 +262,7 @@ class App extends PureComponent {
       )
       .then(function (response) {
         console.log(response);
+
         alert("UPDATED YOUR EXPENSE SUCCESSFULLY");
         window.location.reload(false);
       })
@@ -303,7 +318,10 @@ class App extends PureComponent {
                 exact
                 path="/users/register"
                 render={() => (
-                  <Register handleRegisterSubmit={this.handleRegisterSubmit} />
+                  <Register
+                    alert={this.state.alert}
+                    handleRegisterSubmit={this.handleRegisterSubmit}
+                  />
                 )}
               ></Route>
 
@@ -322,6 +340,7 @@ class App extends PureComponent {
                     handleGetCompanies={this.handleGetCompanies}
                     companies={this.state.companies}
                     projects={this.state.projects}
+                    alert={this.state.alert}
                   />
                 )}
               ></Route>
@@ -334,6 +353,8 @@ class App extends PureComponent {
                     user={this.state.user}
                     show={this.state.show}
                     handleCitySubmit={this.handleCitySubmit}
+                    alert={this.state.alert}
+
                   />
                 )}
               ></Route>
@@ -348,6 +369,7 @@ class App extends PureComponent {
                     handleProjectSubmit={this.handleProjectSubmit}
                     handleGetCompanies={this.handleGetCompanies}
                     companies={this.state.companies}
+                    alert={this.state.alert}
                   />
                 )}
               ></Route>
@@ -360,6 +382,8 @@ class App extends PureComponent {
                     user={this.state.user}
                     show={this.state.show}
                     handleCompanySubmit={this.handleCompanySubmit}
+                    alert={this.state.alert}
+
                   />
                 )}
               ></Route>

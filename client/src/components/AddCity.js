@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 // import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +13,12 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 // import InputLabel from "@material-ui/core/InputLabel";
 import Dashboard from "./Dashboard";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const token = localStorage.getItem('LoginToken');
 
 const options = {
@@ -53,10 +59,32 @@ const useStyles = makeStyles(theme => ({
     height: 50,
     fontSize: 24,
     fontWeight: "bold"
-  }
+  },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 export default function AddCity(props) {
+
+  const [open, setOpen] = React.useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setOpen(props.alert);
+
+  }, [props.alert])
+
+
   const classes = useStyles();
   if (token == null) {
     return <h1>YOU R NOT LOGGED IN</h1>;
@@ -117,6 +145,11 @@ export default function AddCity(props) {
         </form>
       </div>
     </Container>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Added your city successfully
+        </Alert>
+      </Snackbar>
     </>
   );}
 }

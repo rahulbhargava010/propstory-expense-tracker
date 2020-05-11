@@ -10,6 +10,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 
 const columns = [
+  { id: "ID", label: "ID", minWidth: 50 },
+
   { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100 },
   { id: "PLANNED_LEADS", label: "PLANNED LEADS", minWidth: 100 },
   {
@@ -57,6 +59,7 @@ const columns = [
 ];
 
 function createData(
+  ID,
   ACTUAL_LEADS,
   PLANNED_LEADS,
   CPL,
@@ -68,6 +71,7 @@ function createData(
   CAMPAIGN_START_DATE
 ) {
   return {
+    ID,
     ACTUAL_LEADS,
     PLANNED_LEADS,
     CPL,
@@ -93,23 +97,23 @@ export default function StickyHeadTable(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const rows = [
+  const rows =
     props.result &&
-      props.result.map((spending) => {
-        return createData(
-          spending.actualLeads,
-          spending.plannedLeads,
-          spending.cpl,
-          spending.clicks,
-          spending.impressions,
-          spending.totalSpending,
-          spending.totalBudget,
-          spending.spendingDate,
-          spending.campaignStartDate
-        );
-      }),
-  ];
+    props.result.map((spending) => {
+      return createData(
+        spending._id,
+        spending.actualLeads,
+        spending.plannedLeads,
+        spending.cpl,
+        spending.clicks,
+        spending.impressions,
+        spending.totalSpending,
+        spending.totalBudget,
+        spending.spendingDate,
+        spending.campaignStartDate,
+       
+      );
+    });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -119,6 +123,8 @@ export default function StickyHeadTable(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+
 
   return (
     <Paper className={classes.root}>
@@ -135,22 +141,48 @@ export default function StickyHeadTable(props) {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell colSpan={2}>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
+            
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
                       const value = row[column.id];
+                    
+                      
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {value}
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : value}
                         </TableCell>
                       );
                     })}
+                    <TableCell
+                      onClick={() => props.onPressEdit(row)}
+                      style={{
+                        backgroundColor: "#00bcd4",
+                        fontWeight: 800,
+                        color: "#fff",
+                      }}
+                    >
+                      EDIT
+                    </TableCell>
+                    <TableCell
+                      onClick={() => props.onPressDelete(row["ID"])}
+                      style={{
+                        backgroundColor: "#cd4545",
+                        fontWeight: 800,
+                        color: "#fff",
+                      }}
+                    >
+                      DELETE
+                    </TableCell>
                   </TableRow>
                 );
               })}
