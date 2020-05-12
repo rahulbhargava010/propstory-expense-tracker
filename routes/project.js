@@ -27,13 +27,13 @@ router.post('/getProjects', middleware.checkToken, (req, res) => {
 
     User.findById(user_id, (err, user) => {
         if(err) console.log(err)
-        
-        if(user.role == 'PSADMIN') {
+        if (user.role === 'PSADMIN') {
             Project.find({}, (err, result) => {
                 res.status(200).json({ projects: result })
             })
-        } else if(user.role == 'ADMIN') {
-            const filter = { company: ObjectId(company_id) }
+        } else if(user.role === 'ADMIN') {
+            
+            const filter = { company: company_id }
             Project.find(filter, (err, result) => {
                 res.status(200).json({ projects: result })
             })
