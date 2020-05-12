@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 // app.use(logger(process.env.NODE_ENV));
 
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access-morgan.log'), { flags: 'a' })
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'public/access-morgan.log'), { flags: 'a' })
  
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
