@@ -91,9 +91,9 @@ export default function CalcDrawer() {
           <DialpadIcon
             onClick={toggleDrawer(anchor, true)}
             style={{
-              position: "absolute",
-              right: 0,
-              top: "15%",
+              position: "fixed",
+              right: 40,
+              bottom: 40,
               outline: "none",
               fontSize: 50,
               color: "#00bdaa",

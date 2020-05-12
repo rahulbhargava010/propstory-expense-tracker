@@ -12,6 +12,7 @@ import Table from "./Table";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
+import NotLoginView from "./NotLoginView";
 import CalcDrawer from "./CalcDrawer";
 let totalSpending = 0;
 
@@ -124,7 +125,7 @@ export default function ViewExpense(props) {
 
   const handleClose = () => setShow(false);
   if (token == null) {
-    return <h1>YOU R NOT LOGGED IN</h1>;
+    return <NotLoginView />;
   } else {
     return (
       <>
@@ -216,7 +217,7 @@ export default function ViewExpense(props) {
               </Typography>
             }
           </Container>
-          <Container maxWidth="xl">
+          <Container maxWidth="lg">
             <Table onPressEdit={_Edit} onPressDelete={_Delete} result={result} />
           </Container>
 

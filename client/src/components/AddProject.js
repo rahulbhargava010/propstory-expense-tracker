@@ -17,6 +17,7 @@ import axios from "axios";
 import Dashboard from "./Dashboard";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import NotLoginView from "./NotLoginView";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -116,7 +117,7 @@ export default function AddProject(props) {
 
 
   if (token == null) {
-    return <h1>YOU R NOT LOGGED IN</h1>;
+    return <NotLoginView />;
   } else { 
   return (
     <>

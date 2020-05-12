@@ -17,6 +17,7 @@ import axios from "axios";
 import Dashboard from "./Dashboard";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import NotLoginView from "./NotLoginView";
 
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
@@ -112,7 +113,7 @@ export default function AddExpense(props) {
   }, [props.alert])
 
   if (token == null) {
-    return <h1>YOU R NOT LOGGED IN</h1>;
+    return <NotLoginView />;
   } else {
     return (
       <>

@@ -8,9 +8,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import { TableFooter } from "@material-ui/core";
 
 const columns = [
-  { id: "ID", label: "ID", minWidth: 50 },
+  { id: "ID", label: "ID", display: "none" },
 
   { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100 },
   { id: "PLANNED_LEADS", label: "PLANNED LEADS", minWidth: 100 },
@@ -18,43 +19,31 @@ const columns = [
     id: "CPL",
     label: "CPL",
     minWidth: 50,
-    align: "right",
+    align: "center",
   },
   {
     id: "CLICK",
     label: "CLICK",
     minWidth: 50,
-    align: "right",
+    align: "center",
   },
   {
     id: "IMPRESSIONS",
     label: "IMPRESSIONS",
     minWidth: 50,
-    align: "right",
+    align: "center",
   },
   {
     id: "TOTAL_SPENDING",
     label: "TOTAL SPENDING",
     minWidth: 100,
-    align: "right",
-  },
-  {
-    id: "TOTAL_BUDGET",
-    label: "TOTAL BUDGET",
-    minWidth: 100,
-    align: "right",
+    align: "center",
   },
   {
     id: "SPENT_ON",
     label: "SPENT ON",
     minWidth: 100,
-    align: "right",
-  },
-  {
-    id: "CAMPAIGN_START_DATE",
-    label: "CAMPAIGN START DATE",
-    minWidth: 100,
-    align: "right",
+    align: "center",
   },
 ];
 
@@ -66,9 +55,7 @@ function createData(
   CLICK,
   IMPRESSIONS,
   TOTAL_SPENDING,
-  TOTAL_BUDGET,
-  SPENT_ON,
-  CAMPAIGN_START_DATE
+  SPENT_ON
 ) {
   return {
     ID,
@@ -78,9 +65,7 @@ function createData(
     CLICK,
     IMPRESSIONS,
     TOTAL_SPENDING,
-    TOTAL_BUDGET,
     SPENT_ON,
-    CAMPAIGN_START_DATE,
   };
 }
 
@@ -97,6 +82,9 @@ export default function StickyHeadTable(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [al, setAl] = React.useState("");
+
   const rows =
     props.result &&
     props.result.map((spending) => {
@@ -108,10 +96,7 @@ export default function StickyHeadTable(props) {
         spending.clicks,
         spending.impressions,
         spending.totalSpending,
-        spending.totalBudget,
-        spending.spendingDate,
-        spending.campaignStartDate,
-       
+        spending.spendingDate
       );
     });
 
@@ -124,8 +109,6 @@ export default function StickyHeadTable(props) {
     setPage(0);
   };
 
-
-
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
@@ -136,7 +119,7 @@ export default function StickyHeadTable(props) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ minWidth: column.minWidth, display: column.display }}
                 >
                   {column.label}
                 </TableCell>
@@ -145,7 +128,6 @@ export default function StickyHeadTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
@@ -153,10 +135,13 @@ export default function StickyHeadTable(props) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
                       const value = row[column.id];
-                    
-                      
+
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell
+                          style={{ display: column.display }}
+                          key={column.id}
+                          align={column.align}
+                        >
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}
@@ -167,7 +152,7 @@ export default function StickyHeadTable(props) {
                       onClick={() => props.onPressEdit(row)}
                       style={{
                         backgroundColor: "#00bcd4",
-                        fontWeight: 800,
+                        fontWeight: 600,
                         color: "#fff",
                       }}
                     >
@@ -177,7 +162,7 @@ export default function StickyHeadTable(props) {
                       onClick={() => props.onPressDelete(row["ID"])}
                       style={{
                         backgroundColor: "#cd4545",
-                        fontWeight: 800,
+                        fontWeight: 600,
                         color: "#fff",
                       }}
                     >
@@ -187,6 +172,21 @@ export default function StickyHeadTable(props) {
                 );
               })}
           </TableBody>
+          {console.log(al)}
+          <TableFooter>
+            {/* <TableRow>
+              <TableCell align="center">{total.actualLeads}</TableCell>
+              <TableCell align="center">{total.plannedLeads}</TableCell>
+
+              <TableCell align="center">{total.cpl}</TableCell>
+              <TableCell align="center">{total.clicks}</TableCell>
+              <TableCell align="center">{total.impressions}</TableCell>
+              <TableCell align="center">{total.totalSpending}</TableCell>
+              <TableCell align="center" colSpan={3}>
+                <h5>TOTAL</h5>
+              </TableCell>
+            </TableRow> */}
+          </TableFooter>
         </Table>
       </TableContainer>
       <TablePagination
