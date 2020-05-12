@@ -33,7 +33,7 @@ router.post('/getProjects', middleware.checkToken, (req, res) => {
                 res.status(200).json({ projects: result })
             })
         } else if(user.role == 'ADMIN') {
-            const filter = {company: company_id }
+            const filter = { company: ObjectId(company_id) }
             Project.find(filter, (err, result) => {
                 res.status(200).json({ projects: result })
             })

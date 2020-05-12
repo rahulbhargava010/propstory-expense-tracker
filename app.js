@@ -5,7 +5,10 @@ const session = require('express-session')
 const passport = require('passport')
 var cors = require('cors')
 var bodyParser = require('body-parser');
-var logger = require('morgan');
+var morgan = require('morgan');
+const rateLimit = require("express-rate-limit");
+var fs = require('fs')
+
 require('dotenv').config()
 
 require('./config/passport')(passport)
@@ -24,7 +27,13 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(logger(process.env.NODE_ENV));
+// app.use(logger(process.env.NODE_ENV));
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access-morgan.log'), { flags: 'a' })
+ 
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
 
 //Express session
 app.use(session({
@@ -52,6 +61,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //using local public folder as a root for assets
 // app.use(express.static(path.join(__dirname, 'public')))
+
+
+//App Limiter for security concerns 
+//If someone is hitting login signup api fore more then 5 times that IP will be blocked for next 15 min
+const loginRegisterAccountLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minute window
+    max: 5, // start blocking after 5 requests
+    message: {"error" : "Too many attempt for user's api, please try again after an hour"}
+});
+app.use('/users', loginRegisterAccountLimiter)
 
 //routers to use by app
 app.use('/api', require('./routes/index'))
