@@ -84,10 +84,27 @@ export default function StickyHeadTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [al, setAl] = React.useState("");
+  let totalLead = 0
+  let cpl = 0
+  let clicks = 0
+  let impressions = 0
+  let totalSpending = 0
 
   const rows =
     props.result &&
     props.result.map((spending) => {
+      totalLead += spending.actualLeads
+      cpl += spending.cpl
+      clicks += spending.clicks
+      impressions += spending.impressions
+      totalSpending += spending.totalSpending
+
+      console.log('totaleLead coming inside')
+      console.log(totalLead)
+      console.log(cpl)
+      console.log(clicks)
+      console.log(totalSpending)
+      // console.log(totalLead)
       return createData(
         spending._id,
         spending.actualLeads,
@@ -98,6 +115,7 @@ export default function StickyHeadTable(props) {
         spending.totalSpending,
         spending.spendingDate
       );
+
     });
 
   const handleChangePage = (event, newPage) => {
