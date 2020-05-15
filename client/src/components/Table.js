@@ -124,7 +124,9 @@ export default function StickyHeadTable(props) {
                   {column.label}
                 </TableCell>
               ))}
-              <TableCell colSpan={2}>ACTIONS</TableCell>
+              {role == "PSADMIN" ? (
+                <TableCell colSpan={2}>ACTIONS</TableCell>
+              ) : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -148,26 +150,30 @@ export default function StickyHeadTable(props) {
                         </TableCell>
                       );
                     })}
-                    <TableCell
-                      onClick={() => props.onPressEdit(row)}
-                      style={{
-                        backgroundColor: "#00bcd4",
-                        fontWeight: 600,
-                        color: "#fff",
-                      }}
-                    >
-                      EDIT
-                    </TableCell>
-                    <TableCell
-                      onClick={() => props.onPressDelete(row["ID"])}
-                      style={{
-                        backgroundColor: "#cd4545",
-                        fontWeight: 600,
-                        color: "#fff",
-                      }}
-                    >
-                      DELETE
-                    </TableCell>
+                    {role == "PSADMIN" ? (
+                      <>
+                        <TableCell
+                          onClick={() => props.onPressEdit(row)}
+                          style={{
+                            backgroundColor: "#00bcd4",
+                            fontWeight: 600,
+                            color: "#fff",
+                          }}
+                        >
+                          EDIT
+                        </TableCell>
+                        <TableCell
+                          onClick={() => props.onPressDelete(row["ID"])}
+                          style={{
+                            backgroundColor: "#cd4545",
+                            fontWeight: 600,
+                            color: "#fff",
+                          }}
+                        >
+                          DELETE
+                        </TableCell>
+                      </>
+                    ) : null}
                   </TableRow>
                 );
               })}
