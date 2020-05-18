@@ -52,7 +52,6 @@ export default function TemporaryDrawer() {
   const _Logout = () => {
     localStorage.removeItem("LoginToken");
     window.location.href = "http://expenses.propstory.com/";
-
   };
   const list = (anchor) => (
     <div
@@ -63,44 +62,46 @@ export default function TemporaryDrawer() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      
       <Divider />
 
       <List>
-        {role == "PSADMIN" ? <a href="/addexpense">
-          <ListItem button key="AddExpense">
-            <ListItemIcon>
-              <MonetizationOn />
-            </ListItemIcon>
-            <ListItemText primary="Add Expense" />
-          </ListItem>
-        </a> : null}
-        
-        <a href="/addproject">
-          <ListItem button key="AddProject">
-            <ListItemIcon>
-              <Receipt />
-            </ListItemIcon>
-            <ListItemText primary="Add Project" />
-          </ListItem>
-        </a>
-        <a href="/addcity">
-          <ListItem button key="AddCity">
-            <ListItemIcon>
-              <LocationCity />
-            </ListItemIcon>
-            <ListItemText primary="Add City" />
-          </ListItem>
-        </a>
-        <a href="/addcompany">
-          <ListItem button key="AddCompany">
-            <ListItemIcon>
-              <Business />
-            </ListItemIcon>
-            <ListItemText primary="Add Company" />
-          </ListItem>
-        </a>
-        <Divider />
+        {role == "PSADMIN" ? (
+          <>
+            <a href="/addexpense">
+              <ListItem button key="AddExpense">
+                <ListItemIcon>
+                  <MonetizationOn />
+                </ListItemIcon>
+                <ListItemText primary="Add Expense" />
+              </ListItem>
+            </a>
+            <a href="/addproject">
+              <ListItem button key="AddProject">
+                <ListItemIcon>
+                  <Receipt />
+                </ListItemIcon>
+                <ListItemText primary="Add Project" />
+              </ListItem>
+            </a>
+            <a href="/addcity">
+              <ListItem button key="AddCity">
+                <ListItemIcon>
+                  <LocationCity />
+                </ListItemIcon>
+                <ListItemText primary="Add City" />
+              </ListItem>
+            </a>
+            <a href="/addcompany">
+              <ListItem button key="AddCompany">
+                <ListItemIcon>
+                  <Business />
+                </ListItemIcon>
+                <ListItemText primary="Add Company" />
+              </ListItem>
+            </a>
+            <Divider />
+          </>
+        ) : null}
         <a href="/viewexpense">
           <ListItem button key="ViewExpense">
             <ListItemIcon>

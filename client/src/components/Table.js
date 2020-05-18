@@ -10,8 +10,11 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import { TableFooter } from "@material-ui/core";
 
+const role = localStorage.getItem("userRole");
+
 const columns = [
   { id: "ID", label: "ID", display: "none" },
+  { id: "CAMPAIGN_TYPE", label: "CAMPAIGN TYPE", minWidth: 200 },
 
   { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100 },
   { id: "PLANNED_LEADS", label: "PLANNED LEADS", minWidth: 100 },
@@ -49,6 +52,7 @@ const columns = [
 
 function createData(
   ID,
+  CAMPAIGN_TYPE,
   ACTUAL_LEADS,
   PLANNED_LEADS,
   CPL,
@@ -59,6 +63,7 @@ function createData(
 ) {
   return {
     ID,
+    CAMPAIGN_TYPE,
     ACTUAL_LEADS,
     PLANNED_LEADS,
     CPL,
@@ -84,29 +89,26 @@ export default function StickyHeadTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const [al, setAl] = React.useState("");
-  let totalLead = 0
-  let cpl = 0
-  let clicks = 0
-  let impressions = 0
-  let totalSpending = 0
-
+  let totalLead = 0;
+  let cpl = 0;
+  let clicks = 0;
+  let impressions = 0;
+  let totalSpending = 0;
+  let numOfLeads = 0;
   const rows =
     props.result &&
     props.result.map((spending) => {
-      totalLead += spending.actualLeads
-      cpl += spending.cpl
-      clicks += spending.clicks
-      impressions += spending.impressions
-      totalSpending += spending.totalSpending
+      totalLead += spending.actualLeads;
+      cpl += spending.cpl;
+      clicks += spending.clicks;
+      impressions += spending.impressions;
+      totalSpending += spending.totalSpending;
+      numOfLeads += 1;
 
-      console.log('totaleLead coming inside')
-      console.log(totalLead)
-      console.log(cpl)
-      console.log(clicks)
-      console.log(totalSpending)
       // console.log(totalLead)
       return createData(
         spending._id,
+        spending.campaignType,
         spending.actualLeads,
         spending.plannedLeads,
         spending.cpl,
@@ -115,7 +117,6 @@ export default function StickyHeadTable(props) {
         spending.totalSpending,
         spending.spendingDate
       );
-
     });
 
   const handleChangePage = (event, newPage) => {
@@ -147,6 +148,29 @@ export default function StickyHeadTable(props) {
               ) : null}
             </TableRow>
           </TableHead>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" colSpan={3}>
+                <h6>ACTUAL LEADS: {totalLead} </h6>
+              </TableCell>
+
+              <TableCell align="center">
+                <h6>CPL: {Number(cpl / numOfLeads).toFixed(2)}</h6>
+              </TableCell>
+              <TableCell align="center">
+                <h6>CLICKS: {clicks}</h6>
+              </TableCell>
+              <TableCell align="center">
+                <h6>IMPRESSIONS: {impressions}</h6>
+              </TableCell>
+              <TableCell align="center">
+                <h6>TOTAL SPENDING: {totalSpending}</h6>
+              </TableCell>
+              <TableCell align="center" colSpan={3}>
+                <h5>TOTAL</h5>
+              </TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -176,6 +200,7 @@ export default function StickyHeadTable(props) {
                             backgroundColor: "#00bcd4",
                             fontWeight: 600,
                             color: "#fff",
+                            cursor: "pointer",
                           }}
                         >
                           EDIT
@@ -186,6 +211,7 @@ export default function StickyHeadTable(props) {
                             backgroundColor: "#cd4545",
                             fontWeight: 600,
                             color: "#fff",
+                            cursor: "pointer",
                           }}
                         >
                           DELETE
@@ -196,21 +222,6 @@ export default function StickyHeadTable(props) {
                 );
               })}
           </TableBody>
-          {console.log(al)}
-          <TableFooter>
-            {/* <TableRow>
-              <TableCell align="center">{total.actualLeads}</TableCell>
-              <TableCell align="center">{total.plannedLeads}</TableCell>
-
-              <TableCell align="center">{total.cpl}</TableCell>
-              <TableCell align="center">{total.clicks}</TableCell>
-              <TableCell align="center">{total.impressions}</TableCell>
-              <TableCell align="center">{total.totalSpending}</TableCell>
-              <TableCell align="center" colSpan={3}>
-                <h5>TOTAL</h5>
-              </TableCell>
-            </TableRow> */}
-          </TableFooter>
         </Table>
       </TableContainer>
       <TablePagination

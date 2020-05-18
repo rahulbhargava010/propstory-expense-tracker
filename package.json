@@ -15,6 +15,8 @@
   "dependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
+    "@date-io/date-fns": "^2.6.1",
+    "@material-ui/pickers": "^3.2.10",
     "aws-sdk": "^2.666.0",
     "babel-cli": "^6.26.0",
     "babel-jest": "^24.9.0",
@@ -37,7 +39,8 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "react-bootstrap": "^1.0.0"
+    "react-bootstrap": "^1.0.0",
+    "react-icons": "^3.10.0"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",

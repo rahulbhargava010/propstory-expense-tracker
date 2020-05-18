@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import ResultComponent from "./ResultComponent";
 import KeyPadComponent from "./KeyPadComponent";
 import DialpadIcon from "@material-ui/icons/Dialpad";
+import { AiOutlineCalculator } from "react-icons/ai";
 
 const useStyles = makeStyles({
   list: {
@@ -88,15 +89,23 @@ export default function CalcDrawer() {
     <div>
       {["right"].map((anchor) => (
         <React.Fragment key={anchor}>
-          <DialpadIcon
+
+          <AiOutlineCalculator
+          color="white"
+          size="1em"
+          className="icon"
             onClick={toggleDrawer(anchor, true)}
             style={{
               position: "fixed",
-              right: 40,
-              bottom: 40,
+              right: 20,
+              top: 80,
               outline: "none",
               fontSize: 50,
-              color: "#00bdaa",
+              color: "#fff",
+              boxShadow: "1px 5px 10px #9E9E9E",
+              borderRadius: 100,
+              padding: 8,
+              backgroundColor: "#f50057"
             }}
           />
           <SwipeableDrawer

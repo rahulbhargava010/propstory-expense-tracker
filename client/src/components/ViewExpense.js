@@ -14,6 +14,13 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import NotLoginView from "./NotLoginView";
 import CalcDrawer from "./CalcDrawer";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
 let totalSpending = 0;
 
 const token = localStorage.getItem("LoginToken");
@@ -186,6 +193,7 @@ export default function ViewExpense(props) {
                       type="date"
                       autoComplete="spendingDate"
                     />
+                    
                   </Grid>
                   <Grid item lg={4} xs={12}>
                     <InputLabel shrink htmlFor="bootstrap-input">
@@ -211,14 +219,13 @@ export default function ViewExpense(props) {
                 </Button>
               </form>
             </div>
-            {
-              <Typography component="h3" variant="subtitle">
-                TOTAL SPENDING IS {totalSpending}
-              </Typography>
-            }
           </Container>
-          <Container maxWidth="lg">
-            <Table onPressEdit={_Edit} onPressDelete={_Delete} result={result} />
+          <Container maxWidth="xl">
+            <Table
+              onPressEdit={_Edit}
+              onPressDelete={_Delete}
+              result={result}
+            />
           </Container>
 
           <Modal
