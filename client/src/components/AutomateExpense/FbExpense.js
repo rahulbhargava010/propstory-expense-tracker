@@ -10,14 +10,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Table } from "@material-ui/core";
 import FbExpenseTable from "../FbExpenseTable";
 
-let totalSpending = 0;
 
 const token = localStorage.getItem("LoginToken");
 const role = localStorage.getItem("userRole");
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(3),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -79,7 +78,7 @@ export default function FbExpense(props) {
               </Typography>
             </div>
           </Container>
-          <Container maxWidth="xl">
+          <Container maxWidth="lg">
             <FbExpenseTable data={result} />
           </Container>
         </div>

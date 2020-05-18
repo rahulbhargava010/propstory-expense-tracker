@@ -14,10 +14,15 @@ const role = localStorage.getItem("userRole");
 
 const columns = [
   { id: "ID", label: "ID", display: "none" },
-  { id: "CAMPAIGN_TYPE", label: "CAMPAIGN TYPE", minWidth: 200 },
+  {
+    id: "SPENT_ON",
+    label: "SPENT ON",
+    minWidth: 100,
+    align: "center",
+  },
+  { id: "CAMPAIGN_TYPE", label: "CAMPAIGN TYPE", minWidth: 100 },
 
-  { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100 },
-  { id: "PLANNED_LEADS", label: "PLANNED LEADS", minWidth: 100 },
+  { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100, align: "center" },
   {
     id: "CPL",
     label: "CPL",
@@ -42,35 +47,27 @@ const columns = [
     minWidth: 100,
     align: "center",
   },
-  {
-    id: "SPENT_ON",
-    label: "SPENT ON",
-    minWidth: 100,
-    align: "center",
-  },
 ];
 
 function createData(
   ID,
+  SPENT_ON,
   CAMPAIGN_TYPE,
   ACTUAL_LEADS,
-  PLANNED_LEADS,
   CPL,
   CLICK,
   IMPRESSIONS,
-  TOTAL_SPENDING,
-  SPENT_ON
+  TOTAL_SPENDING
 ) {
   return {
     ID,
+    SPENT_ON,
     CAMPAIGN_TYPE,
     ACTUAL_LEADS,
-    PLANNED_LEADS,
     CPL,
     CLICK,
     IMPRESSIONS,
     TOTAL_SPENDING,
-    SPENT_ON,
   };
 }
 
@@ -88,34 +85,28 @@ export default function StickyHeadTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [al, setAl] = React.useState("");
   let totalLead = 0;
-  let cpl = 0;
   let clicks = 0;
   let impressions = 0;
   let totalSpending = 0;
-  let numOfLeads = 0;
   const rows =
     props.result &&
     props.result.map((spending) => {
       totalLead += spending.actualLeads;
-      cpl += spending.cpl;
       clicks += spending.clicks;
       impressions += spending.impressions;
       totalSpending += spending.totalSpending;
-      numOfLeads += 1;
 
       // console.log(totalLead)
       return createData(
         spending._id,
+        spending.spendingDate,
         spending.campaignType,
         spending.actualLeads,
-        spending.plannedLeads,
         spending.cpl,
         spending.clicks,
         spending.impressions,
-        spending.totalSpending,
-        spending.spendingDate
+        spending.totalSpending
       );
     });
 
@@ -144,18 +135,20 @@ export default function StickyHeadTable(props) {
                 </TableCell>
               ))}
               {role == "PSADMIN" ? (
-                <TableCell colSpan={2}>ACTIONS</TableCell>
+                <TableCell colSpan={2} align="right">
+                  ACTIONS
+                </TableCell>
               ) : null}
             </TableRow>
           </TableHead>
           <TableHead>
             <TableRow>
-              <TableCell align="center" colSpan={3}>
+              <TableCell align="right" colSpan={3}>
                 <h6>ACTUAL LEADS: {totalLead} </h6>
               </TableCell>
 
               <TableCell align="center">
-                <h6>CPL: {Number(cpl / numOfLeads).toFixed(2)}</h6>
+                <h6>CPL: {Number(totalSpending / totalLead).toFixed(2)}</h6>
               </TableCell>
               <TableCell align="center">
                 <h6>CLICKS: {clicks}</h6>

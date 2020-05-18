@@ -14,9 +14,8 @@ const role = localStorage.getItem("userRole");
 
 const columns = [
   { id: "ID", label: "ID", display: "none" },
-  { id: "ACCOUNT_NAME", label: "ACCOUNT NAME", minWidth: 150 },
 
-  { id: "CAMPAIGN_NAME", label: "CAMPAIGN NAME", minWidth: 150 },
+  { id: "CAMPAIGN_NAME", label: "CAMPAIGN NAME", minWidth: 120 },
   {
     id: "CLICKS",
     label: "CLICKS",
@@ -59,12 +58,7 @@ const columns = [
     minWidth: 50,
     align: "center",
   },
-  {
-    id: "DATE",
-    label: "DATE",
-    minWidth: 100,
-    align: "center",
-  },
+
   {
     id: "CAMPAIGN_START_DATE",
     label: "CAMPAIGN START DATE",
@@ -75,7 +69,6 @@ const columns = [
 
 function createData(
   ID,
-  ACCOUNT_NAME,
   CAMPAIGN_NAME,
   CLICKS,
   CPC,
@@ -84,12 +77,10 @@ function createData(
   CTR,
   IMPRESSIONS,
   REACH,
-  DATE,
   CAMPAIGN_START_DATE
 ) {
   return {
     ID,
-    ACCOUNT_NAME,
     CAMPAIGN_NAME,
     CLICKS,
     CPC,
@@ -98,7 +89,6 @@ function createData(
     CTR,
     IMPRESSIONS,
     REACH,
-    DATE,
     CAMPAIGN_START_DATE,
   };
 }
@@ -108,7 +98,7 @@ const useStyles = makeStyles({
     width: "100%",
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 580,
   },
 });
 
@@ -122,17 +112,15 @@ export default function FbExpenseTables(props) {
       // console.log(totalLead)
       return createData(
         expense._id,
-        expense.account_name,
         expense.campaign_name,
         expense.clicks,
-        expense.cpc,
-        expense.cpm,
-        expense.cpp,
-        expense.ctr,
+        Number(expense.cpc).toFixed(2),
+        Number(expense.cpm).toFixed(2),
+        Number(expense.cpp).toFixed(2),
+        Number(expense.ctr).toFixed(2),
         expense.impressions,
         expense.reach,
-        expense.date,
-        expense.date_start
+        expense.date_start.slice(0,10)
       );
     });
 
