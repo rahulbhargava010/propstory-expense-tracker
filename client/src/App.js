@@ -14,6 +14,7 @@ import AddProject from "./components/AddProject";
 import AddCompany from "./components/AddCompany";
 import { Home, Login, Register, Header, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
+import FbExpense from "./components/AutomateExpense/FbExpense";
 
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
@@ -354,7 +355,6 @@ class App extends PureComponent {
                     show={this.state.show}
                     handleCitySubmit={this.handleCitySubmit}
                     alert={this.state.alert}
-
                   />
                 )}
               ></Route>
@@ -383,7 +383,6 @@ class App extends PureComponent {
                     show={this.state.show}
                     handleCompanySubmit={this.handleCompanySubmit}
                     alert={this.state.alert}
-
                   />
                 )}
               ></Route>
@@ -402,6 +401,11 @@ class App extends PureComponent {
                     projects={this.state.projects}
                   />
                 )}
+              ></Route>
+              <Route
+                exact
+                path="/automated_expense/facebook"
+                render={() => <FbExpense />}
               ></Route>
             </Switch>
           </div>

@@ -7,7 +7,12 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import CloudCircleIcon from "@material-ui/icons/CloudCircle";
+import UpdateIcon from "@material-ui/icons/Update";
+import Collapse from "@material-ui/core/Collapse";
+import FacebookIcon from "@material-ui/icons/Facebook";
 import {
   Dashboard,
   Receipt,
@@ -38,6 +43,11 @@ export default function TemporaryDrawer() {
   const [state, setState] = React.useState({
     left: false,
   });
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -59,7 +69,6 @@ export default function TemporaryDrawer() {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Divider />
@@ -100,6 +109,31 @@ export default function TemporaryDrawer() {
               </ListItem>
             </a>
             <Divider />
+            <ListItem button onClick={handleClick} key="ViewAutomatedExpense">
+              <ListItemIcon>
+                <UpdateIcon />
+              </ListItemIcon>
+              <ListItemText primary="View Automated Expense" />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <a href="/automated_expense/facebook">
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <FacebookIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Facebook" />
+                  </ListItem>
+                </a>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <CloudCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Taboola" />
+                </ListItem>
+              </List>
+            </Collapse>
           </>
         ) : null}
         <a href="/viewexpense">

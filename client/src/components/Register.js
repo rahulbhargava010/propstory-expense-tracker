@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,14 +14,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import InputLabel from "@material-ui/core/InputLabel";
 import axios from "axios";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-const token = localStorage.getItem('LoginToken');
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+const token = localStorage.getItem("LoginToken");
 
 const options = {
-  headers: {'Authorization': 'Bearer '+ token }
- 
-}
+  headers: { Authorization: "Bearer " + token },
+};
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -42,8 +41,8 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
-    '& > * + *': {
+    width: "100%",
+    "& > * + *": {
       marginTop: theme.spacing(2),
     },
   },
@@ -77,14 +76,12 @@ export default function Register(props) {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
   };
-
-
 
   useEffect(() => {
     axios
@@ -101,8 +98,7 @@ export default function Register(props) {
 
   useEffect(() => {
     setOpen(props.alert);
-
-  }, [props.alert])
+  }, [props.alert]);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -110,7 +106,7 @@ export default function Register(props) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="p">
           Sign up
         </Typography>
         <form
@@ -143,7 +139,6 @@ export default function Register(props) {
                 type="email"
                 autoComplete="email"
                 size="small"
-
               />
             </Grid>
             <Grid item xs={12}>
@@ -158,9 +153,10 @@ export default function Register(props) {
                 onChange={handleChangeCompany}
                 style={{ width: "100%" }}
               >
-                {companies && companies.map((company) => {
-                  return <option value={company._id}>{company.name}</option>;
-                })}
+                {companies &&
+                  companies.map((company) => {
+                    return <option value={company._id}>{company.name}</option>;
+                  })}
               </select>
             </Grid>
             <Grid item xs={12}>
@@ -217,7 +213,8 @@ export default function Register(props) {
       </Box>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          You have been successfully registered
+          You have been successfully registered. Please Contact Admin to
+          Activate Your Profile.
         </Alert>
       </Snackbar>
     </Container>
