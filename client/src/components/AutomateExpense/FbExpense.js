@@ -46,7 +46,7 @@ export default function FbExpense(props) {
 
   const handleViewExpenseSubmit = () => {
     axios
-      .get("http://localhost:3050/expenses/getAutomateExpenses")
+      .get("http://expenses.propstory.com/expenses/getAutomateExpenses")
       .then(function (response) {
         console.log(response);
         let result = response.data.spendings;
