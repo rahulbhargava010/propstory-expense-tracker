@@ -94,9 +94,9 @@ export default function CalcDrawer() {
           
             onClick={toggleDrawer(anchor, true)}
             style={{
-              position: "fixed",
-              right: 20,
-              top: 7,
+              position: "absolute",
+              right: 10,
+              top: 70,
               outline: "none",
               fontSize: 20,
               color: "#fff",

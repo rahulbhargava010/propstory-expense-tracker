@@ -143,7 +143,10 @@ export default function StickyHeadTable(props) {
           </TableHead>
           <TableHead>
             <TableRow>
-              <TableCell align="right" colSpan={3}>
+            <TableCell align="center" colSpan={2}>
+                <h5>TOTAL</h5>
+              </TableCell>
+              <TableCell align="right">
                 <h6>ACTUAL LEADS: {totalLead} </h6>
               </TableCell>
 
@@ -159,9 +162,7 @@ export default function StickyHeadTable(props) {
               <TableCell align="center">
                 <h6>TOTAL SPENDING: {totalSpending}</h6>
               </TableCell>
-              <TableCell align="center" colSpan={3}>
-                <h5>TOTAL</h5>
-              </TableCell>
+              
             </TableRow>
           </TableHead>
           <TableBody>
