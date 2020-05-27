@@ -6,6 +6,9 @@ const csv=require('csvtojson')
 const AutomateExpensefb = require("../models/AutomateExpensefb")
 const AutomateExpenseTaboola = require("../models/AutomateExpenseTaboola")
 
+const FBCampaign = require('../models/FacebookCampaign')
+const TaboolaCampaign = require('../models/TaboolaCampaign')
+
 const router = express.Router()
 
 // const { ensureAuthenticated } = require('../config/auth')
@@ -17,7 +20,7 @@ var s3 = new aws.S3({
     secretAccessKey: process.env.secretAccessKey 
 });
 
-var getParams = {
+var getObjects = {
     Bucket: process.env.Bucket
 }
 
@@ -91,11 +94,14 @@ router.post('/', middleware.checkToken, (req, res) => {
 
 router.post('/delete', middleware.checkToken, (req, res) => {
 
-    const deleteExpense = {_id: ObjectId(req.body._id)}
-    Expense.findOneAndRemove( deleteExpense )
+    // const deleteExpense = {_id: ObjectId(req.body._id)}
+    // findOneAndRemove
+    // AutomateExpensefb
+    const deleteExpense = { "date_start" : "2020-05-23T00:00:00.000Z" }
+    AutomateExpensefb.deleteMany( deleteExpense )
     .then( (result) => {
         console.log('coming inside delete success')
-        res.status(200).json({ msg: 'Your Expense has been deleted successfully' })
+        res.status(200).json({ msg: 'Your Expense has been deleted successfully', result })
     }).catch((err)=>{
         console.log('coming inside delete error')
         errors.push( { msg: err })
@@ -103,175 +109,213 @@ router.post('/delete', middleware.checkToken, (req, res) => {
     })
 })
 
-//Get Files from S3 and then getObject and then push the data in mongo db
+// Get Files from S3 and then getObject and then push the data in mongo db -- done
 // need to write CRONJOB for this 
+// add campaign data to db for taboola and fb
 router.get('/fbexpense', middleware.checkToken, async (req, res) => {
 
-    // const getFiles = {
-    //     Bucket: 'stitchdb-bucket',
-    //     Key: 'propstory_taboola_campaigns/campaign_performance/0_1589448960878.csv'
-    // }
-
-    // await s3.getObject(getFiles, function(err, data) {
-    //     if (err) {
-    //         console.log('error in getting content')
-    //         msg.push({ err })
-    //         res.status(400).json({ msg })
-    //     } else {
-    //         msg.push({ data })
-    //         console.log('file body')
-    //         res.status(200).json({ msg })
-    //     }
-    // })
-
-    let msg = []
-    await s3.listObjects(getParams, async (err, allObjects) => {
-        if (err) {
-            msg.push({ err })
-            res.status(400).json({ msg })
-        } else {
-            if (allObjects && allObjects.Contents) {
-                const allFiles = await allObjects.Contents.map( async (file) => {
-
-                    const key     = file.Key
-                    const today = new Date().getDate() - 1
-                    let fileModifiedDate = new Date(file.LastModified).getDate()
-
-                    if (today === fileModifiedDate && key) {
-
-                        // console.log(today)
-                        // console.log(key)
-                        let getFiles = {
-                            Bucket: process.env.Bucket, 
-                            Key: key
-                        }
-                        // console.log(getFiles)
-                        await s3.getObject(getFiles, async (err, data) => {
-                            if (err) {
-                                console.log('error in getting content')
-                                msg.push({ err })
-                            } else {
-                                // console.log('file body')
-                                if (data.Body && data.Body.toString()) {
-                                    // console.log('file body')
-                                    console.log(key)
-                                    const cvsString = data.Body.toString()
-                                    await csv()
-                                    .fromString(cvsString)
-                                    .then( async (jsonObj) => {
-                                        console.log('jsonObj')
-                                        let valuetopushtodb = ''
-                                        if (key.includes("fb")) {
-                                            pushFbDB = await jsonObj.map( (expenseRow) => {
-                                                // console.log(expenseRow.account_id)
-                                                return {
-                                                    'account_id': expenseRow.account_id,
-                                                    'account_name': expenseRow.account_name,
-                                                    'campaign_id': expenseRow.campaign_id,
-                                                    'campaign_name': expenseRow.campaign_name,
-                                                    'spends': expenseRow.spent,
-                                                    'clicks': expenseRow.clicks,
-                                                    'reach': expenseRow.reach,
-                                                    'impressions': expenseRow.impressions,
-                                                    'unique_clicks': expenseRow.unique_clicks,
-                                                    'cpc': expenseRow.cpc,
-                                                    'cpp': expenseRow.cpp,
-                                                    'cpm': expenseRow.cpm,
-                                                    'ctr': expenseRow.ctr,
-                                                    'date_start': expenseRow.date_start,
-                                                }
-                                            })
-
-                                            // console.log(valuetopushtodb)
-
-                                            await AutomateExpensefb.collection.insertMany(pushFbDB, (err, docs) => {
-                                                if (err){ 
-                                                    console.log('error in multiple submitted')
-                                                    msg.push({ err })
-                                                } else {
-                                                    console.log('document submitted')
-                                                    console.log(key)
-                                                    msg.push({ success: "Multiple documents inserted to Collection" }, key)
-                                                }
-                                            });
-                                        }  else if (key.includes("taboola")) {
-                                            pushTaboolaDB = await jsonObj.map( (expenseRow) => {
-                                                // console.log(expenseRow)
-                                                return {
-                                                    'campaign_id': expenseRow.campaign_id,
-                                                    'spends': expenseRow.spent,
-                                                    'clicks': expenseRow.clicks,
-                                                    'impressions': expenseRow.impressions,
-                                                    'unique_clicks': expenseRow.unique_clicks,
-                                                    'cpc': expenseRow.cpc,
-                                                    'cpp': expenseRow.cpp,
-                                                    'cpm': expenseRow.cpm,
-                                                    'ctr': expenseRow.ctr,
-                                                    'date_start': expenseRow.date,
-                                                }
-                                            })
-
-                                            // console.log(valuetopushtodb)
-
-                                            await AutomateExpenseTaboola.collection.insertMany(pushTaboolaDB, (err, docs) => {
-                                                if (err){ 
-                                                    console.log('error in multiple submitted')
-                                                    msg.push({ err })
-                                                } else {
-                                                    console.log('document submitted')
-                                                    console.log(key)
-                                                    msg.push({ success: "Multiple documents inserted to Collection" }, key)
-                                                }
-                                            });
-                                        }
-                                        // AutomateExpense.collection.insert(valuetopushtodb, (err, docs) => {
-                                        //     if (err){ 
-                                        //         console.log('error in multiple submitted')
-                                        //         msg.push({ err })
-                                        //     } else {
-                                        //         console.log('document submitted')
-                                        //         msg.push({ success: "Multiple documents inserted to Collection" }, key)
-                                        //         // res.status(400).json({ msg })
-                                        //         // console.log("Multiple documents inserted to Collection");
-                                        //     }
-                                        // });
-
-                                        
-
-                                    }).catch((err) => {
-                                        console.log('error in file parse')
-                                        msg.push({ err })
-                                        res.status(400).json({ msg })
-                                    })
-                                }
-                            }
-                            res.status(200).json( { msg, "h":"h" } );
-                        
-                        })
-                    }
-                })
-                res.status(200).json( { msg, "k":"k" } );
-            } else {
-                msg.push({ "err": "No data to push in our db" })
-                res.status(200).json( { msg, "f":"f" } );
+    let objects = null;
+    await new Promise((resolve) => {
+        s3.listObjects(getObjects, (err, allObjects) => {
+            if(err) {
+                res.status(400).json({ 'msg': 'error while geting objects', err })
             }
-            res.status(200).json( { msg, "g":"g" } );
-            
+
+            if (allObjects && allObjects.Contents) {
+                objects = allObjects.Contents
+                resolve(console.log('list objects resolve'));
+            }
+        })
+    })
+
+    
+    // console.log('list objects method end');
+    // console.log('*****************')
+    let CSVStringArray = []
+    if (objects) {
+        for (let i = 0; i < objects.length; i++) {
+            let file = objects[i]
+            const key = file.Key
+            //added files till 26th of may
+            const today = new Date().getDate() - 1
+            let fileModifiedDate = new Date(file.LastModified).getDate()
+            if (today === fileModifiedDate && key !== "stitch-challenge-file-djpTyLmyPFRpF2RsAEyP01Rc") {
+
+                let getObject = {
+                    Bucket: process.env.Bucket, 
+                    Key: key
+                }
+                
+                await new Promise( (resolveinside) => {
+                    s3.getObject(getObject, (err, data) => {
+                        if(err) {
+                            res.status(400).json({ 'msg': 'error while geting files', err })
+                        }
+
+                        if (data.Body && data.Body.toString()) {                            
+                            const csvJson = data.Body.toString()
+                            CSVStringArray.push({ csvJson, key })
+                            resolveinside(console.log('get files resolveinside'));
+                        }
+                    })
+                })
+            }
         }
-    });
+    }
+
+    
+    // console.log('get files content method end');
+    // console.log('*****************')
+    // let emptym = []
+    // let fbCampaigns = []
+    // let taboolaAccounts = []
+
+    //use try catch
+    if (CSVStringArray) {
+        for (let i = 0; i < CSVStringArray.length; i++) {
+            const key = CSVStringArray[i].key
+            const file = CSVStringArray[i].csvJson
+            const jsonObj = await csv().fromString(file)
+            // console.log('csv to json done')
+
+            if (key.includes("fb")) {
+                // console.log('fb file')
+                const pushFbData = jsonObj.map( (expenseRow) => {
+                    // fbCampaigns.push({ 
+                    //     'campaign_id': expenseRow.campaign_id, 
+                    //     'campaign_name': expenseRow.campaign_name
+                    // })
+                    // console.log(fbCampaigns)
+
+                    // if(expenseRow.spend != 0) {
+                        // console.log('inside fb map function')
+                        return {
+                            'account_id': expenseRow.account_id,
+                            'account_name': expenseRow.account_name,
+                            'campaign_id': expenseRow.campaign_id,
+                            'campaign_name': expenseRow.campaign_name,
+                            'spends': expenseRow.spend,
+                            'clicks': expenseRow.clicks,
+                            'reach': expenseRow.reach,
+                            'impressions': expenseRow.impressions,
+                            'cpc': expenseRow.cpc,
+                            'cpp': expenseRow.cpp,
+                            'cpm': expenseRow.cpm,
+                            'ctr': expenseRow.ctr,
+                            'date_start': expenseRow.date_start,
+                        }
+                    // }
+                    
+                })
+
+                // console.log('after json to fb rows')
+                // console.log(key)
+                if(pushFbData) {
+                     AutomateExpensefb.collection.insertMany(pushFbData, (err, docs) => {
+                        if(err) {
+                            // res.status(400).json({ 'msg': 'error while geting files', err })
+                            console.log('error while pushing data in db - fb')
+                            console.log(key)
+                            console.log(err)
+                        } else {
+                            console.log('document submitted fb')
+                            console.log(key)
+                        }
+                        
+                    });
+                }
+
+                // await FBCampaign.addListener(fbCampaigns)
+
+            }  else if (key.includes("taboola")) {
+                // console.log('taboola file')
+                const pushTaboolaData = jsonObj.filter( (expenseRow) => {
+                    // taboolaAccounts.push({ 
+                    //     'campaign_id': expenseRow.campaign_id
+                    // })
+                    if(expenseRow.spent != 0) {
+                        // console.log('inside taboola map function')
+                        return {
+                            'campaign_id': expenseRow.campaign_id,
+                            'spends': expenseRow.spent,
+                            'clicks': expenseRow.clicks,
+                            'impressions': expenseRow.impressions,
+                            'cpa_actions': expenseRow.cpa_actions_num,
+                            'cpc': expenseRow.cpc,
+                            'cpa': expenseRow.cpa,
+                            'cpm': expenseRow.cpm,
+                            'ctr': expenseRow.ctr,
+                            'date_start': expenseRow.date,
+                        }
+                    } else {
+                        return null
+                    }
+                    
+                })
+
+                // console.log('after json to taboola rows')
+                // console.log(key)
+
+                if(pushTaboolaData) {
+                    // console.log(pushTaboolaData)
+                    AutomateExpenseTaboola.collection.insertMany(pushTaboolaData, (err, docs) => {
+                        if (err){ 
+                            console.log('error while pushing data in db - taboola')
+                            console.log(err)
+                        } else {
+                            console.log('document submitted taboola')
+                            console.log(key)
+                        }
+                    })
+                }
+
+            }
+
+        }
+
+        res.status(200).json({ 'msg': 'data inserted successfully need to add the key files'})
+    }
+
+    // console.log('hi3');
 })
 
+//Think how to map taboola accounts to account name
+//how to show to clients -- need to think about the restriction
+
 router.get('/getAutomateExpenses', async (req, res) => {
-    AutomateExpensefb.find({
-        "date_start": { 
-             '$gte': "2020-05-13T00:00:00.000Z", 
-             '$lte': "2020-05-17T00:00:00.000Z"
-         },
-        //  project: ObjectId(project)
-  }, (err, result) => {
-      if(err) res.status(400).json({ 'err': err })
-      res.status(200).json({ 'spendings': result })
- })
+    // const { campaign_id, start_date, end_date, source } = req.body;
+
+    const campaign = '23843958127450618'
+    const start_date = '2020-05-23T00:00:00.000Z'
+    const end_date = '2020-05-26T00:00:00.000Z'
+    const source = 'facebook'
+
+    if(source === 'facebook') {
+        AutomateExpensefb.find({
+            "date_start": { 
+                '$gte': start_date,
+                '$lte': end_date
+            },
+            // campaign_id: campaign
+        }, (err, result) => {
+            if(err) res.status(400).json({ 'err': err })
+            if (result) {
+                // console.log(result)
+                res.status(200).json(result)
+            }
+        })
+    } else if(source == 'taboola') {
+        AutomateExpenseTaboola.find({
+            "date_start": { 
+                '$gte': new Date(start_date), 
+                '$lte': new Date(end_date)
+            },
+            campaign_id: campaign_id
+        }, (err, result) => {
+            if(err) res.status(400).json({ 'err': err })
+            res.status(200).json({ 'spendings': result })
+        })
+    }
 })
 
 //Need to write CRONJOB for this

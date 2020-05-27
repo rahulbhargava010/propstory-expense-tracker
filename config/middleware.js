@@ -3,8 +3,6 @@ const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 
 let checkToken = (req, res, next) => {
-    console.log("IN CHECK TOKEN 12");
-    console.log(req.headers);
     
     let token = req.headers['x-access-token'] || req.headers['authorization'];
     if (token) {
@@ -18,7 +16,6 @@ let checkToken = (req, res, next) => {
                     message: 'Token is not valid'
                 });
             } else {
-                console.log("COMING INSIDE SUCCSEE" );
                 
                 req.decoded = decoded;
                 next();

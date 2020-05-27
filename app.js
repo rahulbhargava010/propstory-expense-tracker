@@ -30,10 +30,10 @@ app.use(bodyParser.json());
 // app.use(logger(process.env.NODE_ENV));
 
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'public/access-morgan.log'), { flags: 'a' })
+// var accessLogStream = fs.createWriteStream(path.join(__dirname, 'public/access-morgan.log'), { flags: 'a' })
  
 // setup the logger
-app.use(morgan('combined', { stream: accessLogStream }))
+// app.use(morgan('combined', { stream: accessLogStream }))
 
 //Express session
 app.use(session({
@@ -66,8 +66,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 //App Limiter for security concerns 
 //If someone is hitting login signup api fore more then 5 times that IP will be blocked for next 15 min
 const loginRegisterAccountLimiter = rateLimit({
-    windowMs: 15 * 65 * 1000, // 15 minute window
-    max: 6, // start blocking after 5 requests
+    windowMs: 10 * 65 * 1000, // 15 minute window
+    max: 20, // start blocking after 5 requests
     message: {"error" : "Too many attempt for user's api, please try again after an hour"}
 });
 app.use('/users', loginRegisterAccountLimiter)
