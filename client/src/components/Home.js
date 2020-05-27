@@ -10,16 +10,16 @@ class Home extends PureComponent {
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
     };
   }
 
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     this.setState({
       email: e.target.email.value,
-      password: e.target.password.value
+      password: e.target.password.value,
     });
     console.log(this.state);
   };
@@ -27,7 +27,6 @@ class Home extends PureComponent {
   render() {
     return (
       <>
-   
         <div class="banner-area banner-3">
           <div class="overlay dark-overlay"></div>
           <div class="d-table">
@@ -36,15 +35,14 @@ class Home extends PureComponent {
                 <div class="row">
                   <div class="col-lg-8 m-auto text-center col-sm-12 col-md-12">
                     <div class="banner-content content-padding">
-                      <h5 class="subtitle">A creative agency</h5>
+                    <h1 class="subtitle">PROPSTORY</h1>
                       <h1 class="banner-title">
-                        We craft seo and digital markting services
+                        Propstory Expense Tracker
                       </h1>
                       <p>
-                        We provide marketing services to startups and small
-                        businesses to looking for a partner for their digital
-                        media, design-area.We are a a startup company to be
-                        commited to work and time management.
+                        We are a leading digital marketing services company
+                        focused on the vast Real Estate sector. Our long
+                        standing clients include top developers in the country
                       </p>
 
                       <a href="/users/login" class="btn btn-white btn-circled">

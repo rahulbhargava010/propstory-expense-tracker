@@ -90,24 +90,23 @@ export default function CalcDrawer() {
       {["right"].map((anchor) => (
         <React.Fragment key={anchor}>
 
-          <AiOutlineCalculator
-          color="white"
-          size="1em"
-          className="icon"
+          <a
+          
             onClick={toggleDrawer(anchor, true)}
             style={{
-              position: "fixed",
-              right: 20,
-              top: 80,
+              position: "absolute",
+              right: 10,
+              top: 70,
               outline: "none",
-              fontSize: 50,
+              fontSize: 20,
               color: "#fff",
-              boxShadow: "1px 5px 10px #9E9E9E",
-              borderRadius: 100,
+              // boxShadow: "1px 5px 10px #afafaf",
+              borderRadius: 8,
               padding: 8,
+              cursor: "pointer",
               backgroundColor: "#f50057"
             }}
-          />
+          >Calculator <AiOutlineCalculator size="1.5em" /></a>
           <SwipeableDrawer
             style={{ backgroundColor: "rgba(0,0,0,0)" }}
             anchor={anchor}
