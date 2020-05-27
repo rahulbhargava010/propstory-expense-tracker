@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const FBCampaignSchema = new mongoose.Schema({
     campaign_id: {
-        type: String,
+        type: Number,
         required: true
     },
     campaign_name: {

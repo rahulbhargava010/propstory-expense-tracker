@@ -405,6 +405,7 @@ class App extends PureComponent {
               <Route
                 exact
                 path="/automated_expense/facebook"
+                projects={this.state.projects}
                 render={() => <FbExpense />}
               ></Route>
             </Switch>

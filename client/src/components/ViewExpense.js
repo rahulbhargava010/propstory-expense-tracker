@@ -89,7 +89,6 @@ export default function ViewExpense(props) {
         console.log(response);
         let result = response.data.spendings;
         setResult(result);
-        console.log(result.cpl);
       })
       .catch(function (error) {
         console.log(error);

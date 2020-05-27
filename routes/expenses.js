@@ -282,13 +282,15 @@ router.get('/fbexpense', middleware.checkToken, async (req, res) => {
 //Think how to map taboola accounts to account name
 //how to show to clients -- need to think about the restriction
 
-router.get('/getAutomateExpenses', async (req, res) => {
-    // const { campaign_id, start_date, end_date, source } = req.body;
-
-    const campaign = '23843958127450618'
-    const start_date = '2020-05-23T00:00:00.000Z'
-    const end_date = '2020-05-26T00:00:00.000Z'
-    const source = 'facebook'
+router.post('/getAutomateExpenses', async (req, res) => {
+    const { campaign_id, start_date, end_date, source } = req.body;
+    console.log("req.body");
+    console.log(req.body);
+    
+    // const campaign = '23843958127450618'
+    // const start_date = '2020-05-23T00:00:00.000Z'
+    // const end_date = '2020-05-26T00:00:00.000Z'
+    // const source = 'facebook'
 
     if(source === 'facebook') {
         AutomateExpensefb.find({
@@ -296,7 +298,7 @@ router.get('/getAutomateExpenses', async (req, res) => {
                 '$gte': start_date,
                 '$lte': end_date
             },
-            // campaign_id: campaign
+            // campaign_id: campaign_id
         }, (err, result) => {
             if(err) res.status(400).json({ 'err': err })
             if (result) {
