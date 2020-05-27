@@ -28,7 +28,7 @@ var getObjects = {
 // Need to add authentication later
 router.post('/', middleware.checkToken, (req, res) => {
    
-    const { project, user, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
+    const { project, user, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
     // console.log(req.body);
     
@@ -55,7 +55,7 @@ router.post('/', middleware.checkToken, (req, res) => {
             const filter = {_id: req.body._id }
             console.log(filter)
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
+            const updateData = { project: projectID, campaignType, actualLeads, allocation,plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -78,7 +78,7 @@ router.post('/', middleware.checkToken, (req, res) => {
                     res.status(400).json({ errors })
                 } else {
                     const newExpense = new Expense({
-                        project: projectID, campaignType, actualLeads, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
+                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
                     newExpense.save()
@@ -90,6 +90,19 @@ router.post('/', middleware.checkToken, (req, res) => {
             });
         }
     }
+})
+
+router.post('/updateAllocation', (req, res) => {
+    // console.log(req.body.expense_id)
+    // console.log(req.body.allocation)
+
+    const rowId = req.body.expense_id
+    const updateRow = { allocation: req.body.allocation }
+    Expense.findByIdAndUpdate(rowId, updateRow, (err, res) => {
+        if(err) console.log(err)
+        else console.log(res)
+    })
+    res.status(200).json( {'msg': 'row updated successfully'})
 })
 
 router.post('/delete', middleware.checkToken, (req, res) => {
