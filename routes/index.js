@@ -9,6 +9,8 @@ const router = express.Router()
 
 const { ensureAuthenticated } = require('../config/auth')
 
+const { ObjectId } = require('mongodb');
+
 let jwt = require('jsonwebtoken');
 // let config = require('../config');
 let middleware = require('../config/middleware');
@@ -69,6 +71,15 @@ router.get('/getCities', (req, res) => {
 // Get Companies
 router.get('/getCompanies', (req, res) => {
     Company.find({}, (err, result) => {
+        res.json({ companies: result })
+    })
+})
+
+// Get Companies
+router.get('/getCompanyProjects', (req, res) => {
+    const company_id = req.body.company_id
+    let filter = { company: ObjectId(company_id)}
+    Project.find(filter, (err, result) => {
         res.json({ companies: result })
     })
 })

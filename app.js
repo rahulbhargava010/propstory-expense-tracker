@@ -21,7 +21,7 @@ const router = express.Router()
 const db = process.env.MONGO_URI;
 
 //Mongoose Connection
-mongoose.connect(db, { useNewUrlParser: true })
+mongoose.connect(db, { useNewUrlParser: true, useFindAndModify: false })
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err))
 
