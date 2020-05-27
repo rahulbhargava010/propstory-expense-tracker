@@ -2,6 +2,9 @@ const express = require("express")
 const router = express.Router()
 const bcrypt = require("bcryptjs")
 const User = require("../models/User")
+const Project = require("../models/Project")
+
+const { ObjectId } = require('mongodb');
 
 let jwt = require('jsonwebtoken');
 let middleware = require('../config/middleware');
@@ -106,6 +109,44 @@ router.post('/getUsers', middleware.checkToken, async (req, res) => {
             
             if(user.role == 'PSADMIN') {
                 User.find({}, (err, users) => {
+                    if (err) {
+                        res.status('403').send({
+                            success: false,
+                            message: 'You are not Authorize'
+                        });
+                    }
+        
+                    res.status('200').send({ 
+                        success: true,
+                        user: users
+                    })
+                })
+            } else {
+                res.status('403').send({
+                    success: false,
+                    message: 'You are not Admin'
+                });
+            }
+        })
+        
+    } else {
+        res.status('403').send({
+            success: false,
+            message: 'Please pass UserID'
+        });
+    }
+})
+
+router.post('/getCompanyUsers', middleware.checkToken, async (req, res) => {
+    const user_id = req.body.user_id
+    const company_id = req.body.company_id
+    if (user_id) {
+        User.findById(user_id, (err, user) => {
+            if(err) console.log(err)
+            
+            if(user.role == 'PSADMIN') {
+                let filter = { company: ObjectId(company_id)}
+                User.find(filter, (err, users) => {
                     if (err) {
                         res.status('403').send({
                             success: false,
