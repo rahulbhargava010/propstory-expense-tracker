@@ -30,7 +30,7 @@ router.post('/', middleware.checkToken, (req, res) => {
    
     const { project, user, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
     
-    // console.log(req.body);
+    console.log(req.body);
     
     let errors = []             
 
@@ -55,7 +55,7 @@ router.post('/', middleware.checkToken, (req, res) => {
             const filter = {_id: req.body._id }
             console.log(filter)
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, allocation,plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
+            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -81,6 +81,10 @@ router.post('/', middleware.checkToken, (req, res) => {
                         project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
+                    console.log("NEW EXPENSE");
+                    
+                    console.log(newExpense);
+                    
                     newExpense.save()
                     .then(expense => {
                         res.status(201).json({ msg: 'Your Expense tracker has been saved successfully' })

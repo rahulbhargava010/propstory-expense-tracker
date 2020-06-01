@@ -13,6 +13,7 @@ import CloudCircleIcon from "@material-ui/icons/CloudCircle";
 import UpdateIcon from "@material-ui/icons/Update";
 import Collapse from "@material-ui/core/Collapse";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import GroupIcon from "@material-ui/icons/Group";
 import {
   Dashboard,
   Receipt,
@@ -109,6 +110,15 @@ export default function TemporaryDrawer() {
               </ListItem>
             </a>
             <Divider />
+            <a href="/manageusers">
+              <ListItem button key="ManageUsers">
+                <ListItemIcon>
+                  <GroupIcon />
+                </ListItemIcon>
+                <ListItemText primary="Manage Users" />
+              </ListItem>
+            </a>
+
             <ListItem button onClick={handleClick} key="ViewAutomatedExpense">
               <ListItemIcon>
                 <UpdateIcon />

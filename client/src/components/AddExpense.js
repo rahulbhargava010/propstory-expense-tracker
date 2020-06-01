@@ -212,6 +212,19 @@ export default function AddExpense(props) {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
+                    autoComplete="allocation"
+                    name="allocation"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="allocation"
+                    label="Allocation"
+                    autoFocus
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
                     variant="outlined"
                     required
                     fullWidth
@@ -222,7 +235,7 @@ export default function AddExpense(props) {
                     size="small"
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     required
@@ -234,7 +247,7 @@ export default function AddExpense(props) {
                     size="small"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
                     required

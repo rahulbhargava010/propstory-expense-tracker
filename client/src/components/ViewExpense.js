@@ -14,7 +14,12 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import NotLoginView from "./NotLoginView";
 import CalcDrawer from "./CalcDrawer";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const token = localStorage.getItem("LoginToken");
 const role = localStorage.getItem("userRole");
 
@@ -43,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
     fontWeight: "bold",
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 export default function ViewExpense(props) {
   const classes = useStyles();
@@ -53,9 +64,19 @@ export default function ViewExpense(props) {
   const [city, setCity] = React.useState("");
   const [show, setShow] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState("");
+  const [alocModal, setAlocModal] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const handleChangeCampaign = (event) => {
     setCity(event.target.value);
+  };
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -70,6 +91,12 @@ export default function ViewExpense(props) {
     console.log(data);
     setData(data);
   };
+
+  const _EditAllocation = (data) => {
+    setAlocModal(true);
+    console.log(data);
+    setData(data);
+  }
 
   const handleViewExpenseSubmit = (e) => {
     // console.log(e.target.project.value);
@@ -120,6 +147,16 @@ export default function ViewExpense(props) {
       });
   }
 
+  async function handleUpdateAllocation(e) {
+    e.preventDefault()
+    await axios.post("http://localhost:3050/expenses/updateAllocation", {
+      expense_id: e.target.expenseid.value,
+      allocation: e.target.allocation.value
+    }).then(
+      setOpen(true),
+      setAlocModal(false),
+    )
+  }
   const handleClose = () => setShow(false);
   if (token == null) {
     return <NotLoginView />;
@@ -214,6 +251,7 @@ export default function ViewExpense(props) {
               <Table
                 onPressEdit={_Edit}
                 onPressDelete={_Delete}
+                onEditAllocation={_EditAllocation}
                 result={result}
               />
             ) : null}
@@ -404,6 +442,56 @@ export default function ViewExpense(props) {
               </form>
             </Modal.Body>
           </Modal>
+
+
+
+          <Modal
+            show={alocModal}
+            onHide={() => setAlocModal(false)}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                UPDATE ALLOCATION
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form
+                className={classes.form}
+                noValidate
+                onSubmit={handleUpdateAllocation}
+              >
+                <TextField name="expenseid" hidden value={data.ID} />
+            <Grid item xs={12}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      variant="standard"
+                      fullWidth
+                      id="allocation"
+                      label={"Allocation " + data.ALLOCATIONS}
+                      name="allocation"
+                      autoComplete="allocation"
+                      size="small"
+                    />
+                  </Grid>
+                 
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Update Allocation
+                  </Button>
+                </Grid>
+
+              </form>
+            </Modal.Body>
+          </Modal>
           <Modal show={show} centered animation={false}>
             <Modal.Header>
               <Modal.Title>Are you sure you want to delete?</Modal.Title>
@@ -421,6 +509,13 @@ export default function ViewExpense(props) {
               </Button>
             </Modal.Footer>
           </Modal>
+
+
+          <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="info">
+                        Allocation has been updated!
+        </Alert>
+      </Snackbar>
         </div>
       </>
     );

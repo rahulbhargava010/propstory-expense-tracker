@@ -16,7 +16,8 @@ const ExpenseSchema = new mongoose.Schema({
         required: true
     },
     allocation: {
-        type: Number
+        type: Number,
+        default: 0
     },
     plannedLeads: {
         type: Number,

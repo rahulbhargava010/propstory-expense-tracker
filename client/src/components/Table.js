@@ -12,6 +12,10 @@ import { TableFooter } from "@material-ui/core";
 
 const role = localStorage.getItem("userRole");
 
+const updateAllocation = () => {
+console.log("data");
+}
+
 const columns = [
   { id: "ID", label: "ID", display: "none" },
   {
@@ -23,6 +27,8 @@ const columns = [
   { id: "CAMPAIGN_TYPE", label: "CAMPAIGN TYPE", minWidth: 100 },
 
   { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100, align: "center" },
+  { id: "ALLOCATIONS", label: "ALLOCATIONS", minWidth: 100, align: "center", edit: true, onchange: {updateAllocation} },
+
   {
     id: "CPL",
     label: "CPL",
@@ -54,6 +60,7 @@ function createData(
   SPENT_ON,
   CAMPAIGN_TYPE,
   ACTUAL_LEADS,
+  ALLOCATIONS,
   CPL,
   CLICK,
   IMPRESSIONS,
@@ -64,6 +71,7 @@ function createData(
     SPENT_ON,
     CAMPAIGN_TYPE,
     ACTUAL_LEADS,
+    ALLOCATIONS,
     CPL,
     CLICK,
     IMPRESSIONS,
@@ -96,13 +104,15 @@ export default function StickyHeadTable(props) {
       clicks += spending.clicks;
       impressions += spending.impressions;
       totalSpending += spending.totalSpending;
-
+      console.log(spending);
+      
       // console.log(totalLead)
       return createData(
         spending._id,
         spending.spendingDate,
         spending.campaignType,
         spending.actualLeads,
+        spending.allocation,
         spending.cpl,
         spending.clicks,
         spending.impressions,
@@ -149,8 +159,10 @@ export default function StickyHeadTable(props) {
               <TableCell align="right">
                 <h6>ACTUAL LEADS: {totalLead} </h6>
               </TableCell>
-
               <TableCell align="center">
+                <h6>ALLOCATIONS: 52 </h6>
+              </TableCell>
+              <TableCell align="center" >
                 <h6>CPL: {Number(totalSpending / totalLead).toFixed(2)}</h6>
               </TableCell>
               <TableCell align="center">
@@ -186,12 +198,24 @@ export default function StickyHeadTable(props) {
                         </TableCell>
                       );
                     })}
+                      <TableCell
+                          onClick={() => props.onEditAllocation(row)}
+                          style={{
+                            backgroundColor: "#3797a4",
+                            fontWeight: 600,
+                            color: "#fff",
+                            cursor: "pointer",
+                          }}
+                        >
+                          UPDATE ALLOCATION
+                        </TableCell>
                     {role == "PSADMIN" ? (
                       <>
+                      
                         <TableCell
                           onClick={() => props.onPressEdit(row)}
                           style={{
-                            backgroundColor: "#00bcd4",
+                            backgroundColor: "#50d890",
                             fontWeight: 600,
                             color: "#fff",
                             cursor: "pointer",
@@ -202,7 +226,7 @@ export default function StickyHeadTable(props) {
                         <TableCell
                           onClick={() => props.onPressDelete(row["ID"])}
                           style={{
-                            backgroundColor: "#cd4545",
+                            backgroundColor: "#fe346e",
                             fontWeight: 600,
                             color: "#fff",
                             cursor: "pointer",

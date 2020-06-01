@@ -76,11 +76,15 @@ router.get('/getCompanies', (req, res) => {
 })
 
 // Get Companies
-router.get('/getCompanyProjects', (req, res) => {
+router.post('/getCompanyProjects', (req, res) => {
     const company_id = req.body.company_id
+ 
+    
     let filter = { company: ObjectId(company_id)}
     Project.find(filter, (err, result) => {
+        
         res.json({ companies: result })
+
     })
 })
 

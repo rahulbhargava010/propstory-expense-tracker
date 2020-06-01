@@ -15,7 +15,7 @@ import AddCompany from "./components/AddCompany";
 import { Home, Login, Register, Header, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
 import FbExpense from "./components/AutomateExpense/FbExpense";
-
+import ManageUsers from './components/ManageUsers'
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
 const userCompany = localStorage.getItem("userCompany");
@@ -208,13 +208,14 @@ class App extends PureComponent {
 
     await axios
       .post(
-        "http://expenses.propstory.com/expenses",
+        "http://localhost:3050/expenses",
         {
           user: userin,
           project: e.target.project.value,
           campaignType: e.target.campaignType.value,
           actualLeads: e.target.actualLeads.value,
           plannedLeads: e.target.plannedLeads.value,
+          allocation: e.target.allocation.value,
           totalBudget: e.target.totalBudget.value,
           cpl: e.target.cpl.value,
           clicks: e.target.clicks.value,
@@ -399,6 +400,17 @@ class App extends PureComponent {
                     handleViewExpenseSubmit={this.handleViewExpenseSubmit}
                     handleGetProjects={this.handleGetProjects}
                     projects={this.state.projects}
+                  />
+                )}
+              ></Route>
+                  <Route
+                exact
+                path="/manageusers"
+                render={() => (
+                  <ManageUsers
+                    user={this.state.user}
+                    handleGetCompanies={this.handleGetCompanies}
+                    companies={this.state.companies}
                   />
                 )}
               ></Route>
