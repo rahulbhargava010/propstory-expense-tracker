@@ -31,6 +31,8 @@ const options = {
   headers: { Authorization: "Bearer " + token },
 };
 
+var assignProjects = [];
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -88,7 +90,7 @@ const AssignedProjects = ({ user }) => {
   useEffect(() => {
     axios
       .post(
-        "http://localhost:3050/project/getProjects",
+        "http://expenses.propstory.com/project/getProjects",
         {
           user_id: user._id,
           company_id: user.company,
@@ -97,7 +99,11 @@ const AssignedProjects = ({ user }) => {
       )
       .then(function (response) {
         console.log(response);
-        setProjects(response.data.projects);
+        var obj = { userId: user.id, companies: response.data.projects };
+        assignProjects.push(obj);
+        console.log("ASSIGNED PROJECTS");
+        
+        console.log(assignProjects);
       });
   }, []);
 
@@ -119,8 +125,6 @@ const AssignedProjects = ({ user }) => {
     </Paper>
   );
 };
-
-
 
 export default function ManageUsers(props) {
   const classes = useStyles();
@@ -163,7 +167,7 @@ export default function ManageUsers(props) {
   const handleAssignProject = () => {
     axios
       .post(
-        "http://localhost:3050/project/assignProject",
+        "http://expenses.propstory.com/project/assignProject",
         {
           user_id: data._id,
           project_id: assignProjectId,
@@ -180,7 +184,7 @@ export default function ManageUsers(props) {
   const handleViewUserSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3050/api/getCompanyProjects", {
+      .post("http://expenses.propstory.com/api/getCompanyProjects", {
         company_id: company,
       })
       .then(function (response) {
@@ -191,7 +195,7 @@ export default function ManageUsers(props) {
 
     axios
       .post(
-        "http://localhost:3050/users/getCompanyUsers",
+        "http://expenses.propstory.com/users/getCompanyUsers",
         {
           company_id: company,
           user_id: userId,
