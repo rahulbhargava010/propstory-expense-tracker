@@ -107,7 +107,7 @@ export default function ViewExpense(props) {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3000/project/projectData", {
+      .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
         startDate: e.target.startDate.value,
         endDate: e.target.endDate.value,
@@ -149,7 +149,7 @@ export default function ViewExpense(props) {
 
   async function handleUpdateAllocation(e) {
     e.preventDefault()
-    await axios.post("http://localhost:3050/expenses/updateAllocation", {
+    await axios.post("http://expenses.propstory.com/expenses/updateAllocation", {
       expense_id: e.target.expenseid.value,
       allocation: e.target.allocation.value
     }).then(
