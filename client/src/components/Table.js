@@ -144,11 +144,7 @@ export default function StickyHeadTable(props) {
                   {column.label}
                 </TableCell>
               ))}
-              {role == "PSADMIN" ? (
-                <TableCell colSpan={2} align="right">
-                  ACTIONS
-                </TableCell>
-              ) : null}
+             
             </TableRow>
           </TableHead>
           <TableHead>
