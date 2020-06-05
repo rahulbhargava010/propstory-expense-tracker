@@ -117,12 +117,12 @@ export default function ViewExpense(props) {
     // alert(e.target.project.value)
     console.log(state[0].startDate);
     e.preventDefault();
-    const start = `${state[0].startDate.getFullYear()}-${
+    const start = `${state[0].startDate.getDate()}-${
       state[0].startDate.getMonth() + 1
-    }-${state[0].startDate.getDate()}`;
-    const end = `${state[0].endDate.getFullYear()}-${
+    }-${state[0].startDate.getFullYear()}`;
+    const end = `${state[0].endDate.getDate()}-${
       state[0].endDate.getMonth() + 1
-    }-${state[0].endDate.getDate()}`;
+    }-${state[0].endDate.getFullYear()}`;
 
     axios
       .post("http://expenses.propstory.com/project/projectData", {
