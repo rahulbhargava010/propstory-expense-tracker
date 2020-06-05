@@ -23,7 +23,7 @@ router.get('/taboola', middleware.checkToken, (req, res) => {
     })
 })
 
-// Get facebook campaign
+// Add facebook campaign
 router.post('/addFacebook', (req, res) => {
 
     const fbCampaign = new FacebookCampaign({

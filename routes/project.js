@@ -22,9 +22,6 @@ router.post("/addProject", middleware.checkToken, (req, res) => {
 });
 
 router.post("/getProjects", middleware.checkToken, (req, res) => {
-    console.log("++++++++++++++++++++++++++");
-    
-  console.log(req.body);
 
   const user_id = req.body.user_id;
   const company_id = req.body.company_id;
@@ -33,7 +30,7 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
     if (err) {
       res.status(400).json({ err });
     }
-    console.log(user.role);
+    // console.log(user.role);
     
     if (user.role === "PSADMIN") {
       Project.find({}, (err, result) => {
@@ -50,10 +47,10 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
       let userProjects;
 
       await UserProjects.find(filter, async (err, result) => {
-          console.log("Inside Team Member");
+        //   console.log("Inside Team Member");
           
-          console.log(err);
-          console.log(result);
+        //   console.log(err);
+        //   console.log(result);
           
           
         if (err) {
@@ -109,26 +106,35 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
 
 // Getting campaign data b/w Dates
 router.post("/projectData", (req, res) => {
-  let errors = [],
-    expenses;
-  const { startDate, endDate, project } = req.body;
-  // res.json({'body': req.body})
+  let errors = []
+  const { startDate, endDate, project, campaignType } = req.body;
+
   if (!startDate || !endDate || !project) {
     errors.push({ msg: "Please fill all the fields" });
   }
 
-  Expense.find(
-    {
-      spendingDate: {
-        $gte: startDate,
-        $lte: endDate,
-      },
-      project: ObjectId(project),
-    },
-    (err, result) => {
-      res.status(200).json({ spendings: result });
+  if(campaignType) {
+        Expense.find({
+            "spendingDate": { 
+                    '$gte': startDate, 
+                    '$lte': endDate
+                },
+                project: ObjectId(project),
+                campaignType: campaignType
+        }, (err, result) => {
+            res.status(200).json({ 'spendings': result })
+        })
+    } else {
+        Expense.find({
+            "spendingDate": { 
+                    '$gte': startDate, 
+                    '$lte': endDate
+                },
+                project: ObjectId(project)
+        }, (err, result) => {
+            res.status(200).json({ 'spendings': result })
+        })
     }
-  );
 });
 
 router.post("/assignProject", middleware.checkToken, (req, res) => {
