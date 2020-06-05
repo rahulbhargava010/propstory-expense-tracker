@@ -364,7 +364,7 @@ export default function ViewExpense(props) {
                       className="custom-select"
                       id="projectSelect"
                       name="campaignType"
-                      value={city}
+                      value={campaign}
                       onChange={handleChangeCampaign}
                       style={{ width: "100%" }}
                     >
