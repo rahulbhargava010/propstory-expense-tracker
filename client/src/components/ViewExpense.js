@@ -127,8 +127,8 @@ export default function ViewExpense(props) {
     axios
       .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
-        startDate: start,
-        endDate: end,
+        startDate: e.target.startDate.value,
+        endDate: e.target.endDate.value,
         campaignType: e.target.campaignType.value,
       })
       .then(function (response) {
@@ -252,7 +252,7 @@ export default function ViewExpense(props) {
                       <option value="Calls/Chats">Calls/Chats</option>
                     </select>
                   </Grid>
-                  <Grid container direction="row" justify="center" xs={12}>
+                  {/* <Grid container direction="row" justify="center" xs={12}>
                     <DateRangePicker
                       onChange={(item) => setState([item.selection])}
                       // showSelectionPreview={true}
@@ -261,19 +261,33 @@ export default function ViewExpense(props) {
                       ranges={state}
                       direction="horizontal"
                     />
-                  </Grid>
-                  {/* <Grid item lg={2} xs={12}>
-                      <InputLabel shrink htmlFor="bootstrap-input">
-                        Enter End Date
-                      </InputLabel>
-                      <TextField
-                        fullWidth
-                        name="endDate"
-                        id="outlined-campaignStartDate"
-                        type="date"
-                        autoComplete="campaignStartDate"
-                      />
-                    </Grid> */}
+                  </Grid> */}
+                   <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Start Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="startDate"
+                    id="outlined-startDate"
+                    type="date"
+                    autoComplete="startDate"
+                  />
+                </Grid>
+                <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    End Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="endDate"
+                    id="outlined-endDate"
+                    type="date"
+                    autoComplete="endDate"
+                  />
+                </Grid>
                 </Grid>
                 <Button
                   type="submit"

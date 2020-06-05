@@ -97,6 +97,7 @@ export default function StickyHeadTable(props) {
   let clicks = 0;
   let impressions = 0;
   let totalSpending = 0;
+  let totalAllocation = 0;
   const rows =
     props.result &&
     props.result.map((spending) => {
@@ -104,6 +105,7 @@ export default function StickyHeadTable(props) {
       clicks += spending.clicks;
       impressions += spending.impressions;
       totalSpending += spending.totalSpending;
+      totalAllocation += spending.allocation;
       console.log(spending);
       
       // console.log(totalLead)
@@ -156,7 +158,7 @@ export default function StickyHeadTable(props) {
                 <h6>ACTUAL LEADS: {totalLead} </h6>
               </TableCell>
               <TableCell align="center">
-                <h6>ALLOCATIONS: 52 </h6>
+                <h6>ALLOCATIONS: {totalAllocation} </h6>
               </TableCell>
               <TableCell align="center" >
                 <h6>CPL: {Number(totalSpending / totalLead).toFixed(2)}</h6>
@@ -199,6 +201,7 @@ export default function StickyHeadTable(props) {
                           style={{
                             backgroundColor: "#3797a4",
                             fontWeight: 600,
+                            fontSize: 9,
                             color: "#fff",
                             cursor: "pointer",
                           }}
