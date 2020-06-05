@@ -20,6 +20,7 @@ import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Snackbar from "@material-ui/core/Snackbar";
+import AssignedProjects from './AssignedProjects'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -31,7 +32,6 @@ const options = {
   headers: { Authorization: "Bearer " + token },
 };
 
-var assignProjects = [];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -83,48 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssignedProjects = ({ user }) => {
-  const classes = useStyles();
 
-  let [projects, setProjects] = React.useState([]);
-  useEffect(() => {
-    axios
-      .post(
-        "http://expenses.propstory.com/project/getProjects",
-        {
-          user_id: user._id,
-          company_id: user.company,
-        },
-        options
-      )
-      .then(function (response) {
-        console.log(response);
-        var obj = { userId: user.id, companies: response.data.projects };
-        assignProjects.push(obj);
-        console.log("ASSIGNED PROJECTS");
-        
-        console.log(assignProjects);
-      });
-  }, []);
-
-  return (
-    <Paper component="ul" className={classes.rootarray}>
-      {projects &&
-        projects.map((data) => {
-          return (
-            <li key={data._id}>
-              <Chip
-                label={data.name}
-                className={classes.chip}
-                size="small"
-                color="primary"
-              />
-            </li>
-          );
-        })}
-    </Paper>
-  );
-};
 
 export default function ManageUsers(props) {
   const classes = useStyles();
@@ -274,7 +233,7 @@ export default function ManageUsers(props) {
             </div>
           </Container>
           <Container maxWidth="lg">
-            {result.length > 0 ? (
+            {companyUsers.length > 0 ? (
               <ManageUsersTable
                 handleEdit={handleEdit}
                 users={companyUsers}
@@ -312,12 +271,12 @@ export default function ManageUsers(props) {
 
                     <h4 style={{ textTransform: "uppercase" }}>{data.name}</h4>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <InputLabel id="demo-simple-select-label">
-                      Assigned Projects
-                    </InputLabel>
-                    <AssignedProjects user={data} />
-                  </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <InputLabel id="demo-simple-select-label">
+                        Assigned Projects
+                      </InputLabel>
+                      <AssignedProjects user={data} />
+                    </Grid>
                   <Grid item xs={12} sm={4}>
                     <InputLabel id="demo-simple-select-label">
                       Account Status

@@ -57,7 +57,7 @@ export default function FbExpense(props) {
 
   const getCampaigns = () => {
     axios
-      .get("http://localhost:3050/campaign/facebook", options)
+      .get("http://expenses.propstory.com/campaign/facebook", options)
       .then(function (response) {
         // console.log(response);
         setCampaigns(response.data.campaign);
@@ -70,7 +70,7 @@ export default function FbExpense(props) {
   const handleViewFbExpenseSubmit = (e) => {
     e.preventDefault();
      axios
-      .post("http://localhost:3050/expenses/getAutomateExpenses", {
+      .post("http://expenses.propstory.com/expenses/getAutomateExpenses", {
         campaign_id: project,
         start_date: e.target.start_date.value,
         end_date: e.target.end_date.value,

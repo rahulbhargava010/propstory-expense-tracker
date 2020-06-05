@@ -14,8 +14,12 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import NotLoginView from "./NotLoginView";
 import CalcDrawer from "./CalcDrawer";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { addDays } from "date-fns";
+import { DateRangePicker } from "react-date-range";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   root: {
-    width: '100%',
-    '& > * + *': {
+    width: "100%",
+    "& > * + *": {
       marginTop: theme.spacing(2),
     },
   },
@@ -66,13 +70,21 @@ export default function ViewExpense(props) {
   const [deleteId, setDeleteId] = React.useState("");
   const [alocModal, setAlocModal] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [campaign, setCampaign] = React.useState("");
+  const [state, setState] = React.useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
 
   const handleChangeCampaign = (event) => {
-    setCity(event.target.value);
+    setCampaign(event.target.value);
   };
 
   const handleCloseAlert = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -96,21 +108,28 @@ export default function ViewExpense(props) {
     setAlocModal(true);
     console.log(data);
     setData(data);
-  }
+  };
 
   const handleViewExpenseSubmit = (e) => {
     // console.log(e.target.project.value);
     // console.log(e.target.startDate.value);
     // console.log(e.target.endDate.value);
     // alert(e.target.project.value)
-    console.log(e);
+    console.log(state[0].startDate);
     e.preventDefault();
+    const start = `${state[0].startDate.getDate()}-${
+      state[0].startDate.getMonth() + 1
+    }-${state[0].startDate.getFullYear()}`;
+    const end = `${state[0].endDate.getDate()}-${
+      state[0].endDate.getMonth() + 1
+    }-${state[0].endDate.getFullYear()}`;
 
     axios
       .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
-        startDate: e.target.startDate.value,
-        endDate: e.target.endDate.value,
+        startDate: start,
+        endDate: end,
+        campaignType: e.target.campaignType.value,
       })
       .then(function (response) {
         console.log(response);
@@ -148,14 +167,13 @@ export default function ViewExpense(props) {
   }
 
   async function handleUpdateAllocation(e) {
-    e.preventDefault()
-    await axios.post("http://expenses.propstory.com/expenses/updateAllocation", {
-      expense_id: e.target.expenseid.value,
-      allocation: e.target.allocation.value
-    }).then(
-      setOpen(true),
-      setAlocModal(false),
-    )
+    e.preventDefault();
+    await axios
+      .post("http://expenses.propstory.com/expenses/updateAllocation", {
+        expense_id: e.target.expenseid.value,
+        allocation: e.target.allocation.value,
+      })
+      .then(setOpen(true), setAlocModal(false));
   }
   const handleClose = () => setShow(false);
   if (token == null) {
@@ -185,8 +203,8 @@ export default function ViewExpense(props) {
                 noValidate
                 onSubmit={handleViewExpenseSubmit}
               >
-                <Grid container spacing={2}>
-                  <Grid item lg={4} xs={12}>
+                <Grid container justify="center" spacing={2}>
+                  <Grid item sm={4} xs={12}>
                     <InputLabel id="demo-simple-select-label">
                       Select Project
                     </InputLabel>
@@ -209,30 +227,54 @@ export default function ViewExpense(props) {
                         })}
                     </select>
                   </Grid>
-                  <Grid item lg={4} xs={12}>
-                    <InputLabel shrink htmlFor="bootstrap-input">
-                      Enter Start Date
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Campaign Type
                     </InputLabel>
-                    <TextField
-                      fullWidth
-                      name="startDate"
-                      id="outlined-spendingDate"
-                      type="date"
-                      autoComplete="spendingDate"
+
+                    <select
+                      className="custom-select"
+                      id="projectSelect"
+                      name="campaignType"
+                      value={campaign}
+                      onChange={handleChangeCampaign}
+                      style={{ width: "100%" }}
+                    >
+                      <option value={null}>-- SELECT CAMPAIGN TYPE --</option>
+                      <option value={null}>All</option>
+                      <option value="GDN">Google - GDN</option>
+                      <option value="GSN">Google - GSN</option>
+                      <option value="Google">Google</option>
+                      <option value="Facebook Lead Form">
+                        Facebook Lead Form
+                      </option>
+                      <option value="Facebook LP">Facebook LP</option>
+                      <option value="Taboola">Taboola</option>
+                      <option value="Calls/Chats">Calls/Chats</option>
+                    </select>
+                  </Grid>
+                  <Grid container direction="row" justify="center" xs={12}>
+                    <DateRangePicker
+                      onChange={(item) => setState([item.selection])}
+                      // showSelectionPreview={true}
+                      moveRangeOnFirstSelection={false}
+                      months={2}
+                      ranges={state}
+                      direction="horizontal"
                     />
                   </Grid>
-                  <Grid item lg={4} xs={12}>
-                    <InputLabel shrink htmlFor="bootstrap-input">
-                      Enter End Date
-                    </InputLabel>
-                    <TextField
-                      fullWidth
-                      name="endDate"
-                      id="outlined-campaignStartDate"
-                      type="date"
-                      autoComplete="campaignStartDate"
-                    />
-                  </Grid>
+                  {/* <Grid item lg={2} xs={12}>
+                      <InputLabel shrink htmlFor="bootstrap-input">
+                        Enter End Date
+                      </InputLabel>
+                      <TextField
+                        fullWidth
+                        name="endDate"
+                        id="outlined-campaignStartDate"
+                        type="date"
+                        autoComplete="campaignStartDate"
+                      />
+                    </Grid> */}
                 </Grid>
                 <Button
                   type="submit"
@@ -443,8 +485,6 @@ export default function ViewExpense(props) {
             </Modal.Body>
           </Modal>
 
-
-
           <Modal
             show={alocModal}
             onHide={() => setAlocModal(false)}
@@ -464,7 +504,7 @@ export default function ViewExpense(props) {
                 onSubmit={handleUpdateAllocation}
               >
                 <TextField name="expenseid" hidden value={data.ID} />
-            <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       variant="standard"
@@ -476,7 +516,6 @@ export default function ViewExpense(props) {
                       size="small"
                     />
                   </Grid>
-                 
 
                   <Button
                     type="submit"
@@ -488,7 +527,6 @@ export default function ViewExpense(props) {
                     Update Allocation
                   </Button>
                 </Grid>
-
               </form>
             </Modal.Body>
           </Modal>
@@ -510,12 +548,15 @@ export default function ViewExpense(props) {
             </Modal.Footer>
           </Modal>
 
-
-          <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity="info">
-                        Allocation has been updated!
-        </Alert>
-      </Snackbar>
+          <Snackbar
+            open={open}
+            autoHideDuration={2000}
+            onClose={handleCloseAlert}
+          >
+            <Alert onClose={handleCloseAlert} severity="info">
+              Allocation has been updated!
+            </Alert>
+          </Snackbar>
         </div>
       </>
     );

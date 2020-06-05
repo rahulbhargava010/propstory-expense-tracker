@@ -7,7 +7,7 @@ import Chip from "@material-ui/core/Chip";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import { IconButton, MenuItem } from "@material-ui/core";
-import axios from "axios";
+import AssignedProjects from './AssignedProjects'
 
 const token = localStorage.getItem("LoginToken");
 const userId = localStorage.getItem("LoggedinUser");
@@ -84,6 +84,7 @@ export default function ManageUsersTable(props) {
   const [age, setAge] = React.useState("");
   const [status, setStatus] = React.useState();
 
+
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -102,7 +103,6 @@ export default function ManageUsersTable(props) {
       );
     });
 
-  const { AssignedProjects } = props;
   return (
     <>
       <Paper className={classes.root}>
