@@ -117,12 +117,12 @@ export default function ViewExpense(props) {
     // alert(e.target.project.value)
     console.log(state[0].startDate);
     e.preventDefault();
-    const start = `${state[0].startDate.getDate()}-${
+    const start = `${state[0].startDate.getFullYear()}-${
       state[0].startDate.getMonth() + 1
-    }-${state[0].startDate.getFullYear()}`;
-    const end = `${state[0].endDate.getDate()}-${
+    }-${state[0].startDate.getDate()}`;
+    const end = `${state[0].endDate.getFullYear()}-${
       state[0].endDate.getMonth() + 1
-    }-${state[0].endDate.getFullYear()}`;
+    }-${state[0].endDate.getDate()}`;
 
     axios
       .post("http://expenses.propstory.com/project/projectData", {
@@ -240,8 +240,7 @@ export default function ViewExpense(props) {
                       onChange={handleChangeCampaign}
                       style={{ width: "100%" }}
                     >
-                      <option value={null}>-- SELECT CAMPAIGN TYPE --</option>
-                      <option value={null}>All</option>
+                      <option value="">All</option>
                       <option value="GDN">Google - GDN</option>
                       <option value="GSN">Google - GSN</option>
                       <option value="Google">Google</option>
