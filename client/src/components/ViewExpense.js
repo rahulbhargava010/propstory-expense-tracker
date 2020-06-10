@@ -20,6 +20,7 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays } from "date-fns";
 import { DateRangePicker } from "react-date-range";
+import moment from 'moment';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -111,24 +112,19 @@ export default function ViewExpense(props) {
   };
 
   const handleViewExpenseSubmit = (e) => {
-    // console.log(e.target.project.value);
-    // console.log(e.target.startDate.value);
-    // console.log(e.target.endDate.value);
-    // alert(e.target.project.value)
-    console.log(state[0].startDate);
+
     e.preventDefault();
-    const start = `${state[0].startDate.getDate()}-${
-      state[0].startDate.getMonth() + 1
-    }-${state[0].startDate.getFullYear()}`;
-    const end = `${state[0].endDate.getDate()}-${
-      state[0].endDate.getMonth() + 1
-    }-${state[0].endDate.getFullYear()}`;
+
+
+    const start = moment(state[0].startDate).format("YYYY-MM-DD")
+    const end = moment(state[0].endDate).format("YYYY-MM-DD")
+
 
     axios
       .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
-        startDate: e.target.startDate.value,
-        endDate: e.target.endDate.value,
+        startDate: start,
+        endDate: end,
         campaignType: e.target.campaignType.value,
       })
       .then(function (response) {
@@ -252,7 +248,7 @@ export default function ViewExpense(props) {
                       <option value="Calls/Chats">Calls/Chats</option>
                     </select>
                   </Grid>
-                  {/* <Grid container direction="row" justify="center" xs={12}>
+                  <Grid container direction="row" justify="center" xs={12}>
                     <DateRangePicker
                       onChange={(item) => setState([item.selection])}
                       // showSelectionPreview={true}
@@ -261,8 +257,8 @@ export default function ViewExpense(props) {
                       ranges={state}
                       direction="horizontal"
                     />
-                  </Grid> */}
-                   <Grid item lg={6} xs={12}>
+                  </Grid>
+                   {/* <Grid item lg={6} xs={12}>
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Start Date
                   </InputLabel>
@@ -287,8 +283,8 @@ export default function ViewExpense(props) {
                     type="date"
                     autoComplete="endDate"
                   />
-                </Grid>
-                </Grid>
+                </Grid>*/}
+                </Grid> 
                 <Button
                   type="submit"
                   fullWidth
