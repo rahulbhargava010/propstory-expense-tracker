@@ -3,7 +3,7 @@ const router = express.Router()
 const bcrypt = require("bcryptjs")
 const User = require("../models/User")
 const Project = require("../models/Project")
-
+const { sendGridActivationMailSend } = require("../helper/sendGridMail")
 const { ObjectId } = require('mongodb');
 
 let jwt = require('jsonwebtoken');
@@ -214,6 +214,31 @@ router.post('/makeAdmin', middleware.checkToken, async (req, res) => {
             message: 'You are not Authorize'
         });
     }
+})
+
+router.get('/changeUserStatus', (req, res) => {
+    const user_id = req.body.user_id
+    const status = req.body.status
+    User.findByIdAndUpdate(user_id, { enable: status}, {new: true}, (err, adminuser) => {
+        if (err) {
+            res.status('403').send({
+                success: false,
+                message: 'User not Found'
+            });
+        }
+        
+        const isEnable = adminuser.enable
+        if (isEnable) {
+            const email = adminuser.email
+            sendGridActivationMailSend(email)
+        }
+        
+        // console.log(adminuser)
+        res.status('200').send({ 
+            success: true,
+            user: adminuser
+        })
+    })
 })
 
 router.get('/logout', (req, res) => {
