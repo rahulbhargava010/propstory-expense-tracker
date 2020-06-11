@@ -20,6 +20,7 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays } from "date-fns";
 import { DateRangePicker } from "react-date-range";
+import moment from 'moment';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -111,18 +112,13 @@ export default function ViewExpense(props) {
   };
 
   const handleViewExpenseSubmit = (e) => {
-    // console.log(e.target.project.value);
-    // console.log(e.target.startDate.value);
-    // console.log(e.target.endDate.value);
-    // alert(e.target.project.value)
-    console.log(state[0].startDate);
+
     e.preventDefault();
-    const start = `${state[0].startDate.getDate()}-${
-      state[0].startDate.getMonth() + 1
-    }-${state[0].startDate.getFullYear()}`;
-    const end = `${state[0].endDate.getDate()}-${
-      state[0].endDate.getMonth() + 1
-    }-${state[0].endDate.getFullYear()}`;
+
+
+    const start = moment(state[0].startDate).format("YYYY-MM-DD")
+    const end = moment(state[0].endDate).format("YYYY-MM-DD")
+
 
     axios
       .post("http://expenses.propstory.com/project/projectData", {
@@ -240,8 +236,7 @@ export default function ViewExpense(props) {
                       onChange={handleChangeCampaign}
                       style={{ width: "100%" }}
                     >
-                      <option value={null}>-- SELECT CAMPAIGN TYPE --</option>
-                      <option value={null}>All</option>
+                      <option value="">All</option>
                       <option value="GDN">Google - GDN</option>
                       <option value="GSN">Google - GSN</option>
                       <option value="Google">Google</option>
@@ -263,19 +258,33 @@ export default function ViewExpense(props) {
                       direction="horizontal"
                     />
                   </Grid>
-                  {/* <Grid item lg={2} xs={12}>
-                      <InputLabel shrink htmlFor="bootstrap-input">
-                        Enter End Date
-                      </InputLabel>
-                      <TextField
-                        fullWidth
-                        name="endDate"
-                        id="outlined-campaignStartDate"
-                        type="date"
-                        autoComplete="campaignStartDate"
-                      />
-                    </Grid> */}
+                   {/* <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    Start Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="startDate"
+                    id="outlined-startDate"
+                    type="date"
+                    autoComplete="startDate"
+                  />
                 </Grid>
+                <Grid item lg={6} xs={12}>
+                  <InputLabel shrink htmlFor="bootstrap-input">
+                    End Date
+                  </InputLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="endDate"
+                    id="outlined-endDate"
+                    type="date"
+                    autoComplete="endDate"
+                  />
+                </Grid>*/}
+                </Grid> 
                 <Button
                   type="submit"
                   fullWidth
@@ -351,7 +360,7 @@ export default function ViewExpense(props) {
                       className="custom-select"
                       id="projectSelect"
                       name="campaignType"
-                      value={city}
+                      value={campaign}
                       onChange={handleChangeCampaign}
                       style={{ width: "100%" }}
                     >

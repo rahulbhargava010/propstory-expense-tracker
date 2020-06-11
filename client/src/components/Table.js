@@ -8,13 +8,14 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { TableFooter } from "@material-ui/core";
-
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 const role = localStorage.getItem("userRole");
 
 const updateAllocation = () => {
-console.log("data");
-}
+  console.log("data");
+};
 
 const columns = [
   { id: "ID", label: "ID", display: "none" },
@@ -27,7 +28,14 @@ const columns = [
   { id: "CAMPAIGN_TYPE", label: "CAMPAIGN TYPE", minWidth: 100 },
 
   { id: "ACTUAL_LEADS", label: "ACTUAL LEADS", minWidth: 100, align: "center" },
-  { id: "ALLOCATIONS", label: "ALLOCATIONS", minWidth: 100, align: "center", edit: true, onchange: {updateAllocation} },
+  {
+    id: "ALLOCATIONS",
+    label: "ALLOCATIONS",
+    minWidth: 100,
+    align: "center",
+    edit: true,
+    onchange: { updateAllocation },
+  },
 
   {
     id: "CPL",
@@ -97,6 +105,7 @@ export default function StickyHeadTable(props) {
   let clicks = 0;
   let impressions = 0;
   let totalSpending = 0;
+  let totalAllocation = 0;
   const rows =
     props.result &&
     props.result.map((spending) => {
@@ -104,8 +113,9 @@ export default function StickyHeadTable(props) {
       clicks += spending.clicks;
       impressions += spending.impressions;
       totalSpending += spending.totalSpending;
+      totalAllocation += spending.allocation;
       console.log(spending);
-      
+
       // console.log(totalLead)
       return createData(
         spending._id,
@@ -144,21 +154,21 @@ export default function StickyHeadTable(props) {
                   {column.label}
                 </TableCell>
               ))}
-             
+              <TableCell align="center" rowSpan={2} colSpan={3}>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableHead>
             <TableRow>
-            <TableCell align="center" colSpan={2}>
+              <TableCell align="center" colSpan={2}>
                 <h5>TOTAL</h5>
               </TableCell>
               <TableCell align="right">
                 <h6>ACTUAL LEADS: {totalLead} </h6>
               </TableCell>
               <TableCell align="center">
-                <h6>ALLOCATIONS: 52 </h6>
+                <h6>ALLOCATIONS: {totalAllocation} </h6>
               </TableCell>
-              <TableCell align="center" >
+              <TableCell align="center">
                 <h6>CPL: {Number(totalSpending / totalLead).toFixed(2)}</h6>
               </TableCell>
               <TableCell align="center">
@@ -167,10 +177,9 @@ export default function StickyHeadTable(props) {
               <TableCell align="center">
                 <h6>IMPRESSIONS: {impressions}</h6>
               </TableCell>
-              <TableCell align="center">
+              <TableCell colSpan={4} align="left">
                 <h6>TOTAL SPENDING: {totalSpending}</h6>
               </TableCell>
-              
             </TableRow>
           </TableHead>
           <TableBody>
@@ -194,20 +203,23 @@ export default function StickyHeadTable(props) {
                         </TableCell>
                       );
                     })}
-                      <TableCell
-                          onClick={() => props.onEditAllocation(row)}
-                          style={{
-                            backgroundColor: "#3797a4",
-                            fontWeight: 600,
-                            color: "#fff",
-                            cursor: "pointer",
-                          }}
-                        >
-                          UPDATE ALLOCATION
-                        </TableCell>
+                    <TableCell
+                      onClick={() => props.onEditAllocation(row)}
+                      style={{
+                        backgroundColor: "#3797a4",
+                        fontWeight: 600,
+                        fontSize: 10,
+                        color: "#fff",
+                        width: 30,
+                        cursor: "pointer",
+                        textAlign: "center"
+                      }}
+                      
+                    >
+                       Update Allocation
+                    </TableCell>
                     {role == "PSADMIN" ? (
                       <>
-                      
                         <TableCell
                           onClick={() => props.onPressEdit(row)}
                           style={{
@@ -215,9 +227,10 @@ export default function StickyHeadTable(props) {
                             fontWeight: 600,
                             color: "#fff",
                             cursor: "pointer",
+                            width: 10
                           }}
                         >
-                          EDIT
+                          <EditOutlinedIcon />
                         </TableCell>
                         <TableCell
                           onClick={() => props.onPressDelete(row["ID"])}
@@ -226,9 +239,10 @@ export default function StickyHeadTable(props) {
                             fontWeight: 600,
                             color: "#fff",
                             cursor: "pointer",
+                            width: 10
                           }}
                         >
-                          DELETE
+                          <DeleteOutlineIcon />
                         </TableCell>
                       </>
                     ) : null}
