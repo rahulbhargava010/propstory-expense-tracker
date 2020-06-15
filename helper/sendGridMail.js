@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer')
 
-export const sendGridActivationMailSend = async  (toEmail) => {
+const sendGridActivationMailSend = async  (toEmail) => {
     console.log('coming inside sendGridActivationMailSend')
     let transporter = nodemailer.createTransport({ 
         service: 'Sendgrid', 
@@ -23,3 +23,5 @@ export const sendGridActivationMailSend = async  (toEmail) => {
         console.log(err, info)
     })
 }
+
+module.exports = sendGridActivationMailSend
