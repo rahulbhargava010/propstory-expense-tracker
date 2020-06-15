@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 
-const sendGridActivationMailSend = async  (toEmail) => {
+ const sendGridActivationMailSend = async (toEmail) => {
     console.log('coming inside sendGridActivationMailSend')
     let transporter = nodemailer.createTransport({ 
         service: 'Sendgrid', 
@@ -18,8 +18,17 @@ const sendGridActivationMailSend = async  (toEmail) => {
         subject: subject,
         html: body,
     };
+    console.log("MAIL SENT");
+    
     console.log(mailOptions)
+
     return transporter.sendMail(mailOptions, (err,info) => {
+        if(err){
+            console.log("THERE IS AN ERROR");
+            
+            console.log(err);
+            
+        }
         console.log(err, info)
     })
 }
