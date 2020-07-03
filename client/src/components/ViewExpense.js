@@ -21,6 +21,9 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays } from "date-fns";
 import { DateRangePicker } from "react-date-range";
 import moment from 'moment';
+import Loader from 'react-loader-spinner'
+import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
+import exportFromJSON from 'export-from-json'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -31,6 +34,12 @@ const role = localStorage.getItem("userRole");
 const options = {
   headers: { Authorization: "Bearer " + token },
 };
+
+
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,13 +74,15 @@ export default function ViewExpense(props) {
   const [project, setProject] = React.useState("");
   const [result, setResult] = React.useState([]);
   const [modalShow, setModalShow] = React.useState(false);
-  const [data, setData] = React.useState([]);
+  const [selectedData, setSelectedData] = React.useState([]);
   const [city, setCity] = React.useState("");
   const [show, setShow] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState("");
   const [alocModal, setAlocModal] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false)
   const [campaign, setCampaign] = React.useState("");
+  const [viewDate, setViewDate] = React.useState(false);
   const [state, setState] = React.useState([
     {
       startDate: new Date(),
@@ -102,22 +113,33 @@ export default function ViewExpense(props) {
   const _Edit = (data) => {
     setModalShow(true);
     console.log(data);
-    setData(data);
+    setSelectedData(data);
   };
 
   const _EditAllocation = (data) => {
     setAlocModal(true);
     console.log(data);
-    setData(data);
+    setSelectedData(data);
   };
+  const downloadCsv = () => {
+    const start = moment(state[0].startDate).format("YYYY-MM-DD")
+    const end = moment(state[0].endDate).format("YYYY-MM-DD")
+    const parsedData = [];
+    result.map((resData) => { return parsedData.push({ "Campaign Type": resData.campaignType, "Actual Leads": resData.actualLeads, "Allocation": resData.allocation, "Total Budget": resData.totalBudget, "Total Spending": resData.totalSpending, "CPL": resData.cpl, "Clicks": resData.clicks, "Impressions": resData.impressions, "Spending Date": resData.spendingDate, "Campaign Start Date": resData.campaignStartDate }) });
+    const data = parsedData;
 
+    const fileName = campaign +' '+'Expense'+' '+ start +' '+ end 
+    const exportType = 'csv'
+    exportFromJSON({ data, fileName, exportType })
+  }
   const handleViewExpenseSubmit = (e) => {
 
     e.preventDefault();
 
-
     const start = moment(state[0].startDate).format("YYYY-MM-DD")
     const end = moment(state[0].endDate).format("YYYY-MM-DD")
+    setLoading(true)
+    setViewDate(false)
 
 
     axios
@@ -131,6 +153,8 @@ export default function ViewExpense(props) {
         console.log(response);
         let result = response.data.spendings;
         setResult(result);
+        setLoading(false)
+
       })
       .catch(function (error) {
         console.log(error);
@@ -181,7 +205,13 @@ export default function ViewExpense(props) {
 
         <div>
           <CalcDrawer />
-
+          <Button onClick={() => downloadCsv()} variant="outlined" color="secondary" startIcon={<AssignmentOutlinedIcon />} style={{ position: "fixed", bottom: 20, right: 20, fontWeight: 600 }}> <Typography
+            component="h5"
+            variant="subtitle"
+            style={{ textTransform: "none", zIndex: 9 }}
+          >
+            Download as csv
+              </Typography></Button>
           <Container maxWidth="lg">
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
@@ -248,17 +278,23 @@ export default function ViewExpense(props) {
                       <option value="Calls/Chats">Calls/Chats</option>
                     </select>
                   </Grid>
-                  <Grid container direction="row" justify="center" xs={12}>
+                  <Grid item xs={12} sm={4}>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Date
+                    </InputLabel>
+                    <input placeholder="Date" style={{ width: "100%", height: 35, border: "1px solid #ced4da", borderRadius: "0.25rem", padding: ".375rem 1.75rem .375rem .75rem" }} onClick={() => setViewDate(true)} />
+                  </Grid>
+                  {viewDate && <Grid container direction="row" justify="center" xs={12}>
                     <DateRangePicker
-                      onChange={(item) => setState([item.selection])}
+                      onChange={(item) => (setState([item.selection]))}
                       // showSelectionPreview={true}
                       moveRangeOnFirstSelection={false}
                       months={2}
                       ranges={state}
                       direction="horizontal"
                     />
-                  </Grid>
-                   {/* <Grid item lg={6} xs={12}>
+                  </Grid>}
+                  {/* <Grid item lg={6} xs={12}>
                   <InputLabel shrink htmlFor="bootstrap-input">
                     Start Date
                   </InputLabel>
@@ -284,7 +320,7 @@ export default function ViewExpense(props) {
                     autoComplete="endDate"
                   />
                 </Grid>*/}
-                </Grid> 
+                </Grid>
                 <Button
                   type="submit"
                   fullWidth
@@ -298,7 +334,12 @@ export default function ViewExpense(props) {
             </div>
           </Container>
           <Container maxWidth="lg">
-            {result.length > 0 ? (
+            {loading ? <Loader
+              type="TailSpin"
+              color="rgb(245, 0, 87)"
+              height={50}
+              width={50}
+            /> : result.length > 0 ? (
               <Table
                 onPressEdit={_Edit}
                 onPressDelete={_Delete}
@@ -326,7 +367,7 @@ export default function ViewExpense(props) {
                 noValidate
                 onSubmit={props.handleUpdateExpense}
               >
-                <TextField name="expenseid" hidden value={data.ID} />
+                <TextField name="expenseid" hidden value={selectedData.ID} />
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <InputLabel id="demo-simple-select-label">
@@ -382,7 +423,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="actualLeads"
-                      label={"Actual Leads " + data.ACTUAL_LEADS}
+                      label={"Actual Leads " + selectedData.ACTUAL_LEADS}
                       autoFocus
                       size="small"
                     />
@@ -392,7 +433,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="plannedLeads"
-                      label={"Planned Leads " + data.PLANNED_LEADS}
+                      label={"Planned Leads " + selectedData.PLANNED_LEADS}
                       name="plannedLeads"
                       autoComplete="plannedLeads"
                       size="small"
@@ -403,7 +444,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       id="totalSpending"
-                      label={"Total Spending " + data.TOTAL_SPENDING}
+                      label={"Total Spending " + selectedData.TOTAL_SPENDING}
                       name="totalSpending"
                       autoComplete="totalSpending"
                       size="small"
@@ -414,7 +455,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="totalBudget"
-                      label={"Total Budget " + data.TOTAL_BUDGET}
+                      label={"Total Budget " + selectedData.TOTAL_BUDGET}
                       id="totalBudget"
                       autoComplete="totalBudget"
                       size="small"
@@ -426,7 +467,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="cpl"
-                      label={"CPL " + data.CPL}
+                      label={"CPL " + selectedData.CPL}
                       id="cpl"
                       autoComplete="cpl"
                       size="small"
@@ -437,7 +478,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="clicks"
-                      label={"Clicks " + data.CLICK}
+                      label={"Clicks " + selectedData.CLICK}
                       id="clicks"
                       autoComplete="clicks"
                       size="small"
@@ -448,7 +489,7 @@ export default function ViewExpense(props) {
                       variant="outlined"
                       fullWidth
                       name="impressions"
-                      label={"Impressions " + data.IMPRESSIONS}
+                      label={"Impressions " + selectedData.IMPRESSIONS}
                       id="impressions"
                       autoComplete="impressions"
                       size="small"
@@ -512,14 +553,14 @@ export default function ViewExpense(props) {
                 noValidate
                 onSubmit={handleUpdateAllocation}
               >
-                <TextField name="expenseid" hidden value={data.ID} />
+                <TextField name="expenseid" hidden value={selectedData.ID} />
                 <Grid item xs={12}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       variant="standard"
                       fullWidth
                       id="allocation"
-                      label={"Allocation " + data.ALLOCATIONS}
+                      label={"Allocation " + selectedData.ALLOCATIONS}
                       name="allocation"
                       autoComplete="allocation"
                       size="small"

@@ -43,7 +43,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "react-bootstrap": "^1.0.0",
-    "react-icons": "^3.10.0"
+    "react-icons": "^3.10.0",
+    "react-loader-spinner": "^3.1.14"
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
