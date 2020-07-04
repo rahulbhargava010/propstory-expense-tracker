@@ -43,6 +43,10 @@ const ExpenseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    campaign: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Campaign' 
+    },
     spendingDate: {
         type: String,
         required: true

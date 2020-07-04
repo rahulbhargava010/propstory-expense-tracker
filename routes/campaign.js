@@ -4,6 +4,7 @@ const path = require("path")
 // const Expense = require("../models/Expense")
 const FacebookCampaign = require("../models/FacebookCampaign")
 const TaboolaCampaign = require("../models/TaboolaCampaign")
+const Campaign = require("../models/Campaign")
 const router = express.Router()
 
 let middleware = require('../config/middleware');
@@ -35,6 +36,8 @@ router.post('/addFacebook', (req, res) => {
     res.json({ fbcamp })
 })
 
+
+
 // Get facebook campaign
 router.post('/addTaboola', (req, res) => {
 
@@ -45,6 +48,33 @@ router.post('/addTaboola', (req, res) => {
     const tbcamp  = taboolaCampaign.save()
 
     res.json({ tbcamp })
+})
+
+
+// Add campaign Name 
+router.post('/addCampaignName', (req, res) => {
+
+    const campaignName = new Campaign({
+        name: req.body.campaign_name,
+        project: req.body.project_id
+    })
+    const campName  = campaignName.save()
+
+    res.json({ campName })
+})
+
+// get campaign Name list
+router.post('/getCampaignNames', (req, res) => {
+
+    const project_id = req.body.project_id
+    
+    let filter = { project: ObjectId(project_id)}
+    Campaign.find(filter, (err, result) => {
+        
+        res.json({ campaigns: result })
+
+    })
+
 })
 
 module.exports = router
