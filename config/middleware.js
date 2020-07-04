@@ -31,7 +31,7 @@ let checkToken = (req, res, next) => {
 
 const findUserByCredentials = async (req, res, next) => {
     try {
-        let email = req.body.email;
+        let email = req.body.email.trim().toLowerCase();
         let password = req.body.password;
 
         if (email && password) {
