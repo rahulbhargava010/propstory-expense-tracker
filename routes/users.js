@@ -14,8 +14,10 @@ let middleware = require('../config/middleware');
 // add last login field
 router.post('/register', (req, res) => {
 
-    const { name, email, password, password2, company } = req.body;
+    const { name, password, password2, company } = req.body;
     
+    const email = req.body.email.trim().toLowerCase();
+
     let errors = []
 
     if (!name || !email || !password || !password2 || !company) {
@@ -75,9 +77,11 @@ router.post('/login', middleware.findUserByCredentials, async (req, res, next) =
     // console.log(req.user)
     // console.log('--------------token');    
     // console.log(process.env.ACCESS_TOKEN_SECRET)
+    // console.log(req.body.email)
+    // console.log(req.body.email.trim().toLowerCase())
     if (req.user) {
         
-        let token = jwt.sign({ email: req.body.email },
+        let token = jwt.sign({ email: req.body.email.trim().toLowerCase() },
             process.env.ACCESS_TOKEN_SECRET,
             { 
                 expiresIn: '24h' // expires in 24 hours
@@ -219,7 +223,7 @@ router.post('/makeAdmin', middleware.checkToken, async (req, res) => {
 router.get('/changeUserStatus', (req, res) => {
     const user_id = req.body.user_id
     const status = req.body.status
-    User.findByIdAndUpdate(user_id, { enable: status}, {new: true}, (err, adminuser) => {
+    User.findByIdAndUpdate(user_id, { enable: status }, {new: true}, (err, adminuser) => {
         if (err) {
             res.status('403').send({
                 success: false,
