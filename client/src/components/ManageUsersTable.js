@@ -7,7 +7,9 @@ import Chip from "@material-ui/core/Chip";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import { IconButton, MenuItem } from "@material-ui/core";
-import AssignedProjects from './AssignedProjects'
+import { red, green } from "@material-ui/core/colors";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import axios from "axios";
 
 const token = localStorage.getItem("LoginToken");
 const userId = localStorage.getItem("LoggedinUser");
@@ -40,50 +42,63 @@ const handleDelete = () => {
   console.info("You clicked the delete icon.");
 };
 
-// const AssignedProjects = ({ user }) => {
-//   const classes = useStyles();
+const AssignedProjects = ({ user }) => {
+  const classes = useStyles();
 
-//   let [projects, setProjects] = React.useState([]);
-//   useEffect(() => {
-//     axios
-//       .post(
-//         "http://localhost:3050/project/getProjects",
-//         {
-//           user_id: user._id,
-//           company_id: user.company,
-//         },
-//         options
-//       )
-//       .then(function (response) {
-//         console.log(response);
-//         setProjects(response.data.projects);
-//       });
-//   }, []);
+  let [projects, setProjects] = React.useState([]);
+  useEffect(() => {
+    axios
+      .post(
+        "http://expenses.propstory.com/project/getProjects",
+        {
+          user_id: user._id,
+          company_id: user.company,
+        },
+        options
+      )
+      .then(function (response) {
+        console.log(response);
+        setProjects(response.data.projects);
+      });
+  }, []);
 
-//   return (
-//     <Paper component="ul" className={classes.rootarray}>
-//       {projects &&
-//         projects.map((data) => {
-//           return (
-//             <li key={data._id}>
-//               <Chip
-//                 label={data.name}
-//                 className={classes.chip}
-//                 size="small"
-//                 color="primary"
-//               />
-//             </li>
-//           );
-//         })}
-//     </Paper>
-//   );
-// };
+  return (
+    <Paper component="ul" className={classes.rootarray}>
+      {projects &&
+        projects.map((data) => {
+          return (
+            <li key={data._id}>
+              <Chip
+                label={data.name}
+                className={classes.chip}
+                size="small"
+                color="primary"
+              />
+            </li>
+          );
+        })}
+    </Paper>
+  );
+};
+
+const StatusSwitch = withStyles({
+  switchBase: {
+    color: red[600],
+    "&$checked": {
+      color: green[700],
+    },
+    "&$checked + $track": {
+      backgroundColor: green[700],
+    },
+  },
+  checked: {},
+  track: {},
+})(Switch);
 
 export default function ManageUsersTable(props) {
   const classes = useStyles();
   const [age, setAge] = React.useState("");
   const [status, setStatus] = React.useState();
-
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -102,6 +117,17 @@ export default function ManageUsersTable(props) {
         />
       );
     });
+
+  const handleChangeSwitch = (user) => {
+    axios
+      .post("http://expenses.propstory.com/users/changeUserStatus", {
+        user_id: user._id,
+        status: user.enable ? false : true,
+      })
+      .then(function (response) {
+       props.callUserSubmit()
+      });
+  };
 
   return (
     <>
@@ -128,17 +154,16 @@ export default function ManageUsersTable(props) {
                 </Grid>
 
                 <Grid item>
-                  {user.enable ? (
-                    <div className="d-flex">
-                      <FiberManualRecordIcon style={{ color: "#94fc13" }} />
-                      <p> ACTIVED</p>
-                    </div>
-                  ) : (
-                    <div className="d-flex">
-                      <FiberManualRecordIcon style={{ color: "#fa163f" }} />
-                      <p> NOT ACTIVATED</p>
-                    </div>
-                  )}
+                  <FormControlLabel
+                    control={
+                      <StatusSwitch
+                        checked={user.enable}
+                        onChange={() => handleChangeSwitch(user)}
+                        name="checkedA"
+                      />
+                    }
+                    label={user.enable ? "Activated" : "Disabled"}
+                  />
                 </Grid>
                 <Grid item xs={1}>
                   {user.role == "TEAM_MEMBER" ? (

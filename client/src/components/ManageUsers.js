@@ -20,7 +20,7 @@ import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Snackbar from "@material-ui/core/Snackbar";
-import AssignedProjects from './AssignedProjects'
+import AssignedProjects from "./AssignedProjects";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -31,7 +31,6 @@ const userId = localStorage.getItem("LoggedinUser");
 const options = {
   headers: { Authorization: "Bearer " + token },
 };
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -82,8 +81,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
   },
 }));
-
-
 
 export default function ManageUsers(props) {
   const classes = useStyles();
@@ -142,6 +139,32 @@ export default function ManageUsers(props) {
 
   const handleViewUserSubmit = (e) => {
     e.preventDefault();
+    axios
+      .post("http://expenses.propstory.com/api/getCompanyProjects", {
+        company_id: company,
+      })
+      .then(function (response) {
+        console.log(response);
+        let result = response.data.companies;
+        setResult(result);
+      });
+
+    axios
+      .post(
+        "http://expenses.propstory.com/users/getCompanyUsers",
+        {
+          company_id: company,
+          user_id: userId,
+        },
+        options
+      )
+      .then(function (response) {
+        console.log(response);
+        setCompanyUsers(response.data.user);
+      });
+  };
+
+  const callUserSubmit = () => {
     axios
       .post("http://expenses.propstory.com/api/getCompanyProjects", {
         company_id: company,
@@ -239,6 +262,7 @@ export default function ManageUsers(props) {
                 users={companyUsers}
                 result={result}
                 AssignedProjects={AssignedProjects}
+                callUserSubmit={callUserSubmit}
               />
             ) : null}
           </Container>
@@ -271,12 +295,7 @@ export default function ManageUsers(props) {
 
                     <h4 style={{ textTransform: "uppercase" }}>{data.name}</h4>
                   </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <InputLabel id="demo-simple-select-label">
-                        Assigned Projects
-                      </InputLabel>
-                      <AssignedProjects user={data} />
-                    </Grid>
+
                   <Grid item xs={12} sm={4}>
                     <InputLabel id="demo-simple-select-label">
                       Account Status

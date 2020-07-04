@@ -114,15 +114,25 @@ router.post('/delete', middleware.checkToken, (req, res) => {
     // const deleteExpense = {_id: ObjectId(req.body._id)}
     // findOneAndRemove
     // AutomateExpensefb
-    const deleteExpense = { "date_start" : "2020-05-23T00:00:00.000Z" }
-    AutomateExpensefb.deleteMany( deleteExpense )
+    // const deleteExpense = { "date_start" : "2020-05-23T00:00:00.000Z" }
+    // AutomateExpensefb.deleteMany( deleteExpense )
+    // .then( (result) => {
+    //     console.log('coming inside delete success')
+    //     res.status(200).json({ msg: 'Your Expense has been deleted successfully', result })
+    // }).catch((err)=>{
+    //     console.log('coming inside delete error')
+    //     errors.push( { msg: err })
+    //     res.status(400).json({ errors })
+    // })
+
+    const deleteExpense = {_id: ObjectId(req.body._id)}
+    Expense.findOneAndRemove( deleteExpense )
     .then( (result) => {
         console.log('coming inside delete success')
         res.status(200).json({ msg: 'Your Expense has been deleted successfully', result })
     }).catch((err)=>{
         console.log('coming inside delete error')
         errors.push( { msg: err })
-        res.status(400).json({ errors })
     })
 })
 
