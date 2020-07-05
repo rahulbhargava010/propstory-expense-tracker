@@ -159,7 +159,7 @@ export default function ViewExpense(props) {
 
 
     axios
-      .post("http://localhost:3050/project/projectData", {
+      .post("http://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
         startDate: start,
         endDate: end,
