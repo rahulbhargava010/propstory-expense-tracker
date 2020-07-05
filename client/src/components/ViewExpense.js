@@ -185,7 +185,7 @@ export default function ViewExpense(props) {
 
     axios
       .post(
-        "http://localhost:3050/campaign/getCampaignNames",
+        "http://expenses.propstory.com/campaign/getCampaignNames",
         {
           project_id: project,
         }
