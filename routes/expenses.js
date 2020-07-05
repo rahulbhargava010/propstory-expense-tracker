@@ -11,6 +11,7 @@ const TaboolaCampaign = require('../models/TaboolaCampaign')
 
 const router = express.Router()
 
+const cron = require("node-cron");
 // const { ensureAuthenticated } = require('../config/auth')
 
 let middleware = require('../config/middleware');
@@ -28,7 +29,7 @@ var getObjects = {
 // Need to add authentication later
 router.post('/', middleware.checkToken, (req, res) => {
    
-    const { project, user, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate } = req.body;
+    const { project, user, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaignName, spendingDate, campaignStartDate } = req.body;
     
     console.log(req.body);
     
@@ -55,7 +56,7 @@ router.post('/', middleware.checkToken, (req, res) => {
             const filter = {_id: req.body._id }
             console.log(filter)
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
+            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, campaignName, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -78,7 +79,7 @@ router.post('/', middleware.checkToken, (req, res) => {
                     res.status(400).json({ errors })
                 } else {
                     const newExpense = new Expense({
-                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
+                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaignName, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
                     console.log("NEW EXPENSE");
@@ -139,8 +140,10 @@ router.post('/delete', middleware.checkToken, (req, res) => {
 // Get Files from S3 and then getObject and then push the data in mongo db -- done
 // need to write CRONJOB for this 
 // add campaign data to db for taboola and fb
-router.get('/fbexpense', middleware.checkToken, async (req, res) => {
+const automateExpenseUpdateInDB = async (req, res) => {
 
+    console.log('cron job for')
+    console.log(new Date().getDate())
     let objects = null;
     await new Promise((resolve) => {
         s3.listObjects(getObjects, (err, allObjects) => {
@@ -164,7 +167,8 @@ router.get('/fbexpense', middleware.checkToken, async (req, res) => {
             let file = objects[i]
             const key = file.Key
             //added files till 26th of may
-            const today = new Date().getDate() - 1
+            const today = new Date().getDate() - 10
+            console.log(today)
             let fileModifiedDate = new Date(file.LastModified).getDate()
             if (today === fileModifiedDate && key !== "stitch-challenge-file-djpTyLmyPFRpF2RsAEyP01Rc") {
 
@@ -300,37 +304,63 @@ router.get('/fbexpense', middleware.checkToken, async (req, res) => {
 
         }
 
-        res.status(200).json({ 'msg': 'data inserted successfully need to add the key files'})
+        // res.status(200).json({ 'msg': 'data inserted successfully need to add the key files'})
     }
 
     // console.log('hi3');
-})
+}
 
 //Think how to map taboola accounts to account name
 //how to show to clients -- need to think about the restriction
 
 router.post('/getAutomateExpenses', async (req, res) => {
-    const { campaign_id, start_date, end_date, source } = req.body;
-    console.log("req.body");
-    console.log(req.body);
+    // const { campaign_id, start_date, end_date, source } = req.body;
+    // console.log("req.body");
+    // console.log(req.body);
     
-    // const campaign = '23843958127450618'
-    // const start_date = '2020-05-23T00:00:00.000Z'
-    // const end_date = '2020-05-26T00:00:00.000Z'
-    // const source = 'facebook'
+    const campaign = '23843825454290616'
+    const start_date = '2020-06-10T00:00:00.000Z'
+    const end_date = '2020-06-11T00:00:00.000Z'
+    const source = 'facebook'
 
+    let campaigns_new_array = []
+    let checkDuplicate = ''
+    let count = 0;
     if(source === 'facebook') {
         AutomateExpensefb.find({
             "date_start": { 
                 '$gte': start_date,
                 '$lte': end_date
             },
-            // campaign_id: campaign_id
+            // "campaign_id": campaign
         }, (err, result) => {
             if(err) res.status(400).json({ 'err': err })
             if (result) {
+                const length = result.length
+                for (var i = 0; i < length; i++) {
+                    count++
+                    console.log(count)
+                    let array1 = {
+                        'campaign_id' : result[i].campaign_id,
+                        'date_start' : result[i].date_start
+                    }
+
+                    if(campaigns_new_array) {
+                        checkDuplicate = campaigns_new_array.find( (elem) => {
+                            return elem
+                        })
+                    }
+                    console.log(checkDuplicate)
+
+                    // checkDuplicate = campaigns_new_array.find()
+                    campaigns_new_array.push(array1)
+                    if(count == 5) {
+                        console.log(campaigns_new_array)
+                        return campaigns_new_array;
+                    }
+                }
                 // console.log(result)
-                res.status(200).json(result)
+                res.status(200).json(campaigns_new_array)
             }
         })
     } else if(source == 'taboola') {
@@ -348,7 +378,7 @@ router.post('/getAutomateExpenses', async (req, res) => {
 })
 
 //Need to write CRONJOB for this
-router.get("/deleteObjects", async (req, res) => {
+const deleteObjects = async (req, res) => {
     const today = new Date();
     const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
 
@@ -394,6 +424,17 @@ router.get("/deleteObjects", async (req, res) => {
         }
     })
     res.json(200).json( { "lastWeek": lastWeek })
+}
+
+
+cron.schedule("* 7 * * *", function () {
+    // console.log("Running Cron Job inside");
+    automateExpenseUpdateInDB()
 })
+cron.schedule("* 8 * * *", function () {
+    console.log("Running Cron Job inside");
+    automateExpenseUpdateInDB()
+})
+
 
 module.exports = router

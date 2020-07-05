@@ -107,34 +107,49 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
 // Getting campaign data b/w Dates
 router.post("/projectData", (req, res) => {
   let errors = []
-  const { startDate, endDate, project, campaignType } = req.body;
+  const { startDate, endDate, campaign, project, campaignType } = req.body;
 
-  if (!startDate || !endDate || !project) {
-    errors.push({ msg: "Please fill all the fields" });
-  }
+  // if (!startDate || !endDate || !project) {
+  //   errors.push({ msg: "Please fill all the fields" });
+  // }
 
-  if(campaignType) {
-        Expense.find({
-            "spendingDate": { 
-                    '$gte': startDate, 
-                    '$lte': endDate
-                },
-                project: ObjectId(project),
-                campaignType: campaignType
-        }, (err, result) => {
-            res.status(200).json({ 'spendings': result })
-        })
-    } else {
-        Expense.find({
-            "spendingDate": { 
-                    '$gte': startDate, 
-                    '$lte': endDate
-                },
-                project: ObjectId(project)
-        }, (err, result) => {
-            res.status(200).json({ 'spendings': result })
-        })
-    }
+  if (startDate) {
+      if(campaignType) {
+          Expense.find({
+              "spendingDate": { 
+                      '$gte': startDate, 
+                      '$lte': endDate
+                  },
+                  project: ObjectId(project),
+                  campaignType: campaignType
+          }, (err, result) => {
+              res.status(200).json({ 'spendings': result })
+          })
+      } else {
+          Expense.find({
+              "spendingDate": { 
+                      '$gte': startDate, 
+                      '$lte': endDate
+                  },
+                  project: ObjectId(project)
+          }, (err, result) => {
+              res.status(200).json({ 'spendings': result })
+          })
+      }
+  } else if(campaign) {
+      if(campaignType) {
+          Expense.find({
+              campaign: ObjectId(campaign),
+              campaignType: campaignType
+          }, (err, result) => {
+              res.status(200).json({ 'spendings': result })
+          })
+      } else {
+          Expense.find({ campaign: ObjectId(campaign) }, (err, result) => {
+              res.status(200).json({ 'spendings': result })
+          })
+      }
+  } 
 });
 
 router.post("/assignProject", middleware.checkToken, (req, res) => {
