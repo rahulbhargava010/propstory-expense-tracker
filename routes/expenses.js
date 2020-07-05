@@ -56,7 +56,7 @@ router.post('/', middleware.checkToken, (req, res) => {
             const filter = {_id: req.body._id }
             console.log(filter)
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, campaignName, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
+            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, campaign: campaignName, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -79,7 +79,7 @@ router.post('/', middleware.checkToken, (req, res) => {
                     res.status(400).json({ errors })
                 } else {
                     const newExpense = new Expense({
-                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaignName, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
+                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaign: campaignName, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
                     console.log("NEW EXPENSE");
