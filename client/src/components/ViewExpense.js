@@ -80,13 +80,16 @@ export default function ViewExpense(props) {
   const [deleteId, setDeleteId] = React.useState("");
   const [alocModal, setAlocModal] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [openDeleteAlert, setOpenDeleteAlert] = React.useState(false);
   const [loading, setLoading] = React.useState(false)
   const [campaign, setCampaign] = React.useState("");
   const [viewDate, setViewDate] = React.useState(false);
+  const [campaignNames, setCampaignNames] = React.useState([]);
+  const [campaignName, setCampaignName] = React.useState("");
   const [state, setState] = React.useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 7),
+      endDate: addDays(new Date, 7),
       key: "selection",
     },
   ]);
@@ -102,6 +105,19 @@ export default function ViewExpense(props) {
 
     setOpen(false);
   };
+
+  const handleCloseDeleteAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenDeleteAlert(false);
+  };
+
+  const handleChangeCampaignName = event => {
+    setCampaignName(event.target.value);
+  }
+
 
   useEffect(() => {
     props.handleGetProjects();
@@ -128,7 +144,7 @@ export default function ViewExpense(props) {
     result.map((resData) => { return parsedData.push({ "Campaign Type": resData.campaignType, "Actual Leads": resData.actualLeads, "Allocation": resData.allocation, "Total Budget": resData.totalBudget, "Total Spending": resData.totalSpending, "CPL": resData.cpl, "Clicks": resData.clicks, "Impressions": resData.impressions, "Spending Date": resData.spendingDate, "Campaign Start Date": resData.campaignStartDate }) });
     const data = parsedData;
 
-    const fileName = campaign +' '+'Expense'+' '+ start +' '+ end 
+    const fileName = campaign + ' ' + 'Expense' + ' ' + start + ' ' + end
     const exportType = 'csv'
     exportFromJSON({ data, fileName, exportType })
   }
@@ -143,11 +159,12 @@ export default function ViewExpense(props) {
 
 
     axios
-      .post("http://expenses.propstory.com/project/projectData", {
+      .post("http://localhost:3050/project/projectData", {
         project: e.target.project.value,
         startDate: start,
         endDate: end,
         campaignType: e.target.campaignType.value,
+        campaign: e.target.campaignName.value
       })
       .then(function (response) {
         console.log(response);
@@ -160,6 +177,30 @@ export default function ViewExpense(props) {
         console.log(error);
       });
   };
+
+
+  useEffect(() => {
+    
+    const _this = this;
+
+    axios
+      .post(
+        "http://localhost:3050/campaign/getCampaignNames",
+        {
+          project_id: project,
+        }
+      )
+      .then(function (response) {
+        console.log(response.data);
+        setCampaignNames(response.data.campaigns)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+ 
+}, [project])
+
+
 
   async function _Delete(id) {
     console.log(id);
@@ -178,8 +219,31 @@ export default function ViewExpense(props) {
       .then(async function (response) {
         console.log("DELETED SUCCESSFULLY");
         console.log(response);
-        alert("DELETED SELECTED EXPENSE SUCCESSFULLY");
-        window.location.reload(false);
+        setOpenDeleteAlert(true);
+        const start = moment(state[0].startDate).format("YYYY-MM-DD")
+        const end = moment(state[0].endDate).format("YYYY-MM-DD")
+        setLoading(true)
+        setViewDate(false)
+        setShow(false);
+    
+        axios
+          .post("http://expenses.propstory.com/project/projectData", {
+            project: project,
+            startDate: start,
+            endDate: end,
+            campaignType: campaign,
+            campaign: campaignName
+          })
+          .then(function (response) {
+            console.log(response);
+            let result = response.data.spendings;
+            setResult(result);
+            setLoading(false)
+    
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       })
       .catch(function (error) {
         console.log(error);
@@ -205,10 +269,10 @@ export default function ViewExpense(props) {
 
         <div>
           <CalcDrawer />
-          <Button onClick={() => downloadCsv()} variant="outlined" color="secondary" startIcon={<AssignmentOutlinedIcon />} style={{ position: "fixed", bottom: 20, right: 20, fontWeight: 600 }}> <Typography
-            component="h5"
+          <Button onClick={() => downloadCsv()} variant="contained" color="secondary" startIcon={<AssignmentOutlinedIcon />} style={{ position: "fixed", right: 20, bottom: 20, fontWeight: 600 }}> <Typography
+            component="h6"
             variant="subtitle"
-            style={{ textTransform: "none", zIndex: 9 }}
+            style={{ textTransform: "none", color: "#fff" }}
           >
             Download as csv
               </Typography></Button>
@@ -229,8 +293,9 @@ export default function ViewExpense(props) {
                 noValidate
                 onSubmit={handleViewExpenseSubmit}
               >
-                <Grid container justify="center" spacing={2}>
-                  <Grid item sm={4} xs={12}>
+                <Grid container justify="center" spacing={2} className="mb-5">
+
+                  <Grid item xs={12} sm={4}>
                     <InputLabel id="demo-simple-select-label">
                       Select Project
                     </InputLabel>
@@ -253,7 +318,10 @@ export default function ViewExpense(props) {
                         })}
                     </select>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                </Grid>
+                <Grid container justify="center" spacing={2}>
+
+                  <Grid item xs={10} sm={3}>
                     <InputLabel id="demo-simple-select-label">
                       Select Campaign Type
                     </InputLabel>
@@ -278,12 +346,50 @@ export default function ViewExpense(props) {
                       <option value="Calls/Chats">Calls/Chats</option>
                     </select>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={10} sm={3}>
                     <InputLabel id="demo-simple-select-label">
                       Select Date
                     </InputLabel>
                     <input placeholder="Date" style={{ width: "100%", height: 35, border: "1px solid #ced4da", borderRadius: "0.25rem", padding: ".375rem 1.75rem .375rem .75rem" }} onClick={() => setViewDate(true)} />
                   </Grid>
+                  <Grid item xs={12} sm={1}>
+                    <Typography
+                      style={{ textAlign: "center", marginTop: 20 }}
+                      component="h4"
+                      variant="subtitle"
+                    >
+                      OR
+              </Typography>
+                  </Grid>
+
+                  <Grid item xs={10} sm={3}>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Campaign Name
+                    </InputLabel>
+
+                    <select
+                    className="custom-select"
+                    id="campaignName"
+                    name="campaignName"
+                    required
+                    value={campaignName}
+                    onChange={handleChangeCampaignName}
+                    style={{ width: "100%" }}
+                  >
+                     <option key="" value="">
+                          Select Campaign Name
+                          </option>
+                    {campaignNames &&
+                      campaignNames.map((campaignName) => {
+                        return (
+                          <option key={campaignName._id} value={campaignName._id}>
+                            {campaignName.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                  </Grid>
+
                   {viewDate && <Grid container direction="row" justify="center" xs={12}>
                     <DateRangePicker
                       onChange={(item) => (setState([item.selection]))}
@@ -605,6 +711,15 @@ export default function ViewExpense(props) {
           >
             <Alert onClose={handleCloseAlert} severity="info">
               Allocation has been updated!
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={openDeleteAlert}
+            autoHideDuration={2000}
+            onClose={handleCloseDeleteAlert}
+          >
+            <Alert onClose={handleCloseAlert} severity="success">
+              Selected expense has been deleted successfully!
             </Alert>
           </Snackbar>
         </div>

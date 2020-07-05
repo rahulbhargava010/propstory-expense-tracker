@@ -77,11 +77,13 @@ export default function AddExpense(props) {
   const classes = useStyles();
   const [show, setShow] = React.useState(props.show);
   const [company, setCompany] = React.useState("");
-
+  const [campaignNames, setCampaignNames] = React.useState([]);
+  const [campaignName, setCampaignName] = React.useState("");
   const [city, setCity] = React.useState("");
   const [project, setProject] = React.useState("");
-
-
+  const [actualLeads, setActualLeads] = React.useState("");
+  const [totalSpending, setTotalSpending] = React.useState("");
+  const [cpl, setCpl] = React.useState(0);
   const handleChangeCampaign = (event) => {
     setCity(event.target.value);
   };
@@ -92,6 +94,19 @@ export default function AddExpense(props) {
   const handleChangeCompany = event => {
     setCompany(event.target.value);
   };
+  
+  const handleChangeCampaignName = event => {
+    setCampaignName(event.target.value);
+  }
+
+  const checkCPL = () => {
+    if(!actualLeads == "" && !totalSpending == ""){
+      setCpl(Number(totalSpending / actualLeads).toFixed(2))
+    }
+    else {
+      setCpl(0)
+    }
+  }
 
   useEffect(() => {
     props.handleGetCompanies();
@@ -103,7 +118,6 @@ export default function AddExpense(props) {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
@@ -111,6 +125,28 @@ export default function AddExpense(props) {
     setOpen(props.alert);
 
   }, [props.alert])
+
+
+  useEffect(() => {
+    
+      const _this = this;
+  
+      axios
+        .post(
+          "http://expenses.propstory.com/campaign/getCampaignNames",
+          {
+            project_id: project,
+          }
+        )
+        .then(function (response) {
+          console.log(response.data);
+          setCampaignNames(response.data.campaigns)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+   
+  }, [project])
 
   if (token == null) {
     return <NotLoginView />;
@@ -132,11 +168,11 @@ export default function AddExpense(props) {
               onSubmit={props.handleExpenseSubmit}
             >
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
               <InputLabel id="demo-simple-select-label">
                 Select Company
               </InputLabel>
-
+             
               <select
                 class="custom-select"
                 name="company"
@@ -144,12 +180,15 @@ export default function AddExpense(props) {
                 onChange={handleChangeCompany}
                 style={{ width: "100%" }}
               >
+                 <option key="" value="">
+                            Select Company
+                          </option>
                  {props.companies && props.companies.map(company => {
                   return <option value={company._id}>{company.name}</option>;
                 })}
               </select>
             </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <InputLabel id="demo-simple-select-label">
                     Select Project
                   </InputLabel>
@@ -163,8 +202,11 @@ export default function AddExpense(props) {
                     onChange={handleChangeProject}
                     style={{ width: "100%" }}
                   >
+                     <option key="" value="">
+                            Select Project
+                          </option>
                     {props.projects &&
-                      props.projects.map((project) => {
+                      props.projects.filter(proj => proj.company == company).map((project) => {
                         return (
                           <option key={project._id} value={project._id}>
                             {project.name}
@@ -173,7 +215,7 @@ export default function AddExpense(props) {
                       })}
                   </select>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <InputLabel id="demo-simple-select-label">
                     Select Campaign Type
                   </InputLabel>
@@ -186,6 +228,9 @@ export default function AddExpense(props) {
                     onChange={handleChangeCampaign}
                     style={{ width: "100%" }}
                   >
+                    <option key="" value="">
+                            Select Campaign Type
+                          </option>
                     <option value="GDN">Google - GDN</option>
                     <option value="GSN">Google - GSN</option>
                     <option value="Google">Google</option>
@@ -197,6 +242,33 @@ export default function AddExpense(props) {
                     <option value="Calls/Chats">Calls/Chats</option>
                   </select>
                 </Grid>
+                <Grid item xs={12} sm={3}>
+                  <InputLabel id="demo-simple-select-label">
+                    Select Campaign Name
+                  </InputLabel>
+
+                  <select
+                    className="custom-select"
+                    id="campaignName"
+                    name="campaignName"
+                    required
+                    value={campaignName}
+                    onChange={handleChangeCampaignName}
+                    style={{ width: "100%" }}
+                  >
+                     <option key="" value="">
+                          Select Campaign Name
+                          </option>
+                    {campaignNames &&
+                      campaignNames.map((campaignName) => {
+                        return (
+                          <option key={campaignName._id} value={campaignName._id}>
+                            {campaignName.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <TextField
                     autoComplete="actualLeads"
@@ -204,6 +276,9 @@ export default function AddExpense(props) {
                     variant="outlined"
                     required
                     fullWidth
+                    value={actualLeads}
+                    onChange={e => setActualLeads(e.target.value)}
+                    onBlur={() => checkCPL()}
                     id="actualLeads"
                     label="Actual Leads"
                     autoFocus
@@ -240,6 +315,9 @@ export default function AddExpense(props) {
                     variant="outlined"
                     required
                     fullWidth
+                    value={totalSpending}
+                    onChange={e => setTotalSpending(e.target.value)}
+                    onBlur={() => checkCPL()}
                     id="totalSpending"
                     label="Total Spending"
                     name="totalSpending"
@@ -268,6 +346,8 @@ export default function AddExpense(props) {
                     name="cpl"
                     label="CPL"
                     id="cpl"
+                    disabled
+                    value={cpl}
                     autoComplete="cpl"
                     size="small"
                   />

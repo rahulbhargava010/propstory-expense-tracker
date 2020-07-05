@@ -16,6 +16,7 @@ import { Home, Login, Register, Header, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
 import FbExpense from "./components/AutomateExpense/FbExpense";
 import ManageUsers from './components/ManageUsers'
+import AddCampaignName from "./components/AddCampaignName";
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
 const userCompany = localStorage.getItem("userCompany");
@@ -35,6 +36,7 @@ class App extends PureComponent {
       show: false,
       projects: [],
       alert: false,
+      campaignName: []
     };
   }
 
@@ -73,8 +75,10 @@ class App extends PureComponent {
         console.log(response);
 
         let projects = response.data.projects;
+        
         this.setState({ projects });
         console.log(this.state.projects);
+
       })
       .catch((err) => console.log(err));
   };
@@ -202,6 +206,8 @@ class App extends PureComponent {
       });
   };
 
+
+
   handleExpenseSubmit = async (e) => {
     e.preventDefault();
     const _this = this;
@@ -213,6 +219,7 @@ class App extends PureComponent {
           user: userin,
           project: e.target.project.value,
           campaignType: e.target.campaignType.value,
+          campaignName: e.target.campaignName.value,
           actualLeads: e.target.actualLeads.value,
           plannedLeads: e.target.plannedLeads.value,
           allocation: e.target.allocation.value,
@@ -375,6 +382,8 @@ class App extends PureComponent {
                 )}
               ></Route>
 
+              
+
               <Route
                 exact
                 path="/addcompany"
@@ -387,7 +396,19 @@ class App extends PureComponent {
                   />
                 )}
               ></Route>
-
+              <Route
+                exact
+                path="/add_campaign_name"
+                render={() => (
+                  <AddCampaignName
+                    user={this.state.user}
+                    handleGetProjects={this.handleGetProjects}
+                    projects={this.state.projects}
+                    handleGetCompanies={this.handleGetCompanies}
+                    companies={this.state.companies}
+                  />
+                )}
+              ></Route>
               {/* <Route exact path="/viewexpense" component={ViewExpense}></Route> */}
               <Route
                 exact

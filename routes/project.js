@@ -31,7 +31,7 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
       res.status(400).json({ err });
     }
     // console.log(user.role);
-    
+
     if (user.role === "PSADMIN") {
       Project.find({}, (err, result) => {
         res.status(200).json({ projects: result });
@@ -48,11 +48,11 @@ router.post("/getProjects", middleware.checkToken, (req, res) => {
 
       await UserProjects.find(filter, async (err, result) => {
         //   console.log("Inside Team Member");
-          
+
         //   console.log(err);
         //   console.log(result);
-          
-          
+
+
         if (err) {
 
           res.status(400).json({ err });
@@ -113,43 +113,48 @@ router.post("/projectData", (req, res) => {
   //   errors.push({ msg: "Please fill all the fields" });
   // }
 
-  if (startDate) {
-      if(campaignType) {
-          Expense.find({
-              "spendingDate": { 
-                      '$gte': startDate, 
-                      '$lte': endDate
-                  },
-                  project: ObjectId(project),
-                  campaignType: campaignType
-          }, (err, result) => {
-              res.status(200).json({ 'spendings': result })
-          })
-      } else {
-          Expense.find({
-              "spendingDate": { 
-                      '$gte': startDate, 
-                      '$lte': endDate
-                  },
-                  project: ObjectId(project)
-          }, (err, result) => {
-              res.status(200).json({ 'spendings': result })
-          })
-      }
-  } else if(campaign) {
-      if(campaignType) {
-          Expense.find({
-              campaign: ObjectId(campaign),
-              campaignType: campaignType
-          }, (err, result) => {
-              res.status(200).json({ 'spendings': result })
-          })
-      } else {
-          Expense.find({ campaign: ObjectId(campaign) }, (err, result) => {
-              res.status(200).json({ 'spendings': result })
-          })
-      }
-  } 
+  if (campaign) {
+    console.log("IN CAMPAIGN NAME", campaign, campaignType);
+    
+    if (campaignType) {
+      console.log("IN CAMPAIGN NAME", campaign, campaignType);
+
+      Expense.find({
+        campaign: ObjectId(campaign),
+        campaignType: campaignType
+      }, (err, result) => {
+        res.status(200).json({ 'spendings': result })
+      })
+    } else {
+      Expense.find({ campaign: ObjectId(campaign) }, (err, result) => {
+        res.status(200).json({ 'spendings': result })
+      })
+    }
+  }
+  else if (startDate) {
+    if (campaignType) {
+      Expense.find({
+        "spendingDate": {
+          '$gte': startDate,
+          '$lte': endDate
+        },
+        project: ObjectId(project),
+        campaignType: campaignType
+      }, (err, result) => {
+        res.status(200).json({ 'spendings': result })
+      })
+    } else {
+      Expense.find({
+        "spendingDate": {
+          '$gte': startDate,
+          '$lte': endDate
+        },
+        project: ObjectId(project)
+      }, (err, result) => {
+        res.status(200).json({ 'spendings': result })
+      })
+    }
+  }
 });
 
 router.post("/assignProject", middleware.checkToken, (req, res) => {
