@@ -14,6 +14,8 @@ import UpdateIcon from "@material-ui/icons/Update";
 import Collapse from "@material-ui/core/Collapse";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import GroupIcon from "@material-ui/icons/Group";
+import AddToPhotosIcon from '@material-ui/icons/AddToPhotos';
+
 import {
   Dashboard,
   Receipt,
@@ -93,6 +95,15 @@ export default function TemporaryDrawer() {
                 <ListItemText primary="Add Project" />
               </ListItem>
             </a>
+            <a href="/add_campaign_name">
+              <ListItem button key="AddCampaignName">
+                <ListItemIcon>
+                  <AddToPhotosIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add Campaign Name" />
+              </ListItem>
+            </a>
+            
             <a href="/addcity">
               <ListItem button key="AddCity">
                 <ListItemIcon>
