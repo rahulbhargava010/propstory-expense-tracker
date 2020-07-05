@@ -186,9 +186,7 @@ export default function ViewExpense(props) {
     axios
       .post(
         "http://expenses.propstory.com/campaign/getCampaignNames",
-        {
-          project_id: project,
-        }
+        { project_id: project }
       )
       .then(function (response) {
         console.log(response.data);
