@@ -45,7 +45,8 @@ const ExpenseSchema = new mongoose.Schema({
     },
     campaign: {
         type: Schema.Types.ObjectId, 
-        ref: 'Campaign' 
+        ref: 'Campaign', 
+        required: false
     },
     spendingDate: {
         type: String,
