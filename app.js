@@ -9,6 +9,7 @@ var morgan = require('morgan');
 const rateLimit = require("express-rate-limit");
 var fs = require('fs')
 const cron = require("node-cron");
+const fetch = require('node-fetch');
 
 require('dotenv').config()
 
@@ -48,6 +49,7 @@ app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')))
+//app.use('/exported-images', express.static('static'));
 //app.use(express.static("client/build/"));
 
 //Connect flash
@@ -80,32 +82,13 @@ app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 app.use('/campaign', require('./routes/campaign'))
+// app.use('/image', require('./routes/image'))
 
 app.get('*', (req, res) => {    
     res.sendFile(path.resolve(__dirname, "public", "index.html"));
 })
-// 0 7 * * *
-cron.schedule("* * * * *", async function () {
-    console.log("Running Cron Job");
-    try {
-        // router.get('localhost:3050/expenses/fbexpense', (req, res) => {
-        //     console.log(res)
-        //     console.log("object delettion done");
-        // })
-    } catch(error) {
-        console.log(error)
-        // code to run if there are any problems
-    } 
-    // .then( (result) => {
-    //     console.log(result)
-    // }).catch( error => console.log(error))
-    // app.get('localhost:3050/expenses/deleteObjects', (req, res) => {
-    //     console.log(res)
-    //     console.log("object delettion done");
-    // })
-});
 
-const PORT = process.env.PORT || 3050
+const PORT = process.env.PORT || 3030
 
 // app server connection
 app.listen(PORT, (err, res) => {
