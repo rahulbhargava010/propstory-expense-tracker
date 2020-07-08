@@ -82,7 +82,7 @@ app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 app.use('/campaign', require('./routes/campaign'))
-app.use('/image', require('./routes/image'))
+// app.use('/image', require('./routes/image'))
 
 app.get('*', (req, res) => {    
     res.sendFile(path.resolve(__dirname, "public", "index.html"));
