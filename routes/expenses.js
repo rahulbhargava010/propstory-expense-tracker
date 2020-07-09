@@ -78,8 +78,9 @@ router.post('/', middleware.checkToken, (req, res) => {
                     errors.push( { msg: "Expense already exist for this date" })
                     res.status(400).json({ errors })
                 } else {
+                    const campaign_name = campaignName.length > 0 ? campaignName : null 
                     const newExpense = new Expense({
-                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaign: campaignName, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
+                        project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaign: campaign_name, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
                     })
                     console.log("NEW EXPENSE");
