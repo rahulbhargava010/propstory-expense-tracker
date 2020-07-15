@@ -100,7 +100,7 @@ export default function AddExpense(props) {
   }
 
   const checkCPL = () => {
-    if(!actualLeads == "" && !totalSpending == ""){
+    if(!actualLeads == "" && !totalSpending == "" && actualLeads > 0){
       setCpl(Number(totalSpending / actualLeads).toFixed(2))
     }
     else {
@@ -251,7 +251,6 @@ export default function AddExpense(props) {
                     className="custom-select"
                     id="campaignName"
                     name="campaignName"
-                    required
                     value={campaignName}
                     onChange={handleChangeCampaignName}
                     style={{ width: "100%" }}
