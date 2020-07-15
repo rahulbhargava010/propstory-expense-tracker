@@ -82,6 +82,7 @@ app.use('/users', require('./routes/users'))
 app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 app.use('/campaign', require('./routes/campaign'))
+app.use('/webhook', require('./routes/webhook'))
 // app.use('/image', require('./routes/image'))
 
 app.get('*', (req, res) => {    
