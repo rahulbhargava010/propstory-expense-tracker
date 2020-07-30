@@ -6,6 +6,12 @@ const CampaignSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    campaignStartDate: {
+        type: String
+    },
+    plannedLeads: {
+        type: Number
+    },
     project: { 
         type: Schema.Types.ObjectId, 
         ref: 'Project'
