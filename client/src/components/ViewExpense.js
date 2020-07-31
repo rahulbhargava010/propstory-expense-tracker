@@ -138,17 +138,25 @@ export default function ViewExpense(props) {
     console.log(data);
     setSelectedData(data);
   };
+
+
+
   const downloadCsv = () => {
     const start = moment(state[0].startDate).format("YYYY-MM-DD")
     const end = moment(state[0].endDate).format("YYYY-MM-DD")
     const parsedData = [];
-    result.map((resData) => { return parsedData.push({ "Campaign Type": resData.campaignType, "Actual Leads": resData.actualLeads, "Allocation": resData.allocation, "Total Budget": resData.totalBudget, "Total Spending": resData.totalSpending, "CPL": resData.cpl, "Clicks": resData.clicks, "Impressions": resData.impressions, "Spending Date": resData.spendingDate, "Campaign Start Date": resData.campaignStartDate }) });
+    result.map((resData) => { 
+      console.log(resData);
+      return parsedData.push({ "Campaign Type": resData.campaignType, "Actual Leads": resData.actualLeads, "Allocation": resData.allocation, "Total Budget": resData.totalBudget, "Total Spending": resData.totalSpending, "CPL": resData.cpl, "Clicks": resData.clicks, "Impressions": resData.impressions, "Spending Date": resData.spendingDate, "Campaign Start Date": resData.campaignStartDate }) });
     const data = parsedData;
 
     const fileName = campaign + ' ' + 'Expense' + ' ' + start + ' ' + end
     const exportType = 'csv'
     exportFromJSON({ data, fileName, exportType })
   }
+
+
+  
   const handleViewExpenseSubmit = (e) => {
 
     e.preventDefault();
@@ -259,7 +267,7 @@ export default function ViewExpense(props) {
       .then(setOpen(true), setAlocModal(false));
   }
 
-  var cpledit = selectedData.TOTAL_SPENDING/ selectedData.ACTUAL_LEADS;
+  var cpledit = selectedData.TOTAL_SPENDING/selectedData.ACTUAL_LEADS;
   const handleClose = () => setShow(false);
   if (token == null) {
     return <NotLoginView />;
@@ -477,7 +485,7 @@ export default function ViewExpense(props) {
               >
                 <TextField name="expenseid" hidden value={selectedData.ID} />
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel id="demo-simple-select-label">
                       Select Project
                     </InputLabel>
@@ -500,7 +508,7 @@ export default function ViewExpense(props) {
                         })}
                     </select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <InputLabel id="demo-simple-select-label">
                       Select Campaign Type
                     </InputLabel>
@@ -524,7 +532,33 @@ export default function ViewExpense(props) {
                       <option value="Calls/Chats">Calls/Chats</option>
                     </select>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
+                  <InputLabel id="demo-simple-select-label">
+                    Select Campaign Name
+                  </InputLabel>
+
+                  <select
+                    className="custom-select"
+                    id="campaignName"
+                    name="campaignName"
+                    value={campaignName}
+                    onChange={handleChangeCampaignName}
+                    style={{ width: "100%" }}
+                  >
+                     <option key="" value="">
+                          Select Campaign Name
+                          </option>
+                    {campaignNames &&
+                      campaignNames.map((campaignName) => {
+                        return (
+                          <option key={campaignName._id} value={campaignName._id}>
+                            {campaignName.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </Grid>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       autoComplete="actualLeads"
                       name="actualLeads"
@@ -533,62 +567,11 @@ export default function ViewExpense(props) {
                       id="actualLeads"
                       label="Actual Leads"
                       value={selectedData.ACTUAL_LEADS}
-                      onChange={e => setSelectedData({ACTUAL_LEADS: e.target.value})}
+                      onChange={e => {setSelectedData({ACTUAL_LEADS: e.target.value})}}
                       autoFocus
                       size="small"
                     />
                   </Grid>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      hidden
-                      id="plannedLeads"
-                      label="Planned Leads"
-                      value={selectedData.PLANNED_LEADS}
-                      onChange={e => setSelectedData({PLANNED_LEADS: e.target.value})}
-                      name="plannedLeads"
-                      autoComplete="plannedLeads"
-                      size="small"
-                    />
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      id="totalSpending"
-                      label="Total Spending"
-                      value={selectedData.TOTAL_SPENDING}
-                      onChange={e => setSelectedData({TOTAL_SPENDING: e.target.value})}
-                      name="totalSpending"
-                      autoComplete="totalSpending"
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      name="totalBudget"
-                      label="Total Budget"
-                      value={selectedData.TOTAL_BUDGET}
-                      onChange={e => setSelectedData({TOTAL_BUDGET: e.target.value})}
-                      id="totalBudget"
-                      autoComplete="totalBudget"
-                      size="small"
-                    />
-                  </Grid>
-                        
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      name="cpl"
-                      hidden
-                      label="CPL"
-                      placeholder="will be calculated after updation"
-                      value=""
-                      id="cpl"
-                      autoComplete="cpl"
-                      size="small"
-                    />
                   <Grid item xs={12} sm={4}>
                     <TextField
                       variant="outlined"
@@ -615,6 +598,58 @@ export default function ViewExpense(props) {
                       size="small"
                     />
                   </Grid>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      hidden
+                      id="plannedLeads"
+                      label="Planned Leads"
+                      value={selectedData.PLANNED_LEADS}
+                      onChange={e => setSelectedData({PLANNED_LEADS: e.target.value})}
+                      name="plannedLeads"
+                      autoComplete="plannedLeads"
+                      size="small"
+                    />
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      id="totalSpending"
+                      label="Total Spending"
+                      value={selectedData.TOTAL_SPENDING}
+                      onChange={e => setSelectedData({TOTAL_SPENDING: parseInt(e.target.value)})}
+                      name="totalSpending"
+                      autoComplete="totalSpending"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      name="totalBudget"
+                      label="Total Budget"
+                      value={selectedData.TOTAL_BUDGET}
+                      onChange={e => setSelectedData({TOTAL_BUDGET: e.target.value})}
+                      id="totalBudget"
+                      autoComplete="totalBudget"
+                      size="small"
+                    />
+                  </Grid>
+                        
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      name="cpl"
+                      hidden
+                      label="CPL"
+                      placeholder="will be calculated after updation"
+                      value={parseFloat(selectedData.CPL)}
+                      id="cpl"
+                      autoComplete="cpl"
+                      size="small"
+                    />
+                  
                   <Grid item lg={6} xs={12}>
                     <InputLabel shrink htmlFor="bootstrap-input">
                       Spending Date
@@ -625,6 +660,8 @@ export default function ViewExpense(props) {
                       id="outlined-spendingDate"
                       type="date"
                       autoComplete="spendingDate"
+                      onChange={e => setSelectedData({SPENT_ON: e.target.value})}
+                      value={selectedData.SPENT_ON}
                     />
                   </Grid>
                   <Grid item lg={6} xs={12}>
@@ -637,6 +674,8 @@ export default function ViewExpense(props) {
                       id="outlined-campaignStartDate"
                       type="date"
                       autoComplete="campaignStartDate"
+                      onChange={e => setSelectedData({CAMPAIGN_START_DATE: e.target.value})}
+                      value={selectedData.CAMPAIGN_START_DATE}
                     />
                   </Grid>
                   <Button

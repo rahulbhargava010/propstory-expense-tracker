@@ -107,6 +107,9 @@ export default function AddCampaignName(props) {
                 {
                     project_id: e.target.project.value,
                     campaign_name: e.target.campaignName.value,
+                    planned_leads: e.target.plannedLeads.value,
+                    campaign_start_date: e.target.campaignStartDate.value,
+                    total_budget: e.target.totalBudget.value
                 },
                 options
             )
@@ -120,7 +123,7 @@ export default function AddCampaignName(props) {
             .catch(function (error) {
                 console.log(error);
             });
-        
+
 
     }
     useEffect(() => {
@@ -148,7 +151,7 @@ export default function AddCampaignName(props) {
                             noValidate
                             onSubmit={handleCampaignNameSubmit}
                         >
-                            <Grid container spacing={4}>
+                            <Grid container  justify="center" spacing={4}>
 
                                 <Grid item xs={12} sm={6}>
                                     <InputLabel id="demo-simple-select-label">
@@ -170,7 +173,7 @@ export default function AddCampaignName(props) {
                                 <Grid item xs={12} sm={6}>
                                     <InputLabel id="demo-simple-select-label">
                                         Select Project
-                  </InputLabel>
+                                     </InputLabel>
 
                                     <select
                                         className="custom-select"
@@ -194,7 +197,7 @@ export default function AddCampaignName(props) {
                                             })}
                                     </select>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item lg={4} xs={12}>
                                     <TextField
                                         variant="outlined"
                                         required
@@ -207,7 +210,44 @@ export default function AddCampaignName(props) {
                                         size="small"
                                     />
                                 </Grid>
-
+                                
+                                <Grid item lg={4} xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="plannedLeads"
+                                        label="Assign Planned Leads"
+                                        id="plannedLeads"
+                                        autoComplete="plannedLeads"
+                                        size="small"
+                                    />
+                                </Grid>
+                                <Grid item lg={4} xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="totalBudget"
+                                        label="Assign Total Budget"
+                                        id="totalBudget"
+                                        autoComplete="totalBudget"
+                                        size="small"
+                                    />
+                                </Grid>
+                                <Grid item lg={6} xs={12}>
+                                    <InputLabel shrink htmlFor="bootstrap-input">
+                                        Campaign Start Date
+                                     </InputLabel>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        name="campaignStartDate"
+                                        id="outlined-campaignStartDate"
+                                        type="date"
+                                        autoComplete="campaignStartDate"
+                                    />
+                                </Grid>
 
 
                                 <Button

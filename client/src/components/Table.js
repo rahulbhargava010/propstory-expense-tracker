@@ -61,6 +61,16 @@ const columns = [
     minWidth: 100,
     align: "center",
   },
+  {
+    id: "TOTAL_BUDGET",
+    label: "TOTAL BUDGET",
+    hidden: true
+  },
+  {
+    id: "CAMPAIGN_START_DATE",
+    label: "CAMPAIGN START DATE",
+    hidden: true
+  }
 ];
 
 function createData(
@@ -72,7 +82,9 @@ function createData(
   CPL,
   CLICK,
   IMPRESSIONS,
-  TOTAL_SPENDING
+  TOTAL_SPENDING,
+  TOTAL_BUDGET,
+  CAMPAIGN_START_DATE
 ) {
   return {
     ID,
@@ -84,6 +96,8 @@ function createData(
     CLICK,
     IMPRESSIONS,
     TOTAL_SPENDING,
+    TOTAL_BUDGET,
+    CAMPAIGN_START_DATE
   };
 }
 
@@ -126,7 +140,9 @@ export default function StickyHeadTable(props) {
         spending.cpl,
         spending.clicks,
         spending.impressions,
-        spending.totalSpending
+        parseInt(spending.totalSpending),
+        spending.totalBudget,
+        spending.campaignStartDate
       );
     });
 
@@ -150,6 +166,7 @@ export default function StickyHeadTable(props) {
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth, display: column.display }}
+                  hidden={column.hidden}
                 >
                   {column.label}
                 </TableCell>
@@ -178,7 +195,7 @@ export default function StickyHeadTable(props) {
                 <h6>IMPRESSIONS: {impressions}</h6>
               </TableCell>
               <TableCell colSpan={4} align="left">
-                <h6>TOTAL SPENDING: {totalSpending}</h6>
+                <h6>TOTAL SPENDING: {parseFloat(totalSpending).toFixed(2)}</h6>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -186,6 +203,7 @@ export default function StickyHeadTable(props) {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
+                
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
@@ -196,6 +214,7 @@ export default function StickyHeadTable(props) {
                           style={{ display: column.display }}
                           key={column.id}
                           align={column.align}
+                          hidden={column.hidden}
                         >
                           {column.format && typeof value === "number"
                             ? column.format(value)
@@ -203,6 +222,7 @@ export default function StickyHeadTable(props) {
                         </TableCell>
                       );
                     })}
+
                     <TableCell
                       onClick={() => props.onEditAllocation(row)}
                       style={{
@@ -214,9 +234,9 @@ export default function StickyHeadTable(props) {
                         cursor: "pointer",
                         textAlign: "center"
                       }}
-                      
+
                     >
-                       Update Allocation
+                      Update Allocation
                     </TableCell>
                     {role == "PSADMIN" ? (
                       <>

@@ -16,7 +16,7 @@ import { Home, Login, Register, Header, Footer } from "./components";
 import ViewExpense from "./components/ViewExpense";
 import FbExpense from "./components/AutomateExpense/FbExpense";
 import ManageUsers from './components/ManageUsers'
-import AddCampaignName from "./components/AddCampaignName";
+import AddCampaignName from "./components/AddCampaignName.jsx";
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
 const userCompany = localStorage.getItem("userCompany");
@@ -246,7 +246,6 @@ class App extends PureComponent {
   };
 
   handleUpdateExpense = async (e) => {
-    console.log(e.target);
 
     e.preventDefault();
     await axios
@@ -260,12 +259,13 @@ class App extends PureComponent {
           actualLeads: e.target.actualLeads.value,
           plannedLeads: e.target.plannedLeads.value,
           totalBudget: e.target.totalBudget.value,
-          cpl: e.target.cpl.value,
+          cpl: e.target.totalSpending.value/e.target.actualLeads.value,
           clicks: e.target.clicks.value,
           impressions: e.target.impressions.value,
           totalSpending: e.target.totalSpending.value,
           spendingDate: e.target.spendingDate.value,
           campaignStartDate: e.target.campaignStartDate.value,
+          campaignName: e.target.campaignName.value
         },
         options
       )

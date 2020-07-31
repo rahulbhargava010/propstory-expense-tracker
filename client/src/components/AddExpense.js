@@ -22,6 +22,10 @@ import NotLoginView from "./NotLoginView";
 const token = localStorage.getItem("LoginToken");
 const userin = localStorage.getItem("LoggedinUser");
 const userCompany = localStorage.getItem("userCompany");
+var date = new Date();
+
+var formatedDate = `${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}`
+
 
 const options = {
   headers: { Authorization: "Bearer " + token },
@@ -84,6 +88,7 @@ export default function AddExpense(props) {
   const [actualLeads, setActualLeads] = React.useState("");
   const [totalSpending, setTotalSpending] = React.useState("");
   const [cpl, setCpl] = React.useState(0);
+  const [campaignData, setCampaignData] = React.useState([]);
   const handleChangeCampaign = (event) => {
     setCity(event.target.value);
   };
@@ -96,7 +101,11 @@ export default function AddExpense(props) {
   };
   
   const handleChangeCampaignName = event => {
+    const campaignData = campaignNames.filter(campaign => campaign._id == event.target.value);
     setCampaignName(event.target.value);
+    console.log(campaignData[0]);
+    setCampaignData({plannedLeads: campaignData[0].plannedLeads, campaignStartDate: campaignData[0].campaignStartDate, totalBudget: campaignData[0].totalBudget})
+
   }
 
   const checkCPL = () => {
@@ -130,7 +139,9 @@ export default function AddExpense(props) {
   useEffect(() => {
     
       const _this = this;
-  
+      var yesterday = new Date(new Date().setDate(new Date().getDate()-1));
+
+      document.getElementById('outlined-spendingDate').valueAsDate = yesterday;
       axios
         .post(
           "http://expenses.propstory.com/campaign/getCampaignNames",
@@ -139,8 +150,9 @@ export default function AddExpense(props) {
           }
         )
         .then(function (response) {
+          console.log("*********");
           console.log(response.data);
-          setCampaignNames(response.data.campaigns)
+          setCampaignNames(response.data.campaigns);
         })
         .catch(function (error) {
           console.log(error);
@@ -307,6 +319,8 @@ export default function AddExpense(props) {
                     name="plannedLeads"
                     autoComplete="plannedLeads"
                     size="small"
+                    onChange={e => setCampaignData({plannedLeads: e.target.value})}
+                    value={campaignData.plannedLeads}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -322,6 +336,7 @@ export default function AddExpense(props) {
                     name="totalSpending"
                     autoComplete="totalSpending"
                     size="small"
+                    
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -334,6 +349,8 @@ export default function AddExpense(props) {
                     id="totalBudget"
                     autoComplete="totalBudget"
                     size="small"
+                    onChange={e => setCampaignData({totalBudget: e.target.value})}
+                    value={campaignData.totalBudget}
                   />
                 </Grid>
 
@@ -399,6 +416,8 @@ export default function AddExpense(props) {
                     id="outlined-campaignStartDate"
                     type="date"
                     autoComplete="campaignStartDate"
+                    onChange={e => setCampaignData({campaignStartDate: e.target.value})}
+                    value={campaignData.campaignStartDate}
                   />
                 </Grid>
                 <Button
