@@ -70,6 +70,11 @@ const columns = [
     id: "CAMPAIGN_START_DATE",
     label: "CAMPAIGN START DATE",
     hidden: true
+  },
+  {
+    id: "PLANNED_LEADS",
+    label: "PLANNED LEADS",
+    hidden: true
   }
 ];
 
@@ -84,7 +89,8 @@ function createData(
   IMPRESSIONS,
   TOTAL_SPENDING,
   TOTAL_BUDGET,
-  CAMPAIGN_START_DATE
+  CAMPAIGN_START_DATE,
+  PLANNED_LEADS
 ) {
   return {
     ID,
@@ -97,7 +103,8 @@ function createData(
     IMPRESSIONS,
     TOTAL_SPENDING,
     TOTAL_BUDGET,
-    CAMPAIGN_START_DATE
+    CAMPAIGN_START_DATE,
+    PLANNED_LEADS
   };
 }
 
@@ -142,7 +149,8 @@ export default function StickyHeadTable(props) {
         spending.impressions,
         parseInt(spending.totalSpending),
         spending.totalBudget,
-        spending.campaignStartDate
+        spending.campaignStartDate,
+        spending.plannedLeads
       );
     });
 

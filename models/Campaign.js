@@ -13,7 +13,7 @@ const CampaignSchema = new mongoose.Schema({
         type: Number
     },
     totalBudget: {
-        type:   
+        type: Number  
     },
     project: { 
         type: Schema.Types.ObjectId, 

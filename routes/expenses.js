@@ -55,8 +55,10 @@ router.post('/', middleware.checkToken, (req, res) => {
 
             const filter = {_id: req.body._id }
             console.log(filter)
+            console.log(campaignName);
+            const campaign_name = campaignName ? campaignName : null 
             // const filter = {_id: ObjectId(req.body._id)}
-            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, campaign: campaignName, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
+            const updateData = { project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, campaign: campaign_name, totalSpending, spendingDate, campaignStartDate, updatedBy: userID }
             console.log();
             
             Expense.findOneAndUpdate( filter, updateData, { returnOriginal: false} )
@@ -78,7 +80,7 @@ router.post('/', middleware.checkToken, (req, res) => {
                     errors.push( { msg: "Expense already exist for this date" })
                     res.status(400).json({ errors })
                 } else {
-                    const campaign_name = campaignName.length > 0 ? campaignName : null 
+                    const campaign_name = campaignName ? campaignName : null 
                     const newExpense = new Expense({
                         project: projectID, campaignType, actualLeads, allocation, plannedLeads, totalBudget, cpl, clicks, impressions, totalSpending, campaign: campaign_name, spendingDate, campaignStartDate, updatedBy: userID, createdBy: userID
 
