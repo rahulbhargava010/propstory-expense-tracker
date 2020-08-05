@@ -250,7 +250,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://localhost:3050/expenses",
+        "http://expenses.propstory.com/expenses",
         {
           _id: e.target.expenseid.value,
           user: userin,
@@ -265,7 +265,7 @@ class App extends PureComponent {
           totalSpending: e.target.totalSpending.value,
           spendingDate: e.target.spendingDate.value,
           campaignStartDate: e.target.campaignStartDate.value,
-          campaignName: e.target.campaignName.value ? e.target.campaignName.value : null
+          campaignName: e.target.campaignName.value
         },
         options
       )
