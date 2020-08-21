@@ -89,7 +89,7 @@ export default function AddProject(props) {
       props.handleGetCompanies();
 
       axios
-      .get("http://expenses.propstory.com/api/getCities")
+      .get("https://expenses.propstory.com/api/getCities")
       .then(response => {
         console.log(response);
 

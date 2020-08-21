@@ -103,7 +103,7 @@ export default function AddCampaignName(props) {
         e.preventDefault();
         axios
             .post(
-                "http://expenses.propstory.com/campaign/addCampaignName",
+                "https://expenses.propstory.com/campaign/addCampaignName",
                 {
                     project_id: e.target.project.value,
                     campaign_name: e.target.campaignName.value,

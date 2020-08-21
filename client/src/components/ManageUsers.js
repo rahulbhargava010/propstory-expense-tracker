@@ -123,7 +123,7 @@ export default function ManageUsers(props) {
   const handleAssignProject = () => {
     axios
       .post(
-        "http://expenses.propstory.com/project/assignProject",
+        "https://expenses.propstory.com/project/assignProject",
         {
           user_id: data._id,
           project_id: assignProjectId,
@@ -140,7 +140,7 @@ export default function ManageUsers(props) {
   const handleViewUserSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://expenses.propstory.com/api/getCompanyProjects", {
+      .post("https://expenses.propstory.com/api/getCompanyProjects", {
         company_id: company,
       })
       .then(function (response) {
@@ -151,7 +151,7 @@ export default function ManageUsers(props) {
 
     axios
       .post(
-        "http://expenses.propstory.com/users/getCompanyUsers",
+        "https://expenses.propstory.com/users/getCompanyUsers",
         {
           company_id: company,
           user_id: userId,
@@ -166,7 +166,7 @@ export default function ManageUsers(props) {
 
   const callUserSubmit = () => {
     axios
-      .post("http://expenses.propstory.com/api/getCompanyProjects", {
+      .post("https://expenses.propstory.com/api/getCompanyProjects", {
         company_id: company,
       })
       .then(function (response) {
@@ -177,7 +177,7 @@ export default function ManageUsers(props) {
 
     axios
       .post(
-        "http://expenses.propstory.com/users/getCompanyUsers",
+        "https://expenses.propstory.com/users/getCompanyUsers",
         {
           company_id: company,
           user_id: userId,

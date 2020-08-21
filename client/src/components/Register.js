@@ -85,7 +85,7 @@ export default function Register(props) {
 
   useEffect(() => {
     axios
-      .get("http://expenses.propstory.com/api/getCompanies")
+      .get("https://expenses.propstory.com/api/getCompanies")
       .then((response) => {
         console.log(response);
 

@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer')
         } 
     });
     const subject = "Propstory Expense Email Activation"
-    const body = "Hi,<br/> Your account has been activated. Now you can view your expense on propstory on <a href='http://expenses.propstory.com/users/login'>expense.propstory</a>"
+    const body = "Hi,<br/> Your account has been activated. Now you can view your expense on propstory on <a href='https://expenses.propstory.com/users/login'>expense.propstory</a>"
 
     let mailOptions = { 
         from: 'Ashish Mahajan <ashish.mahajan@propstory.com>', 

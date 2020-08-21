@@ -144,7 +144,7 @@ export default function AddExpense(props) {
       document.getElementById('outlined-spendingDate').valueAsDate = yesterday;
       axios
         .post(
-          "http://expenses.propstory.com/campaign/getCampaignNames",
+          "https://expenses.propstory.com/campaign/getCampaignNames",
           {
             project_id: project,
           }

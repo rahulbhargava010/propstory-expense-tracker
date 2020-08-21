@@ -49,7 +49,7 @@ const AssignedProjects = ({ user }) => {
   useEffect(() => {
     axios
       .post(
-        "http://expenses.propstory.com/project/getProjects",
+        "https://expenses.propstory.com/project/getProjects",
         {
           user_id: user._id,
           company_id: user.company,
@@ -120,7 +120,7 @@ export default function ManageUsersTable(props) {
 
   const handleChangeSwitch = (user) => {
     axios
-      .post("http://expenses.propstory.com/users/changeUserStatus", {
+      .post("https://expenses.propstory.com/users/changeUserStatus", {
         user_id: user._id,
         status: user.enable ? false : true,
       })

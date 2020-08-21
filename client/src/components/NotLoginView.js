@@ -26,7 +26,7 @@ export default function Types() {
         
       </h1>
       <a
-          href="http://expenses.propstory.com/users/login"
+          href="https://expenses.propstory.com/users/login"
           style={{ color: "#15eda3", fontSize: 60 }}
         >
           Here

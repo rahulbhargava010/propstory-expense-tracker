@@ -168,7 +168,7 @@ export default function ViewExpense(props) {
 
 
     axios
-      .post("http://expenses.propstory.com/project/projectData", {
+      .post("https://expenses.propstory.com/project/projectData", {
         project: e.target.project.value,
         startDate: start,
         endDate: end,
@@ -194,7 +194,7 @@ export default function ViewExpense(props) {
 
     axios
       .post(
-        "http://expenses.propstory.com/campaign/getCampaignNames",
+        "https://expenses.propstory.com/campaign/getCampaignNames",
         { project_id: project }
       )
       .then(function (response) {
@@ -217,7 +217,7 @@ export default function ViewExpense(props) {
   async function handleDelete() {
     await axios
       .post(
-        "http://expenses.propstory.com/expenses/delete",
+        "https://expenses.propstory.com/expenses/delete",
         {
           _id: deleteId,
         },
@@ -234,7 +234,7 @@ export default function ViewExpense(props) {
         setShow(false);
     
         axios
-          .post("http://expenses.propstory.com/project/projectData", {
+          .post("https://expenses.propstory.com/project/projectData", {
             project: project,
             startDate: start,
             endDate: end,
@@ -260,7 +260,7 @@ export default function ViewExpense(props) {
   async function handleUpdateAllocation(e) {
     e.preventDefault();
     await axios
-      .post("http://expenses.propstory.com/expenses/updateAllocation", {
+      .post("https://expenses.propstory.com/expenses/updateAllocation", {
         expense_id: e.target.expenseid.value,
         allocation: e.target.allocation.value,
       })

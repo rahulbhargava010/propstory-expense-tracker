@@ -69,7 +69,7 @@ const AssignedProjects = ({ user }) => {
   useEffect(() => {
       axios
         .post(
-          "http://expenses.propstory.com/project/getProjects",
+          "https://expenses.propstory.com/project/getProjects",
           {
             user_id: user._id,
             company_id: user.company,

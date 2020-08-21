@@ -52,7 +52,7 @@ class App extends PureComponent {
 
   handleGetCompanies = () => {
     axios
-      .get("http://expenses.propstory.com/api/getCompanies", options)
+      .get("https://expenses.propstory.com/api/getCompanies", options)
       .then((response) => {
         console.log(response);
 
@@ -70,7 +70,7 @@ class App extends PureComponent {
     };
 
     axios
-      .post("http://expenses.propstory.com/project/getProjects", data, options)
+      .post("https://expenses.propstory.com/project/getProjects", data, options)
       .then((response) => {
         console.log(response);
 
@@ -87,7 +87,7 @@ class App extends PureComponent {
     const _this = this;
     e.preventDefault();
     axios
-      .post("http://expenses.propstory.com/users/login", {
+      .post("https://expenses.propstory.com/users/login", {
         email: e.target.email.value,
         password: e.target.password.value,
       })
@@ -99,7 +99,7 @@ class App extends PureComponent {
         localStorage.setItem("userRole", response.data.user.role);
       })
       .then(() => {
-        window.location.href = "http://expenses.propstory.com/viewexpense";
+        window.location.href = "https://expenses.propstory.com/viewexpense";
       })
       .catch(function (error) {
         console.log(error);
@@ -112,7 +112,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://expenses.propstory.com/api/addCity",
+        "https://expenses.propstory.com/api/addCity",
         {
           city: e.target.city.value,
           region: e.target.region.value,
@@ -137,7 +137,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://expenses.propstory.com/api/addCompany",
+        "https://expenses.propstory.com/api/addCompany",
         {
           company: e.target.company.value,
         },
@@ -161,7 +161,7 @@ class App extends PureComponent {
 
     axios
       .post(
-        "http://expenses.propstory.com/project/addProject",
+        "https://expenses.propstory.com/project/addProject",
         {
           project: e.target.project.value,
           city: e.target.city.value,
@@ -187,7 +187,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://expenses.propstory.com/users/register",
+        "https://expenses.propstory.com/users/register",
         {
           name: e.target.name.value,
           email: e.target.email.value,
@@ -214,7 +214,7 @@ class App extends PureComponent {
 
     await axios
       .post(
-        "http://expenses.propstory.com/expenses",
+        "https://expenses.propstory.com/expenses",
         {
           user: userin,
           project: e.target.project.value,
@@ -250,7 +250,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://expenses.propstory.com/expenses",
+        "https://expenses.propstory.com/expenses",
         {
           _id: e.target.expenseid.value,
           user: userin,
@@ -287,7 +287,7 @@ class App extends PureComponent {
     e.preventDefault();
     await axios
       .post(
-        "http://expenses.propstory.com/project/projectData",
+        "https://expenses.propstory.com/project/projectData",
         {
           project: e.target.project.value,
           startDate: e.target.startDate.value,
