@@ -57,9 +57,10 @@ router.post('/addCampaignName', (req, res) => {
 
     const campaignName = new Campaign({
         name: req.body.campaign_name,
-        campaign_start_date: req.body.campaign_start_date,
-        planned_leads: req.body.planned_leads,
-        project: req.body.project_id
+        campaignStartDate: req.body.campaign_start_date,
+        plannedLeads: req.body.planned_leads,
+        project: req.body.project_id,
+        totalBudget: req.body.total_budget
     })
     const campName  = campaignName.save()
 

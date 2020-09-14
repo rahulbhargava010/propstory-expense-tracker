@@ -64,7 +64,7 @@ export default function TemporaryDrawer() {
   };
   const _Logout = () => {
     localStorage.removeItem("LoginToken");
-    window.location.href = "http://expenses.propstory.com/";
+    window.location.href = "https://expenses.propstory.com/";
   };
   const list = (anchor) => (
     <div

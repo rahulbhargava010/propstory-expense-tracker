@@ -12,6 +12,9 @@ const CampaignSchema = new mongoose.Schema({
     plannedLeads: {
         type: Number
     },
+    totalBudget: {
+        type: Number  
+    },
     project: { 
         type: Schema.Types.ObjectId, 
         ref: 'Project'
