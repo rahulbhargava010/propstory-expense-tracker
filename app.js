@@ -83,6 +83,7 @@ app.use('/expenses', require('./routes/expenses'))
 app.use('/project', require('./routes/project'))
 app.use('/campaign', require('./routes/campaign'))
 app.use('/webhook', require('./routes/webhook'))
+app.use('/gauth', require('./routes/google-auth'))
 // app.use('/image', require('./routes/image'))
 
 app.get('*', (req, res) => {    
