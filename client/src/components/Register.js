@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Register(props) {
   const classes = useStyles();
   const [company, setCompany] = React.useState("");
+  const [url, setUrl] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
   const [companies, setCompanies] = React.useState([]);
@@ -93,6 +94,20 @@ export default function Register(props) {
         console.log(companies);
         setCompanies(companies);
       }, options)
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://expenses.propstory.com/gauth/urlGoogle")
+      .then((response) => {
+        console.log('coming inside register function')
+        console.log(response);
+
+        let url = response.data.url;
+        console.log(url);
+        setUrl(url);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -199,6 +214,12 @@ export default function Register(props) {
           >
             Sign Up
           </Button>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link href={url} variant="body2">Login with google
+              </Link>
+            </Grid>
+          </Grid>
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="/users/login" variant="body2">
