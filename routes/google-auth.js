@@ -1,11 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const { google } = require("googleapis");
-
-// const { ObjectId } = require("mongodb");
-// const google = require("googleapis")
-
-
+const queryString = require('query-string');
 
 /*******************/
 /** CONFIGURATION **/
@@ -27,17 +23,22 @@ const defaultScope = [
 /*************/
 
 function createConnection() {
-  console.log("coming inside createConnection")
   return new google.auth.OAuth2(
     googleConfig.clientId,
     googleConfig.clientSecret,
     googleConfig.redirect
-  );
+  )
 }
 
+const oAuth2Client = new google.auth.OAuth2(
+    googleConfig.clientId,
+    googleConfig.clientSecret,
+    googleConfig.redirect
+  )
+
 function getConnectionUrl(auth) {
-  console.log("coming inside getConnectionUrl")
-  console.log(auth)
+  // console.log("coming inside getConnectionUrl")
+  // console.log(auth)
   return auth.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
@@ -49,29 +50,14 @@ function getGooglePlusApi(auth) {
   return google.plus({ version: 'v1', auth });
 }
 
-/**********/
-/** MAIN **/
-/**********/
-
-/**
- * Part 1: Create a Google URL and send to the client to log in the user.
- */
-// function urlGoogle() {
-//   const auth = createConnection();
-//   const url = getConnectionUrl(auth);
-//   console.log(auth)
-//   console.log(url)
-//   return url;
-// }
-
 router.get('/urlGoogle', (req, res) => {
-    console.log('coming inside google')
+    // console.log('coming inside google')
     const auth = createConnection();
     const url = getConnectionUrl(auth);
-    console.log(auth)
-    console.log(url)
+    // console.log(auth)
+    // console.log(url)
     res.status(200).send({ url })
-    return url;
+    // return url;
 })
 /**
  * Part 2: Take the "code" parameter which Google gives us once when the user logs in, then get the user's email and id.
@@ -79,22 +65,28 @@ router.get('/urlGoogle', (req, res) => {
 
 router.get('/getGoogleAccountFromCode/callback', async (req, res) => {
 
-  const auth = createConnection();
-  const data = await auth.getToken(req);
-  console.log('data')
-  console.log(data)
-  const tokens = data.tokens;
-  auth.setCredentials(tokens);
-  const plus = getGooglePlusApi(auth);
-  const me = await plus.people.get({ userId: 'me' });
-  const userGoogleId = me.data.id;
-  const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;
-  return {
-    id: userGoogleId,
-    email: userGoogleEmail,
-    tokens: tokens,
-  };
+    const code = req.query.code
+    if (code) {
+        const data = await oAuth2Client.getToken(code, async(err, tokens) => {
+            if (err) {
+                res.status(400).send({
+                    "error": "authentication failed",
+                    err
+                })
+            } else { 
+                await oAuth2Client.setCredentials(tokens);
+                const plus = await getGooglePlusApi(auth);
+                const me = plus.people.get({ userId: 'me' });
+                const userGoogleId = me.data.id;
+                const userGoogleEmail = me.data.emails && me.data.emails.length && me.data.emails[0].value;
+                res.status(200).send({
+                    "success": true,
+                    id: userGoogleId,
+                    email: userGoogleEmail,
+                    tokens: tokens,
+                })
+            }
+        });
+    }
 })
-
-
 module.exports = router;
