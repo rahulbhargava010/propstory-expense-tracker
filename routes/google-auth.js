@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
 const { google } = require("googleapis");
-const queryString = require('query-string');
 
 /*******************/
 /** CONFIGURATION **/
@@ -89,4 +88,5 @@ router.get('/getGoogleAccountFromCode/callback', async (req, res) => {
         });
     }
 })
+
 module.exports = router;
